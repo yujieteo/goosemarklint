@@ -5,7 +5,7 @@ import lint.context;
 
 let OPAQUE = 1;
 
-struct Prose { text: u8[>..]&, pos: i64[>..]&, cmap: i64[>..]&, base: i64 = 0 }
+struct Prose { text: u8[>..]&, pos: i64[>..]&, cmap: i64[>..]&, base: i64 = 0, code: bool = false }
 
 fn map_lines(L: Lint&, p: Prose&, c: const u8[:], first_line: i64) {
     var line = first_line;
@@ -138,7 +138,10 @@ fn emit_leaf(L: Lint&, p: Prose&, n: i64) -> bool {
     match node.kind {
         Text => emit_text(L, p, n),
         SoftBreak, LineBreak => emit(p, ' ', last_pos(p)),
-        Code => emit(p, OPAQUE, if node.src >= 0 { content_pos(p, node.src) } else { last_pos(p) }),
+        Code => {
+            let at = if node.src >= 0 { content_pos(p, node.src) } else { last_pos(p) };
+            if p.code { for ch in text_of(L.d, node.content) { emit(p, ch, at); } } else { emit(p, OPAQUE, at); }
+        },
         HtmlInline => emit(p, ' ', content_pos(p, node.content.at)),
         Image => {
             emit(p, ' ', last_pos(p));

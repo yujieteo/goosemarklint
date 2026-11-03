@@ -47,6 +47,7 @@ fn read_directive(L: Lint&, body: const u8[:], line: i64, col: i64, end_line: i6
     let ids = words(rest[..colon]);
     guard ids.len > 0 else { return "directive names no rule"; }
     for id in ids { guard position(RULE_IDS, id) >= 0 && id != "suppression" else { return "directive names an unknown rule"; } }
+    for id in ids { guard id != "repeated-fact" else { return "directive names repeated-fact, and a directive cannot stop it"; } }
     let at = L.msgs.len;
     L.msgs.append(rest[..colon]);
     L.directives.push(Directive { line: line, col: col, target: end_line + 1, rules: Span { at: at, len: colon } });
