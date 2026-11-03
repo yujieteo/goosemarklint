@@ -12,6 +12,8 @@ import lint.sentence_rules;
 import lint.block_rules;
 import lint.suppress;
 import lint.profiles;
+import lint.md_base;
+import lint.md_rules;
 
 let CONFIG = ".goosemarklint";
 
@@ -55,6 +57,7 @@ fn check_tree(L: Lint&, p: Prose&, w: Words&) {
     }
     check_summary_heading(L, p);
     check_profile(L, p, w);
+    check_markdown(L, p);
 }
 
 fn print_findings(out: u8[>..]&, path: const u8[:], L: Lint&) {
@@ -75,11 +78,13 @@ fn lint_source(out: u8[>..]&, path: const u8[:], input: const u8[:]) -> i64 {
     var d = Doc { nodes: nodes, text: text, refs: refs, ref_index: ref_index, line_cols: line_cols, opts: gfm_opts() };
     parse_markdown(d, input);
     var lines: i64[>..] = [];
+    var kinds: i64[>..] = [];
     var found: Finding[>..] = [];
     var msgs: u8[>..] = [];
     var directives: Directive[>..] = [];
-    var L = Lint { d: d, profile: profile_of(path), lines: lines, found: found, msgs: msgs, directives: directives };
+    var L = Lint { d: d, profile: profile_of(path), lines: lines, kinds: kinds, found: found, msgs: msgs, directives: directives };
     index_lines(L);
+    index_kinds(L);
     var ptext: u8[>..] = [];
     var pos: i64[>..] = [];
     var cmap: i64[>..] = [];

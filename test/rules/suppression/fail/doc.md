@@ -1,3 +1,5 @@
+# Test
+
 <!-- goosemarklint-disable-next-line ste-ing -->
 The tool is fast.
 

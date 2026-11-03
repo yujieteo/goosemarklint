@@ -128,11 +128,15 @@ fn add_row(d: Doc&, line_no: i64, table: i64, s: const u8[:], base_col: i64, cel
     }
 }
 
-fn insert_leading_paragraph(d: Doc&, table: i64, s: const u8[:]) {
+fn insert_leading_paragraph(d: Doc&, table: i64, s: const u8[:], header_line: i64) {
     let p = new_node(d, Kind.Paragraph, d.nodes[table].line, d.nodes[table].col);
     d.nodes[p].open = false;
     d.nodes[p].content = put_cell_text(d, s);
+    d.nodes[p].end_line = header_line - 1;
+    let text = trim_end(s);
+    d.nodes[p].end_col = text.len - (rfind(text, "\n") + 1);
     insert_before(d, table, p);
+    d.nodes[table].line = header_line;
 }
 
 fn try_table_header(d: Doc&, b: LineState&, para: i64) -> Start {
@@ -152,8 +156,14 @@ fn try_table_header(d: Doc&, b: LineState&, para: i64) -> Start {
     let aligns_at = d.text.len;
     for cell in delims { d.text.push(alignment_of(line[cell.start..cell.end])); }
     d.nodes[para].info = Span { at: aligns_at, len: delims.len };
-    if para_offset > 0 { insert_leading_paragraph(d, para, para_text[..para_offset]); }
-    add_row(d, b.number - 1, para, para_text, d.nodes[para].col, heads, true);
+    var head_text = para_text;
+    if para_offset > 0 {
+        insert_leading_paragraph(d, para, para_text[..para_offset], b.number - 1);
+        head_text = para_text[para_offset..];
+        heads.clear();
+        parse_row(head_text, heads);
+    }
+    add_row(d, b.number - 1, para, head_text, d.nodes[para].col, heads, true);
     advance_offset(d, b, b.len - b.offset, false);
     return Start.Container;
 }

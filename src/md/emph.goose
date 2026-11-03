@@ -66,6 +66,7 @@ fn insert_strike(d: Doc&, p: Inl&, opener: i64, closer: i64) -> i64 {
     let c = p.delims[closer].node;
     if d.nodes[o].content.len == d.nodes[c].content.len {
         let strike = new_node(d, Kind.Strike, 0, 0);
+        d.nodes[strike].src = d.nodes[o].content.at;
         move_between(d, o, c, strike);
         insert_after(d, o, strike);
         unlink(d, o);
@@ -90,6 +91,7 @@ fn insert_emph(d: Doc&, p: Inl&, opener: i64, closer: i64) -> i64 {
     d.nodes[o].content.len -= use_delims;
     d.nodes[c].content.len -= use_delims;
     let emph = new_node(d, if use_delims == 1 { Kind.Emph } else { Kind.Strong }, 0, 0);
+    d.nodes[emph].src = d.nodes[o].content.at + d.nodes[o].content.len;
     move_between(d, o, c, emph);
     insert_after(d, o, emph);
     if p.delims[opener].next != closer {

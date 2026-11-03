@@ -25,6 +25,10 @@ def main(path):
         folded = chr(cp).casefold()
         if folded != chr(cp):
             lines.append("f %X " % cp + " ".join("%X" % ord(c) for c in folded))
+    for cp in range(0x80, 0x110000):
+        lower = chr(cp).lower()
+        if lower != chr(cp):
+            lines.append("l %X " % cp + " ".join("%X" % ord(c) for c in lower))
     with open(path, "w", encoding="ascii") as f:
         f.write("\n".join(lines) + "\n")
 

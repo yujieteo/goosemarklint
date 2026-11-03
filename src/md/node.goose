@@ -93,7 +93,7 @@ fn gfm_opts() -> Opts {
     }
 }
 
-struct Ref { label: Span, dest: Span, title: Span, chain: i64 = -1 }
+struct Ref { label: Span, dest: Span, title: Span, chain: i64 = -1, line: i64 = 0, used: bool = false }
 
 struct Doc {
     nodes: Node[>..]&,
