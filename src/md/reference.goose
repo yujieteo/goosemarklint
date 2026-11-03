@@ -68,6 +68,7 @@ fn scan_plain_destination(s: const u8[:], i: i64) -> i64 {
             j += 2;
         } else if c == '(' {
             parens++;
+            if parens > 32 { return -1; }
             j++;
         } else if c == ')' {
             if parens < 1 { break; }
@@ -182,7 +183,7 @@ fn parse_reference(d: Doc&, s: const u8[:]) -> i64 {
     return end;
 }
 
-fn strip_references(d: Doc&, para: i64) -> i64 {
+fn strip_references(d: Doc&, para: i64) {
     var removed_lines = 0;
     loop {
         let c = d.nodes[para].content;
@@ -192,5 +193,7 @@ fn strip_references(d: Doc&, para: i64) -> i64 {
         for k in n { if d.text[c.at + k] == '\n' { removed_lines++; } }
         d.nodes[para].content = Span { at: c.at + n, len: c.len - n };
     }
-    return removed_lines;
+    guard removed_lines > 0 && d.nodes[para].content.len > 0;
+    d.nodes[para].line += removed_lines;
+    d.nodes[para].col = d.line_cols[d.nodes[para].line];
 }

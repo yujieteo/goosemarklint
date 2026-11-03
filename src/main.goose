@@ -17,7 +17,8 @@ fn print_file_tree(path: const u8[:]) -> bool {
     var text: u8[>..] = [];
     var refs: Ref[>..] = [];
     var ref_index = dictionary<u64, i64> {};
-    var d = Doc { nodes: nodes, text: text, refs: refs, ref_index: ref_index, opts: gfm_opts() };
+    var line_cols: i64[>..] = [];
+    var d = Doc { nodes: nodes, text: text, refs: refs, ref_index: ref_index, line_cols: line_cols, opts: gfm_opts() };
     parse_markdown(d, input);
     var out: u8[>..] = [];
     print_tree(d, out);

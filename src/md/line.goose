@@ -92,6 +92,8 @@ fn add_line(d: Doc&, b: LineState&) {
     d.text.append(rest_of_line(d, b, b.offset));
     d.text.push('\n');
     d.nodes[tip].content.len = d.text.len - start;
+    while d.line_cols.len <= b.number { d.line_cols.push(0); }
+    d.line_cols[b.number] = b.offset + 1;
 }
 
 fn can_contain(parent: Kind, child: Kind) -> bool {

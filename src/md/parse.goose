@@ -72,8 +72,7 @@ fn remove_references(d: Doc&) {
     while n >= 0 {
         if d.nodes[n].kind == Kind.Paragraph {
             let before = d.nodes[n].content.len;
-            let removed = strip_references(d, n);
-            d.nodes[n].line += removed;
+            strip_references(d, n);
             let c = d.nodes[n].content;
             if c.len != before && is_blank_text(d.text[c.at..c.at + c.len]) { empty.push(n); }
         }
@@ -107,8 +106,12 @@ fn make_alert(d: Doc&, quote: i64) {
     let nl = position(body, '\n');
     let cut = if nl >= 0 { nl + 1 } else { c.len };
     d.nodes[para].content = Span { at: c.at + cut, len: c.len - cut };
+    if is_blank_text(d.text[c.at + cut..c.at + c.len]) {
+        unlink(d, para);
+        return;
+    }
     d.nodes[para].line++;
-    if is_blank_text(d.text[c.at + cut..c.at + c.len]) { unlink(d, para); }
+    d.nodes[para].col = d.line_cols[d.nodes[para].line];
 }
 
 fn make_alerts(d: Doc&) {
@@ -159,7 +162,7 @@ fn consolidate_text(d: Doc&) {
 
 fn parse_markdown(d: Doc&, input: const u8[:]) {
     let root = new_node(d, Kind.Document, 1, 1);
-    let src = put_source(d, input);
+    let src = put_source(d, if starts_with(input, "\xEF\xBB\xBF") { input[3..] } else { input });
     var b = LineState { tip: root, oldtip: root, last_matched: root, .. };
     let from = add_front_matter(d, b, src);
     parse_lines(d, b, src, from);

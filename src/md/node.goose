@@ -99,6 +99,7 @@ struct Doc {
     text: u8[>..]&,
     refs: Ref[>..]&,
     ref_index: dictionary<u64, i64>&,
+    line_cols: i64[>..]&,
     opts: Opts,
 }
 

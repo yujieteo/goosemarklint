@@ -26,6 +26,16 @@ for f in $(git -C "$root" ls-files -co --exclude-standard '*.py'); do
   fi
 done
 
+for m in $(git -C "$root" ls-files -co --exclude-standard '*.sm.md'); do
+  mapfile -t cited < <(awk -F '|' 'NF == 8 && $7 !~ /^ *(source|-+) *$/ { gsub(/ /, "", $7); print $7 }' "$root/$m")
+  for f in "${cited[@]}"; do
+    if ! grep -Eqh "^fn ${f}\(" "${sources[@]/#/$root/}"; then
+      echo "$m: no fn $f"
+      exit 1
+    fi
+  done
+done
+
 tail -n +2 "$root/data/sources.tsv" | awk -F '\t' -v root="$root" '{ print $2 "  " root "/" $1 }' >"$out/sources.sha256"
 sha256sum --check --quiet "$out/sources.sha256"
 

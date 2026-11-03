@@ -71,7 +71,29 @@ Text
 <p>Text</p>
 ````````````````````````````````
 
+```````````````````````````````` example tree
+﻿---
+a: 1
+---
+# BOM
+.
+document [1:1-4:5]
+  front_matter [1:1-3:3] "a: 1\n"
+  heading [4:1-4:5] level=1
+    text "BOM"
+````````````````````````````````
+
 ## Alerts
+
+```````````````````````````````` example tree
+> [!NOTE]
+lazy text
+.
+document [1:1-2:9]
+  alert [1:1-2:9] type="note"
+    paragraph [2:1-2:9]
+      text "lazy text"
+````````````````````````````````
 
 ```````````````````````````````` example tree
 > [!NOTE]
@@ -166,4 +188,34 @@ document [1:1-2:10]
     item [2:1-2:10] task=open
       paragraph [2:7-2:10]
         text "open"
+````````````````````````````````
+
+## Source positions after reference definitions
+
+```````````````````````````````` example tree
+> [a]: /u
+lazy text
+.
+document [1:1-2:9]
+  block_quote [1:1-2:9]
+    paragraph [2:1-2:9]
+      text "lazy text"
+````````````````````````````````
+
+```````````````````````````````` example tree
+[a]: /u
+  Foo
+===
+.
+document [1:1-3:3]
+  heading [2:3-3:3] level=1
+    text "Foo"
+````````````````````````````````
+
+## Link destination nesting
+
+```````````````````````````````` example
+[a]((((((((((((((((((((((((((((((((((x))))))))))))))))))))))))))))))))))
+.
+<p>[a]((((((((((((((((((((((((((((((((((x))))))))))))))))))))))))))))))))))</p>
 ````````````````````````````````

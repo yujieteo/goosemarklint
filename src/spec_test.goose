@@ -86,7 +86,8 @@ fn run_example(e: Example, buf: const u8[:], file: const u8[:], t: Tally&) {
     var text: u8[>..] = [];
     var refs: Ref[>..] = [];
     var ref_index = dictionary<u64, i64> {};
-    var d = Doc { nodes: nodes, text: text, refs: refs, ref_index: ref_index, opts: e.opts };
+    var line_cols: i64[>..] = [];
+    var d = Doc { nodes: nodes, text: text, refs: refs, ref_index: ref_index, line_cols: line_cols, opts: e.opts };
     parse_markdown(d, buf[e.markdown.at..e.markdown.at + e.markdown.len]);
     var got: u8[>..] = [];
     if e.tree { print_tree(d, got); } else { render_html(d, got); }
