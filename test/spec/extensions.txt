@@ -1,0 +1,169 @@
+# goosemarklint extension tests
+
+The parser runs these examples with all extensions on.
+
+## Front matter
+
+```````````````````````````````` example tree
+---
+title: Notes
+tags: [a, b]
+---
+# Notes
+.
+document [1:1-5:7]
+  front_matter [1:1-4:3] "title: Notes\ntags: [a, b]\n"
+  heading [5:1-5:7] level=1
+    text "Notes"
+````````````````````````````````
+
+```````````````````````````````` example tree
+---
+name: x
+...
+Text
+.
+document [1:1-4:4]
+  front_matter [1:1-3:3] "name: x\n"
+  paragraph [4:1-4:4]
+    text "Text"
+````````````````````````````````
+
+```````````````````````````````` example tree
+---
+---
+Text
+.
+document [1:1-3:4]
+  front_matter [1:1-2:3] ""
+  paragraph [3:1-3:4]
+    text "Text"
+````````````````````````````````
+
+```````````````````````````````` example tree
+---
+title: x
+.
+document [1:1-2:8]
+  thematic_break [1:1-1:3]
+  paragraph [2:1-2:8]
+    text "title: x"
+````````````````````````````````
+
+```````````````````````````````` example tree
+
+---
+a: b
+---
+.
+document [1:1-4:3]
+  thematic_break [2:1-2:3]
+  heading [3:1-4:3] level=2
+    text "a: b"
+````````````````````````````````
+
+```````````````````````````````` example
+---
+a: 1
+---
+Text
+.
+<p>Text</p>
+````````````````````````````````
+
+## Alerts
+
+```````````````````````````````` example tree
+> [!NOTE]
+> Read the *guide*.
+.
+document [1:1-2:19]
+  alert [1:1-2:19] type="note"
+    paragraph [2:3-2:19]
+      text "Read the "
+      emph
+        text "guide"
+      text "."
+````````````````````````````````
+
+```````````````````````````````` example tree
+> [!tip]
+> One.
+>
+> Two.
+.
+document [1:1-4:6]
+  alert [1:1-4:6] type="tip"
+    paragraph [2:3-2:6]
+      text "One."
+    paragraph [4:3-4:6]
+      text "Two."
+````````````````````````````````
+
+```````````````````````````````` example tree
+> [!FOO]
+> Text.
+.
+document [1:1-2:7]
+  block_quote [1:1-2:7]
+    paragraph [1:3-2:7]
+      text "[!FOO]"
+      softbreak
+      text "Text."
+````````````````````````````````
+
+```````````````````````````````` example tree
+> [!NOTE] Text on the marker line.
+.
+document [1:1-1:34]
+  block_quote [1:1-1:34]
+    paragraph [1:3-1:34]
+      text "[!NOTE] Text on the marker line."
+````````````````````````````````
+
+```````````````````````````````` example tree
+> [!CAUTION]
+.
+document [1:1-1:12]
+  alert [1:1-1:12] type="caution"
+````````````````````````````````
+
+```````````````````````````````` example tree
+- > [!NOTE]
+  > In a list.
+.
+document [1:1-2:14]
+  list [1:1-2:14] bullet=- tight
+    item [1:1-2:14]
+      block_quote [1:3-2:14]
+        paragraph [1:5-2:14]
+          text "[!NOTE]"
+          softbreak
+          text "In a list."
+````````````````````````````````
+
+```````````````````````````````` example
+> [!WARNING]
+> Do not *panic*.
+.
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>Do not <em>panic</em>.</p>
+</div>
+````````````````````````````````
+
+## Task lists
+
+```````````````````````````````` example tree
+- [X] done
+- [ ] open
+.
+document [1:1-2:10]
+  list [1:1-2:10] bullet=- tight
+    item [1:1-1:10] task=done
+      paragraph [1:7-1:10]
+        text "done"
+    item [2:1-2:10] task=open
+      paragraph [2:7-2:10]
+        text "open"
+````````````````````````````````
