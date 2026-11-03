@@ -12,6 +12,10 @@ run() {
   local want=$1 dir=$2 status=0
   shift 2
   (cd "$dir" && "$bin" check "$@") >"$work/out" 2>&1 || status=$?
+  if [ "$want" = findings ]; then
+    want=1
+    if [ -s "$work/out" ] && ! grep -qv ": warning: " "$work/out"; then want=0; fi
+  fi
   if [ "$status" -ne "$want" ]; then
     cat "$work/out"
     echo "rule_tests: check $* in $dir exited $status, want $want"
@@ -28,7 +32,7 @@ if [ "${dirs[*]}" != "${sorted[*]}" ]; then
 fi
 for r in "${rules[@]}"; do
   run 0 "$root/test/rules" "$r/pass"
-  run 1 "$root/test/rules" "$r/fail"
+  run findings "$root/test/rules" "$r/fail"
   if grep -v ": $r: " "$work/out"; then
     echo "rule_tests: $r/fail gives a finding of another rule"
     exit 1

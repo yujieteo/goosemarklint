@@ -73,8 +73,9 @@ fn check_ing(L: Lint&, p: Prose&, t: Tok) {
     let word = tok_text(p, t);
     var at = 0;
     each_split(word, '-') {
-        if it.len >= 4 && lower_ends_with(it, "ing") && !is_allowed(it) {
-            report(L, p.pos[t.at + at], "ste-ing", str("\"", it, "\" is an -ing word: use another verb form"));
+        let css_at_rule = at == 0 && t.at > 0 && p.text[t.at - 1] == '@';
+        if it.len >= 4 && lower_ends_with(it, "ing") && !is_allowed(it) && !css_at_rule {
+            report_warning(L, p.pos[t.at + at], "ste-ing", str("\"", it, "\" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then"));
         }
         at += it.len + 1;
     };

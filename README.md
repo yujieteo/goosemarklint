@@ -17,7 +17,9 @@ goose build src/main.goose -o goosemarklint
 `check` takes files and folders.
 In a folder, it reads each `.md` file and skips `node_modules` and each folder whose name starts with a dot.
 Each finding is one line: `file:line:col: rule: message`.
-The exit status is 0 for no finding, 1 for a finding, and 2 for a file or a config that the tool cannot read.
+A warning has the word `warning:` before its message.
+The exit status is 0 for no finding or only warnings, and 1 for an error.
+It is 2 for a file or a config that the tool cannot read.
 
 `./goosemarklint rules` prints the rule IDs.
 `./goosemarklint tree FILE` prints the parse tree of a file.
@@ -35,7 +37,7 @@ Each other Markdown file, such as a blog post, gets all of the other rules.
 | `ste-sentence-length` | A sentence of more than 25 words, or an instruction of more than 20 words. An instruction starts with a verb, or has a verb after its first comma. |
 | `ste-contraction` | A contraction, such as `don't`. |
 | `ste-semicolon` | A semicolon. |
-| `ste-ing` | A word that ends in -ing and is not in an `allow` list. |
+| `ste-ing` | A warning for a word that ends in -ing and is not in an `allow` list. The rule also flags nouns, adjectives, titles and CSS names, so the reader decides if a hit is a verb form. It skips a CSS at-rule such as `@starting-style`. |
 | `ste-passive` | A form of "be" and then a past participle, such as `is used`. |
 | `llm-stock` | A stock word or a stock phrase of LLM text, such as `delve` or `seamless`. |
 | `llm-hedge` | A hedge or a filler word, such as `basically` or `very`. |

@@ -27,11 +27,11 @@
 ./skill-front-matter/fail/no-when/SKILL.md:3:1: skill-front-matter: description does not say when to load the skill: add "Use when ..."
 ./ste-contraction/fail/doc.md:1:19: ste-contraction: "doesn't" is a contraction: write "does not"
 ./ste-contraction/fail/doc.md:3:1: ste-contraction: "Don't" is a contraction: write "do not"
-./ste-ing/fail/doc.md:1:13: ste-ing: "running" is an -ing word: use another verb form
-./ste-ing/fail/doc.md:3:14: ste-ing: "running" is an -ing word: use another verb form
-./ste-ing/fail/doc.md:5:24: ste-ing: "running" is an -ing word: use another verb form
-./ste-ing/fail/doc.md:7:4: ste-ing: "Running" is an -ing word: use another verb form
-./ste-ing/fail/doc.md:11:16: ste-ing: "running" is an -ing word: use another verb form
+./ste-ing/fail/doc.md:1:13: ste-ing: warning: "running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
+./ste-ing/fail/doc.md:3:14: ste-ing: warning: "running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
+./ste-ing/fail/doc.md:5:24: ste-ing: warning: "running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
+./ste-ing/fail/doc.md:7:4: ste-ing: warning: "Running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
+./ste-ing/fail/doc.md:11:16: ste-ing: warning: "running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./ste-passive/fail/doc.md:1:10: ste-passive: "is read" is passive voice: name who does the action
 ./ste-passive/fail/doc.md:3:10: ste-passive: "was not changed" is passive voice: name who does the action
 ./ste-semicolon/fail/doc.md:1:16: ste-semicolon: semicolon: write two sentences
