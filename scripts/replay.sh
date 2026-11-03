@@ -7,7 +7,11 @@ if [ "${1:-}" = --accept ]; then accept=yes; fi
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 
-base=$(git -C "$root" merge-base HEAD main)
+main=$(git -C "$root" rev-parse -q --verify main || git -C "$root" rev-parse -q --verify origin/main) || {
+  echo "replay: no main or origin/main branch to compare with"
+  exit 1
+}
+base=$(git -C "$root" merge-base HEAD "$main")
 mkdir "$work/base"
 git -C "$root" archive "$base" | tar -x -C "$work/base"
 if [ ! -e "$work/base/src/main.goose" ]; then

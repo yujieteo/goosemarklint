@@ -27,7 +27,15 @@ for f in $(git -C "$root" ls-files -co --exclude-standard '*.py'); do
 done
 
 for m in $(git -C "$root" ls-files -co --exclude-standard '*.sm.md'); do
-  mapfile -t cited < <(awk -F '|' 'NF == 8 && $7 !~ /^ *(source|-+) *$/ { gsub(/ /, "", $7); print $7 }' "$root/$m")
+  mapfile -t cited < <(awk -F '|' '
+    !/^\|/ { col = 0; next }
+    !col { for (i = 2; i < NF; i++) { h = $i; gsub(/ /, "", h); if (h == "source") col = i } next }
+    $col !~ /^ *-+ *$/ { v = $col; gsub(/ /, "", v); print v }
+  ' "$root/$m")
+  if [ "${#cited[@]}" -eq 0 ]; then
+    echo "$m: no machine table with a source column"
+    exit 1
+  fi
   for f in "${cited[@]}"; do
     if ! grep -Eqh "^fn ${f}\(" "${sources[@]/#/$root/}"; then
       echo "$m: no fn $f"
