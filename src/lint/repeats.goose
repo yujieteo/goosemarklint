@@ -169,6 +169,19 @@ fn places_of(F: Facts&, group: i64[:]) -> u8[>..], i64 {
     return out, n;
 }
 
+fn anchors_of(F: Facts&, group: i64[:]) -> u8[>..] {
+    var out: u8[>..] = [];
+    for k, at in group {
+        let f = F.items[k];
+        let a = str(fact_path(F, f), ":", f.line, ":", f.col);
+        let seen = any(group[..at]) { str(fact_path(F, F.items[it]), ":", F.items[it].line, ":", F.items[it].col) == a };
+        guard !seen;
+        if out.len > 0 { out.append(", "); }
+        out.append(a);
+    }
+    return out;
+}
+
 fn shown_key(F: Facts&, group: i64[:]) -> u8[>..] {
     var best = group[0];
     for k in group {
@@ -182,7 +195,7 @@ fn shown_key(F: Facts&, group: i64[:]) -> u8[>..] {
     return out;
 }
 
-fn report_group(out: u8[>..]&, F: Facts&, group: i64[:], sentence_places: const u8[:]) {
+fn report_group(out: u8[>..]&, F: Facts&, group: i64[:], sentence_anchors: const u8[:]) {
     let first = F.items[group[0]];
     let what = match first.kind {
         Sentence => "sentence",
@@ -193,7 +206,7 @@ fn report_group(out: u8[>..]&, F: Facts&, group: i64[:], sentence_places: const 
     let places, n = places_of(F, group);
     let enough = if pin { file_count(F, group) >= 2 } else { n >= 2 };
     guard enough;
-    guard first.kind != FactKind.List || position(split(sentence_places, '\0'), places) < 0;
+    guard first.kind != FactKind.List || position(split(sentence_anchors, '\0'), anchors_of(F, group)) < 0;
     format(out, fact_path(F, first), ":", first.line, ":", first.col, ": repeated-fact: warning: ", what, " \"", shown_key(F, group), "\" is in ", n, " places: ", places);
     if first.kind == FactKind.List {
         let diffs = group_diffs(F, group);
@@ -223,13 +236,13 @@ fn report_repeats(out: u8[>..]&, F: Facts&) {
             start = k;
         }
     }
-    var sentence_places: u8[>..] = [];
+    var sentence_anchors: u8[>..] = [];
     for g in groups {
         guard F.items[order[g.at]].kind == FactKind.Sentence;
         let places, n = places_of(F, order[g.at..g.at + g.len]);
         guard n >= 2;
-        sentence_places.append(places);
-        sentence_places.push('\0');
+        sentence_anchors.append(anchors_of(F, order[g.at..g.at + g.len]));
+        sentence_anchors.push('\0');
     }
-    for g in groups { report_group(out, F, order[g.at..g.at + g.len], sentence_places); }
+    for g in groups { report_group(out, F, order[g.at..g.at + g.len], sentence_anchors); }
 }

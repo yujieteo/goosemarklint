@@ -125,7 +125,7 @@ fn scan_lists(L: Lint&, t: const u8[:], pos: const i64[:], line: i64) {
             if depth > 0 { depth--; }
         } else if depth == 0 && c == ':' && spaced {
             colon = i;
-        } else if depth == 0 && position(".!?;", c) >= 0 && spaced {
+        } else if depth == 0 && position(".!?", c) >= 0 && spaced {
             add_sentence_lists(L, t, start, i, colon, pos, line);
             start = i + 1;
             colon = -1;
@@ -185,6 +185,19 @@ fn add_diff(diffs: u8[>..]&, x: const u8[:]) {
     diffs.append(x);
 }
 
+fn has_words(hay: const u8[:], w: const u8[:]) -> bool {
+    var from = 0;
+    while from + w.len <= hay.len {
+        let at = find(hay[from..], w);
+        guard at >= 0 else { return false; }
+        let i = from + at;
+        let j = i + w.len;
+        if (i == 0 || hay[i - 1] == ' ') && (j == hay.len || hay[j] == ' ') { return true; }
+        from = i + 1;
+    }
+    return false;
+}
+
 fn compare_side(F: Facts&, a: Fact, b: Fact, diffs: u8[>..]&) -> Side {
     let full = split(fact_key(F, b), '\n');
     let items = split(fact_key(F, a), '\n');
@@ -200,11 +213,14 @@ fn compare_side(F: Facts&, a: Fact, b: Fact, diffs: u8[>..]&) -> Side {
         if inside && k != 0 && k != 3 && !extra {
             s.matched++;
         } else if !inside && k != 0 && k != 3 && !extra {
-            let glued = any(other) { position(items, it) < 0 && find(it, x) >= 0 };
+            let glued = any(other) { position(items, it) < 0 && has_words(it, x) };
             if ends.len > 0 || !glued {
                 s.miss++;
                 add_diff(diffs, x);
             }
+        } else if !inside && b.ends.len == 0 {
+            let holds = any(full) { has_words(x, it) };
+            if !holds { add_diff(diffs, x); }
         }
     }
     return s;
