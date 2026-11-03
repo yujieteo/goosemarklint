@@ -1,5 +1,8 @@
 ./agents-imperative/fail/agents/AGENTS.md:4:3: agents-imperative: list item does not start with an imperative verb
 ./agents-imperative/fail/claude/CLAUDE.md:3:4: agents-imperative: list item does not start with an imperative verb
+./html-comment/fail/blocks.md:2:1: html-comment: HTML comment: delete it, or move the fact into code or a test
+./html-comment/fail/blocks.md:5:28: html-comment: HTML comment: delete it, or move the fact into code or a test
+./html-comment/fail/blocks.md:7:72: html-comment: HTML comment: delete it, or move the fact into code or a test
 ./html-comment/fail/doc.md:1:1: html-comment: HTML comment: delete it, or move the fact into code or a test
 ./html-comment/fail/doc.md:3:19: html-comment: HTML comment: delete it, or move the fact into code or a test
 ./llm-bold-label/fail/doc.md:1:1: llm-bold-label: each list item starts with a bold label: delete the labels or use a table
@@ -18,7 +21,7 @@
 ./readme-purpose/fail/none/README.md:3:1: readme-purpose: README has no purpose paragraph after the title
 ./readme-purpose/fail/two/README.md:3:1: readme-purpose: first paragraph has 2 sentences: state the purpose in 1 sentence
 ./readme-run-block/fail/README.md:1:1: readme-run-block: README has no fenced code block: show the run steps in one
-./skill-front-matter/fail/no-description/SKILL.md:1:1: skill-front-matter: front matter has no description
+./skill-front-matter/fail/no-description/SKILL.md:5:1: skill-front-matter: front matter has no description
 ./skill-front-matter/fail/no-front-matter/SKILL.md:1:1: skill-front-matter: SKILL.md has no front matter: add name and description
 ./skill-front-matter/fail/no-when/SKILL.md:3:1: skill-front-matter: description does not say when to load the skill: add "Use when ..."
 ./ste-contraction/fail/doc.md:1:19: ste-contraction: "doesn't" is a contraction: write "does not"

@@ -12,10 +12,13 @@ let HEAVY_BOLD_SPANS = 3;
 struct Range2 { lo: i64, hi: i64 }
 
 let EMOJI = [
-    Range2 { lo: 0x2300, hi: 0x23FF },
-    Range2 { lo: 0x2600, hi: 0x27BF },
-    Range2 { lo: 0x2B00, hi: 0x2BFF },
-    Range2 { lo: 0x1F000, hi: 0x1FAFF },
+    Range2 { lo: 0x26A0, hi: 0x26A0 },
+    Range2 { lo: 0x26A1, hi: 0x26A1 },
+    Range2 { lo: 0x2705, hi: 0x2705 },
+    Range2 { lo: 0x2728, hi: 0x2728 },
+    Range2 { lo: 0x274C, hi: 0x274C },
+    Range2 { lo: 0x2B50, hi: 0x2B50 },
+    Range2 { lo: 0x1F300, hi: 0x1FAFF },
 ];
 
 fn is_emoji(cp: i64) -> bool { any(EMOJI) { cp >= it.lo && cp <= it.hi } }

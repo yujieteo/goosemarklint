@@ -21,7 +21,8 @@ fn check_inline_comments(L: Lint&, p: Prose&, b: i64) {
         if L.d.nodes[n].kind == Kind.HtmlInline {
             let text = text_of(L.d, L.d.nodes[n].content);
             let off = content_pos(p, L.d.nodes[n].content.at);
-            check_comment(L, text, off, line_at(L, off) + count(text) { it == '\n' });
+            let line = line_at(L, off);
+            check_comments(L, text, line, col_at(L, line, off));
         }
         n = next_in(L.d, n, b);
     }
@@ -42,7 +43,7 @@ fn check_tree(L: Lint&, p: Prose&, w: Words&) {
         let node = L.d.nodes[n];
         match node.kind {
             Paragraph, Heading, TableCell => check_prose_block(L, p, w, n),
-            HtmlBlock => check_comment(L, text_of(L.d, node.content), node_offset(L, n), node.end_line),
+            HtmlBlock => check_comments(L, text_of(L.d, node.content), node.line, max(node.col, 1)),
             List => check_bold_labels(L, n),
             _ => {},
         }

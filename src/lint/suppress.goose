@@ -7,19 +7,39 @@ let SYNTAX = "<!-- goosemarklint-disable-next-line RULE: reason -->";
 
 fn comment_body(t: const u8[:]) -> const u8[:] { trim(t[4..if ends_with(t, "-->") && t.len >= 7 { t.len - 3 } else { t.len }]) }
 
-fn check_comment(L: Lint&, text: const u8[:], off: i64, end_line: i64) {
-    let t = trim(text);
-    guard starts_with(t, "<!--");
-    let body = comment_body(t);
-    if !starts_with(body, "goosemarklint-") || !ends_with(t, "-->") {
-        report(L, off, "html-comment", "HTML comment: delete it, or move the fact into code or a test");
+fn is_directive(t: const u8[:]) -> bool { starts_with(t, "<!--") && starts_with(comment_body(t), "goosemarklint-") }
+
+fn check_comment(L: Lint&, t: const u8[:], line: i64, col: i64) {
+    guard is_directive(t) && ends_with(t, "-->") else {
+        report_at(L, line, col, "html-comment", "HTML comment: delete it, or move the fact into code or a test");
         return;
     }
-    let why = read_directive(L, body, off, end_line);
-    if why.len > 0 { report(L, off, "suppression", str(why, ": write ", SYNTAX)); }
+    let why = read_directive(L, comment_body(t), line, col, line + count(t) { it == '\n' });
+    if why.len > 0 { report_at(L, line, col, "suppression", str(why, ": write ", SYNTAX)); }
 }
 
-fn read_directive(L: Lint&, body: const u8[:], off: i64, end_line: i64) -> const u8[:] {
+fn check_comments(L: Lint&, text: const u8[:], line: i64, col: i64) {
+    var ln = line;
+    var ls = 0;
+    var seen = 0;
+    var at = find(text, "<!--");
+    while at >= 0 {
+        for c, k in text[seen..at] {
+            if c == '\n' {
+                ln++;
+                ls = seen + k + 1;
+            }
+        }
+        seen = at;
+        let e = find(text[at + 2..], "-->");
+        let end = if e < 0 { text.len } else { at + e + 5 };
+        check_comment(L, text[at..end], ln, col + count(text[ls..at]) { (it & 0xC0) != 0x80 });
+        let next = find(text[end..], "<!--");
+        at = if next < 0 { -1 } else { end + next };
+    }
+}
+
+fn read_directive(L: Lint&, body: const u8[:], line: i64, col: i64, end_line: i64) -> const u8[:] {
     guard starts_with(body, DIRECTIVE) && body.len > DIRECTIVE.len && body[DIRECTIVE.len] == ' ' else { return "unknown directive"; }
     let rest = body[DIRECTIVE.len..];
     let colon = position(rest, ':');
@@ -29,8 +49,7 @@ fn read_directive(L: Lint&, body: const u8[:], off: i64, end_line: i64) -> const
     for id in ids { guard position(RULE_IDS, id) >= 0 && id != "suppression" else { return "directive names an unknown rule"; } }
     let at = L.msgs.len;
     L.msgs.append(rest[..colon]);
-    let line = line_at(L, off);
-    L.directives.push(Directive { line: line, col: col_at(L, line, off), target: end_line + 1, rules: Span { at: at, len: colon } });
+    L.directives.push(Directive { line: line, col: col, target: end_line + 1, rules: Span { at: at, len: colon } });
     return "";
 }
 

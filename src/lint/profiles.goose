@@ -5,6 +5,7 @@ import lint.context;
 import lint.prose;
 import lint.tokens;
 import lint.sentence_rules;
+import lint.suppress;
 
 fn profile_of(path: const u8[:]) -> Profile {
     let slash = rfind(path, "/");
@@ -56,18 +57,29 @@ fn key_value(fm: const u8[:], key: const u8[:]) -> const u8[:], i64 {
     return "", -1;
 }
 
+fn is_header(L: Lint&, n: i64) -> bool {
+    let k = L.d.nodes[n].kind;
+    return k == Kind.FrontMatter || (k == Kind.HtmlBlock && is_directive(trim(text_of(L.d, L.d.nodes[n].content))));
+}
+
+fn report_file(L: Lint&, rule: const u8[:], msg: const u8[:]) {
+    var n = L.d.nodes[0].first;
+    while n >= 0 && is_header(L, n) { n = L.d.nodes[n].next; }
+    if n >= 0 { report_node(L, n, rule, msg); } else { report_at(L, 1, 1, rule, msg); }
+}
+
 fn check_skill(L: Lint&) {
     let fm = L.d.nodes[0].first;
     guard fm >= 0 && L.d.nodes[fm].kind == Kind.FrontMatter else {
-        report_at(L, 1, 1, "skill-front-matter", "SKILL.md has no front matter: add name and description");
+        report_file(L, "skill-front-matter", "SKILL.md has no front matter: add name and description");
         return;
     };
     let text = text_of(L.d, L.d.nodes[fm].content);
     let name, name_at = key_value(text, "name");
-    if name.len == 0 { report_at(L, 1, 1, "skill-front-matter", "front matter has no name"); }
+    if name.len == 0 { report_file(L, "skill-front-matter", "front matter has no name"); }
     let desc, desc_at = key_value(text, "description");
     if desc.len == 0 {
-        report_at(L, 1, 1, "skill-front-matter", "front matter has no description");
+        report_file(L, "skill-front-matter", "front matter has no description");
     } else if !has_word(desc, "when") {
         report_at(L, desc_at + 2, 1, "skill-front-matter", "description does not say when to load the skill: add \"Use when ...\"");
     }
@@ -103,7 +115,7 @@ fn check_purpose(L: Lint&, p: Prose&, w: Words&) {
     let b = purpose_block(L, p, w);
     guard b >= 0 && L.d.nodes[b].kind == Kind.Paragraph else {
         if b >= 0 { report_node(L, b, "readme-purpose", "README has no purpose paragraph after the title"); }
-        else { report_at(L, 1, 1, "readme-purpose", "README has no purpose paragraph after the title"); }
+        else { report_file(L, "readme-purpose", "README has no purpose paragraph after the title"); }
         return;
     };
     read_words(L, p, w, b);
@@ -115,7 +127,7 @@ fn check_purpose(L: Lint&, p: Prose&, w: Words&) {
 fn check_run_block(L: Lint&) {
     let fenced = any(L.d.nodes) { it.kind == Kind.CodeBlock && it.fenced && it.parent >= 0 };
     guard !fenced;
-    report_at(L, 1, 1, "readme-run-block", "README has no fenced code block: show the run steps in one");
+    report_file(L, "readme-run-block", "README has no fenced code block: show the run steps in one");
 }
 
 fn check_profile(L: Lint&, p: Prose&, w: Words&) {
