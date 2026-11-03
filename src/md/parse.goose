@@ -142,6 +142,7 @@ fn merge_text(d: Doc&, a: i64, b: i64) {
     if x.at + x.len == y.at {
         d.nodes[a].content.len += y.len;
     } else {
+        if d.nodes[a].src < 0 { d.nodes[a].src = x.at; }
         let at = d.text.len;
         d.text.append(d.text[x.at..x.at + x.len]);
         d.text.append(d.text[y.at..y.at + y.len]);
@@ -163,6 +164,7 @@ fn consolidate_text(d: Doc&) {
 fn parse_markdown(d: Doc&, input: const u8[:]) {
     let root = new_node(d, Kind.Document, 1, 1);
     let src = put_source(d, if starts_with(input, "\xEF\xBB\xBF") { input[3..] } else { input });
+    d.nodes[root].content = src;
     var b = LineState { tip: root, oldtip: root, last_matched: root, .. };
     let from = add_front_matter(d, b, src);
     parse_lines(d, b, src, from);

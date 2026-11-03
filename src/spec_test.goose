@@ -5,6 +5,7 @@ import md.node;
 import md.parse;
 import md.html;
 import md.tree;
+import lint.check;
 
 let FENCE = "````````````````````````````````";
 let TAB_MARK = "\xE2\x86\x92";
@@ -99,6 +100,17 @@ fn run_example(e: Example, buf: const u8[:], file: const u8[:], t: Tally&) {
     }
 }
 
+fn lint_examples(examples: const Example[:], buf: const u8[:]) -> i64 {
+    var findings = 0;
+    for e in examples {
+        for name in ["doc.md", "README.md", "SKILL.md", "AGENTS.md"] {
+            var out: u8[>..] = [];
+            findings += lint_source(out, name, buf[e.markdown.at..e.markdown.at + e.markdown.len]);
+        }
+    }
+    return findings;
+}
+
 fn count_openings(spec: const u8[:]) -> i64 {
     var n = 0;
     each_split(spec, '\n') { if starts_with(it, FENCE) && it.len > FENCE.len { n++; } };
@@ -116,7 +128,8 @@ fn run_file(profile: const u8[:], file: const u8[:], t: Tally&) -> bool {
     collect(profile, spec, buf, examples);
     let before = t.failed;
     for e in examples { run_example(e, buf, file, t); }
-    write_stdout(str(file, ": ", examples.len, " examples, ", t.failed - before, " failed\n"));
+    let findings = lint_examples(examples, buf);
+    write_stdout(str(file, ": ", examples.len, " examples, ", t.failed - before, " failed, ", findings, " lint findings\n"));
     let openings = count_openings(spec);
     guard examples.len == openings else {
         write_stdout(str(file, ": ", openings - examples.len, " of ", openings, " examples not collected\n"));

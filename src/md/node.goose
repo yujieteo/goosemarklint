@@ -66,6 +66,7 @@ struct Node {
     align: u8 = 0,
     header: bool = false,
     visited: bool = false,
+    src: i64 = -1,
 }
 
 struct Opts {
