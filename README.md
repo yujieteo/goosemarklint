@@ -15,7 +15,7 @@ goose build src/main.goose -o goosemarklint
 ./goosemarklint tree README.md
 ```
 
-Run all checks: the CommonMark and GFM spec tests, the lint of the project code, the hashes of the vendored files and the output replay:
+Run all checks, which include the CommonMark and GFM spec tests and the output replay:
 
 ```sh
 scripts/check.sh
