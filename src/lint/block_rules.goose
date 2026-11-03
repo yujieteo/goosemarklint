@@ -12,12 +12,12 @@ let HEAVY_BOLD_SPANS = 3;
 struct Range2 { lo: i64, hi: i64 }
 
 let EMOJI = [
-    Range2 { lo: 0x26A0, hi: 0x26A0 },
-    Range2 { lo: 0x26A1, hi: 0x26A1 },
+    Range2 { lo: 0x26A0, hi: 0x26A1 },
     Range2 { lo: 0x2705, hi: 0x2705 },
     Range2 { lo: 0x2728, hi: 0x2728 },
     Range2 { lo: 0x274C, hi: 0x274C },
     Range2 { lo: 0x2B50, hi: 0x2B50 },
+    Range2 { lo: 0xFE0F, hi: 0xFE0F },
     Range2 { lo: 0x1F300, hi: 0x1FAFF },
 ];
 
@@ -25,12 +25,14 @@ fn is_emoji(cp: i64) -> bool { any(EMOJI) { cp >= it.lo && cp <= it.hi } }
 
 fn check_heading_emoji(L: Lint&, p: Prose&) {
     var i = 0;
+    var last = 0;
     while i < p.text.len {
         let cp, n = decode_at(p.text, i);
         if is_emoji(cp) {
-            report(L, p.pos[i], "llm-heading-emoji", "emoji in a heading: delete it");
+            report(L, p.pos[if cp == 0xFE0F { last } else { i }], "llm-heading-emoji", "emoji in a heading: delete it");
             return;
         }
+        last = i;
         i += n;
     }
 }

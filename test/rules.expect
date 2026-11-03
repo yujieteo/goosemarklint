@@ -10,6 +10,7 @@
 ./llm-contrast/fail/doc.md:3:13: llm-contrast: "not X, but Y" contrast: state Y
 ./llm-em-dash/fail/doc.md:1:18: llm-em-dash: em dash: write two sentences or use a comma
 ./llm-heading-emoji/fail/doc.md:1:3: llm-heading-emoji: emoji in a heading: delete it
+./llm-heading-emoji/fail/fe0f/doc.md:1:3: llm-heading-emoji: emoji in a heading: delete it
 ./llm-heavy-bold/fail/doc.md:1:1: llm-heavy-bold: paragraph has 3 bold spans: keep bold for one key term
 ./llm-hedge/fail/doc.md:1:1: llm-hedge: "Basically" is filler: delete it
 ./llm-hedge/fail/doc.md:1:24: llm-hedge: "very" is filler: delete it
