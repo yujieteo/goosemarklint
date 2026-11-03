@@ -27,7 +27,7 @@ let RULE_IDS = [
 
 enum Profile { Docs, Readme, Skill, Agents }
 
-struct Finding { line: i64, col: i64, rule: i64, msg: Span }
+struct Finding { line: i64, col: i64, rule: i64, msg: Span, warning: bool = false }
 
 struct Directive { line: i64, col: i64, target: i64, rules: Span, used: bool = false }
 
@@ -86,6 +86,11 @@ fn report_at(L: Lint&, line: i64, col: i64, rule: const u8[:], msg: const u8[:])
 fn report(L: Lint&, off: i64, rule: const u8[:], msg: const u8[:]) {
     let line = line_at(L, off);
     report_at(L, line, col_at(L, line, off), rule, msg);
+}
+
+fn report_warning(L: Lint&, off: i64, rule: const u8[:], msg: const u8[:]) {
+    report(L, off, rule, msg);
+    L.found[L.found.len - 1].warning = true;
 }
 
 fn node_offset(L: Lint&, n: i64) -> i64 { L.lines[L.d.nodes[n].line] + max(L.d.nodes[n].col, 1) - 1 }

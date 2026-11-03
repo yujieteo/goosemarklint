@@ -60,7 +60,7 @@ fn check_tree(L: Lint&, p: Prose&, w: Words&) {
 fn print_findings(out: u8[>..]&, path: const u8[:], L: Lint&) {
     stable_sort(L.found) { a, b => a.line < b.line || (a.line == b.line && (a.col < b.col || (a.col == b.col && a.rule < b.rule))) };
     for f in L.found {
-        format(out, path, ":", f.line, ":", f.col, ": ", RULE_IDS[f.rule], ": ");
+        format(out, path, ":", f.line, ":", f.col, ": ", RULE_IDS[f.rule], ": ", if f.warning { "warning: " } else { "" });
         out.append(L.msgs[f.msg.at..f.msg.at + f.msg.len]);
         out.push('\n');
     }
@@ -90,7 +90,7 @@ fn lint_source(out: u8[>..]&, path: const u8[:], input: const u8[:]) -> i64 {
     check_tree(L, p, w);
     apply_suppressions(L);
     print_findings(out, path, L);
-    return L.found.len;
+    return count(L.found) { !it.warning };
 }
 
 fn lint_file(out: u8[>..]&, path: const u8[:]) -> i64 {
