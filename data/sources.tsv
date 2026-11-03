@@ -1,0 +1,5 @@
+path	sha256	version	license	source
+test/spec/commonmark-0.31.2.txt	257c41ad946f7a1414a499aca402a1aa8fdac3678532266611348c1cf54f4b80	0.31.2 (2024-01-28)	CC-BY-SA-4.0	https://raw.githubusercontent.com/commonmark/commonmark-spec/0.31.2/spec.txt
+test/spec/gfm-0.29.txt	7d8e5814befec287ac116786d81ff14e0adc9b13295b4494649e995408fd871c	0.29 (2019-04-06)	CC-BY-SA-4.0	https://raw.githubusercontent.com/github/cmark-gfm/27d942c8b0a62d192f616e5bf3578f4b6a89e180/test/spec.txt
+data/entities.json	d741d877ac77c4194c4ad526b5b4a19aef8dfe411ab840a466891cdbb9f362e6	downloaded 2026-11-03	CC-BY-4.0	https://html.spec.whatwg.org/entities.json
+data/unicode.txt	571c78a12778fc2ae5aa3a5fbc65383b249987512e3ed9e8edf549ca3a2126a6	Unicode 15.1.0	Unicode-3.0	python3 scripts/gen_unicode.py data/unicode.txt (Python unicodedata)
