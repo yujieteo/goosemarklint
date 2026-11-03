@@ -25,3 +25,5 @@ Read the parts (the docs, the tests and the fonts) before you start.
 - The docs.
 
 The kit has five parts: maps, logs, fonts, pens and cups.
+
+Pack bags, boats, trains, ships, cups and pens here.

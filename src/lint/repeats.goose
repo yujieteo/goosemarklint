@@ -155,13 +155,18 @@ fn file_count(F: Facts&, group: i64[:]) -> i64 {
 
 fn place(F: Facts&, f: Fact) -> u8[>..] { str(fact_path(F, f), ":", f.line) }
 
-fn places_of(F: Facts&, group: i64[:]) -> u8[>..] {
+fn places_of(F: Facts&, group: i64[:]) -> u8[>..], i64 {
     var out: u8[>..] = [];
+    var n = 0;
     for k, at in group {
-        if at > 0 { out.append(", "); }
-        out.append(place(F, F.items[k]));
+        let p = place(F, F.items[k]);
+        let seen = any(group[..at]) { place(F, F.items[it]) == p };
+        guard !seen;
+        if n > 0 { out.append(", "); }
+        out.append(p);
+        n++;
     }
-    return out;
+    return out, n;
 }
 
 fn shown_key(F: Facts&, group: i64[:]) -> u8[>..] {
@@ -185,11 +190,11 @@ fn report_group(out: u8[>..]&, F: Facts&, group: i64[:], sentence_places: const 
         _ => "pinned value",
     };
     let pin = first.kind == FactKind.Version || first.kind == FactKind.Hash;
-    let enough = if pin { file_count(F, group) >= 2 } else { group.len >= 2 };
+    let places, n = places_of(F, group);
+    let enough = if pin { file_count(F, group) >= 2 } else { n >= 2 };
     guard enough;
-    let places = places_of(F, group);
     guard first.kind != FactKind.List || position(split(sentence_places, '\0'), places) < 0;
-    format(out, fact_path(F, first), ":", first.line, ":", first.col, ": repeated-fact: warning: ", what, " \"", shown_key(F, group), "\" is in ", group.len, " places: ", places);
+    format(out, fact_path(F, first), ":", first.line, ":", first.col, ": repeated-fact: warning: ", what, " \"", shown_key(F, group), "\" is in ", n, " places: ", places);
     if first.kind == FactKind.List {
         let diffs = group_diffs(F, group);
         if diffs.len > 0 {
@@ -220,8 +225,10 @@ fn report_repeats(out: u8[>..]&, F: Facts&) {
     }
     var sentence_places: u8[>..] = [];
     for g in groups {
-        guard g.len >= 2 && F.items[order[g.at]].kind == FactKind.Sentence;
-        sentence_places.append(places_of(F, order[g.at..g.at + g.len]));
+        guard F.items[order[g.at]].kind == FactKind.Sentence;
+        let places, n = places_of(F, order[g.at..g.at + g.len]);
+        guard n >= 2;
+        sentence_places.append(places);
         sentence_places.push('\0');
     }
     for g in groups { report_group(out, F, order[g.at..g.at + g.len], sentence_places); }

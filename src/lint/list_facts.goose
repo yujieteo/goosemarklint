@@ -11,7 +11,7 @@ let MIN_LIST = 3;
 let FUZZY_LIST = 5;
 let LOOKUPS = 4;
 
-struct Side { miss: i64, matched: i64, glued: i64 }
+struct Side { miss: i64, matched: i64 }
 
 struct Link { list: i64, next: i64 }
 
@@ -67,7 +67,7 @@ fn conj_len(t: const u8[:], i: i64) -> i64 {
     return 0;
 }
 
-fn add_items(L: Lint&, t: const u8[:], from: i64, to: i64, bounded: bool, pos: const i64[:], line: i64) {
+fn add_items(L: Lint&, t: const u8[:], at: i64, from: i64, to: i64, bounded: bool, pos: const i64[:], line: i64) {
     var segs: Span[>..] = [];
     var start = from;
     var depth = 0;
@@ -95,7 +95,7 @@ fn add_items(L: Lint&, t: const u8[:], from: i64, to: i64, bounded: bool, pos: c
         fold_item(t, seg.at, seg.at + seg.len, buf);
         if buf.len > at { items.push(Span { at: at, len: buf.len - at }); }
     }
-    var first = from;
+    var first = at;
     while first < to && is_space(t[first]) { first++; }
     guard first < to;
     guard pos.len > 0 else {
@@ -107,7 +107,7 @@ fn add_items(L: Lint&, t: const u8[:], from: i64, to: i64, bounded: bool, pos: c
 }
 
 fn add_sentence_lists(L: Lint&, t: const u8[:], start: i64, end: i64, colon: i64, pos: const i64[:], line: i64) {
-    if colon >= 0 { add_items(L, t, colon + 1, end, true, pos, line); } else { add_items(L, t, start, end, false, pos, line); }
+    if colon >= 0 { add_items(L, t, start, colon + 1, end, true, pos, line); } else { add_items(L, t, start, start, end, false, pos, line); }
 }
 
 fn scan_lists(L: Lint&, t: const u8[:], pos: const i64[:], line: i64) {
@@ -121,7 +121,7 @@ fn scan_lists(L: Lint&, t: const u8[:], pos: const i64[:], line: i64) {
             if depth == 0 { open = i + 1; }
             depth++;
         } else if c == ')' {
-            if depth == 1 { add_items(L, t, open, i, true, pos, line); }
+            if depth == 1 { add_items(L, t, start, open, i, true, pos, line); }
             if depth > 0 { depth--; }
         } else if depth == 0 && c == ':' && spaced {
             colon = i;
@@ -187,39 +187,37 @@ fn add_diff(diffs: u8[>..]&, x: const u8[:]) {
 
 fn compare_side(F: Facts&, a: Fact, b: Fact, diffs: u8[>..]&) -> Side {
     let full = split(fact_key(F, b), '\n');
+    let items = split(fact_key(F, a), '\n');
     let ends = edges(F, a);
     let other = edges(F, b);
     var surplus = max(item_count(F, a) - item_count(F, b), 0);
-    var s = Side { miss: 0, matched: 0, glued: 0 };
-    for x in split(fact_key(F, a), '\n') {
+    var s = Side { miss: 0, matched: 0 };
+    for x in items {
         let k = position(ends, x);
         let inside = position(full, x) >= 0;
         let extra = (k == 1 || k == 2) && !inside && surplus > 0;
         if extra { surplus--; }
-        if k == 0 || k == 3 || extra {
-            if !inside { s.glued++; }
-        } else if inside {
+        if inside && k != 0 && k != 3 && !extra {
             s.matched++;
-        } else {
-            s.miss++;
-            let explained = any(other) { find(it, x) >= 0 };
-            if ends.len > 0 || !explained { add_diff(diffs, x); }
+        } else if !inside && k != 0 && k != 3 && !extra {
+            let glued = any(other) { position(items, it) < 0 && find(it, x) >= 0 };
+            if ends.len > 0 || !glued {
+                s.miss++;
+                add_diff(diffs, x);
+            }
         }
     }
     return s;
 }
 
-fn fits(f: Fact, s: Side, other: Side, tol: i64) -> bool {
-    let spare = if f.ends.len > 0 { 0 } else { other.glued };
-    return s.matched >= MIN_LIST && s.miss <= tol + spare;
-}
+fn fits(s: Side, tol: i64) -> bool { s.matched >= MIN_LIST && s.miss <= tol }
 
 fn list_diffs(F: Facts&, a: Fact, b: Fact, diffs: u8[>..]&) -> bool {
     let tol = if item_count(F, a) >= FUZZY_LIST && item_count(F, b) >= FUZZY_LIST { 1 } else { 0 };
     guard abs(item_count(F, a) - item_count(F, b)) <= tol else { return false; }
     let sa = compare_side(F, a, b, diffs);
     let sb = compare_side(F, b, a, diffs);
-    return fits(a, sa, sb, tol) && fits(b, sb, sa, tol);
+    return fits(sa, tol) && fits(sb, tol);
 }
 
 fn same_list(F: Facts&, a: Fact, b: Fact) -> bool {

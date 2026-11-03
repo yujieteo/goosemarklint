@@ -17,3 +17,5 @@ A decade of work on 1234567 files defaced the facade.
 Read the parts (the docs, the tests and the maps) before you start.
 
 The kit has five parts: maps, logs, fonts, docs and keys.
+
+Check the parts (cars, boats, trains, ships, roads, maps) now.
