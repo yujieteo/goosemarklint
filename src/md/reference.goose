@@ -146,17 +146,17 @@ fn lookup_ref(d: Doc&, raw: const u8[:]) -> i64 {
     return find_ref(d, key);
 }
 
-fn add_ref(d: Doc&, key: const u8[:], dest: Span, title: Span) {
+fn add_ref(d: Doc&, key: const u8[:], dest: Span, title: Span, line: i64) {
     guard find_ref(d, key) < 0;
     let id = d.refs.len;
     let label = put_text(d, key);
     let head = d.ref_index.get(hash(key));
     let chain = if head { head } else { -1 };
-    d.refs.push(Ref { label: label, dest: dest, title: title, chain: chain });
+    d.refs.push(Ref { label: label, dest: dest, title: title, chain: chain, line: line });
     d.ref_index.insert(hash(key), id);
 }
 
-fn parse_reference(d: Doc&, s: const u8[:]) -> i64 {
+fn parse_reference(d: Doc&, s: const u8[:], line: i64) -> i64 {
     let label_len = link_label_length(s, 0);
     guard label_len > 0 && label_len < s.len && s[label_len] == ':' else { return 0; }
     let dest_at = skip_spnl(s, label_len + 1);
@@ -179,7 +179,7 @@ fn parse_reference(d: Doc&, s: const u8[:]) -> i64 {
     var key: u8[>..] = [];
     normalize_label(key, s[1..label_len - 1]);
     guard key.len > 0 else { return 0; }
-    add_ref(d, key, dest, title);
+    add_ref(d, key, dest, title, line);
     return end;
 }
 
@@ -188,7 +188,7 @@ fn strip_references(d: Doc&, para: i64) {
     loop {
         let c = d.nodes[para].content;
         guard c.len > 0 && d.text[c.at] == '[' else { break; }
-        let n = parse_reference(d, d.text[c.at..c.at + c.len]);
+        let n = parse_reference(d, d.text[c.at..c.at + c.len], d.nodes[para].line + removed_lines);
         guard n > 0 else { break; }
         for k in n { if d.text[c.at + k] == '\n' { removed_lines++; } }
         d.nodes[para].content = Span { at: c.at + n, len: c.len - n };

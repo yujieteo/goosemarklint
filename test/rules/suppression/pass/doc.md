@@ -1,3 +1,5 @@
+# Test
+
 <!-- goosemarklint-disable-next-line ste-ing ste-passive: a test of two rules -->
 The tool is running and the file is read.
 

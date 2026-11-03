@@ -1,23 +1,76 @@
+./MD001/fail/doc.md:3:1: MD001: heading level 3 after level 1: use level 2
+./MD003/fail/doc.md:3:1: MD003: heading style setext: use atx, as the first heading
+./MD004/fail/doc.md:8:1: MD004: list marker "*": use "-", as the first list
+./MD005/fail/doc.md:4:2: MD005: list item indent is not the same as the other items: align the markers
+./MD007/fail/doc.md:4:5: MD007: list indent 4: use 2
+./MD009/fail/doc.md:3:18: MD009: 3 trailing spaces: delete them, or use 2 for a line break
+./MD010/fail/doc.md:3:9: MD010: hard tab: use spaces
+./MD011/fail/doc.md:3:6: MD011: reversed link (the site)[site.md]: write [text](url)
+./MD012/fail/doc.md:5:1: MD012: 2 blank lines in a row: use 1
+./MD014/fail/doc.md:4:1: MD014: "$" before a command that shows no output: delete the "$"
+./MD018/fail/doc.md:3:1: MD018: no space after the hash of a heading: add a space
+./MD019/fail/doc.md:3:4: MD019: 2 spaces after the opening hashes: use 1 space
+./MD020/fail/doc.md:3:8: MD020: no space before the closing hashes of a closed heading: add a space
+./MD021/fail/doc.md:3:9: MD021: 2 spaces before the closing hashes: use 1 space
+./MD022/fail/doc.md:3:1: MD022: heading has no blank line below it: add one
+./MD023/fail/doc.md:3:1: MD023: heading does not start at the left edge: delete the indent
+./MD024/fail/doc.md:7:1: MD024: heading "Part" is a copy of an earlier heading: change the text
+./MD025/fail/doc.md:5:1: MD025: more than one level 1 heading: keep one title
+./MD026/fail/doc.md:3:8: MD026: heading ends with ".": delete the punctuation
+./MD027/fail/doc.md:3:3: MD027: more than 1 space after the block quote marker: use 1 space
+./MD028/fail/doc.md:4:1: MD028: blank line between two block quotes: delete it, or put text between them
+./MD029/fail/doc.md:4:1: MD029: list number 3: use 2, and count up by 1
+./MD030/fail/doc.md:3:2: MD030: 2 spaces after the list marker: use 1
+./MD030/fail/doc.md:4:2: MD030: 2 spaces after the list marker: use 1
+./MD031/fail/doc.md:4:1: MD031: fenced code block has no blank line above it: add one
+./MD032/fail/doc.md:4:1: MD032: list has no blank line above it: add one
+./MD033/fail/doc.md:3:13: MD033: HTML element <b>: use Markdown
+./MD034/fail/doc.md:3:6: MD034: bare URL: put it in <> or in a link
+./MD035/fail/doc.md:9:1: MD035: thematic break "***": use "---", as the first one
+./MD036/fail/doc.md:3:1: MD036: emphasis "Part" is used as a heading: use a heading
+./MD037/fail/doc.md:3:14: MD037: space inside the emphasis marker "*": delete it
+./MD037/fail/doc.md:3:19: MD037: space inside the emphasis marker "*": delete it
+./MD038/fail/doc.md:3:5: MD038: space at the start of the code span: delete it
+./MD039/fail/doc.md:3:6: MD039: space at the start of the link text: delete it
+./MD040/fail/doc.md:3:1: MD040: fenced code block has no language: add one after the fence
+./MD041/fail/doc.md:1:1: MD041: first line is not a level 1 heading: start the file with a title
+./MD042/fail/doc.md:3:6: MD042: link has no destination: add a URL
+./MD045/fail/doc.md:3:1: MD045: image has no alternative text: add it in the brackets
+./MD046/fail/doc.md:7:5: MD046: code block style indented: use fenced, as the first code block
+./MD047/fail/doc.md:3:17: MD047: file does not end with a newline: add one
+./MD048/fail/doc.md:7:1: MD048: code fence "~": use "`", as the first code fence
+./MD049/fail/doc.md:3:24: MD049: emphasis marker "_": use "*", as the first emphasis
+./MD049/fail/doc.md:3:30: MD049: emphasis marker "_": use "*", as the first emphasis
+./MD050/fail/doc.md:3:26: MD050: strong marker "_": use "*", as the first strong
+./MD050/fail/doc.md:3:33: MD050: strong marker "_": use "*", as the first strong
+./MD051/fail/doc.md:3:6: MD051: link fragment "#nothing" has no heading or anchor: fix the link
+./MD052/fail/doc.md:3:6: MD052: reference "site" has no definition: add one, or fix the label
+./MD053/fail/doc.md:5:1: MD053: reference definition "site" is not used: delete it
+./MD055/fail/doc.md:5:7: MD055: table row has no trailing pipe: add one, as the first row
+./MD056/fail/doc.md:5:1: MD056: table row has 1 cells, the header has 2: make them the same
+./MD058/fail/doc.md:4:1: MD058: table has no blank line above it: add one
+./MD059/fail/doc.md:3:6: MD059: link text "here" does not say where the link goes: describe the target
+./MD060/fail/doc.md:5:6: MD060: table pipe is not in line with the header pipe: align the columns
 ./agents-imperative/fail/agents/AGENTS.md:4:3: agents-imperative: list item does not start with an imperative verb
 ./agents-imperative/fail/claude/CLAUDE.md:3:4: agents-imperative: list item does not start with an imperative verb
-./html-comment/fail/blocks.md:2:1: html-comment: HTML comment: delete it, or move the fact into code or a test
-./html-comment/fail/blocks.md:5:28: html-comment: HTML comment: delete it, or move the fact into code or a test
-./html-comment/fail/blocks.md:7:72: html-comment: HTML comment: delete it, or move the fact into code or a test
-./html-comment/fail/doc.md:1:1: html-comment: HTML comment: delete it, or move the fact into code or a test
-./html-comment/fail/doc.md:3:19: html-comment: HTML comment: delete it, or move the fact into code or a test
-./llm-bold-label/fail/doc.md:1:1: llm-bold-label: each list item starts with a bold label: delete the labels or use a table
-./llm-contrast/fail/doc.md:1:1: llm-contrast: "not X, but Y" contrast: state Y
-./llm-contrast/fail/doc.md:3:13: llm-contrast: "not X, but Y" contrast: state Y
-./llm-em-dash/fail/doc.md:1:18: llm-em-dash: em dash: write two sentences or use a comma
+./html-comment/fail/blocks.md:5:1: html-comment: HTML comment: delete it, or move the fact into code or a test
+./html-comment/fail/blocks.md:9:28: html-comment: HTML comment: delete it, or move the fact into code or a test
+./html-comment/fail/blocks.md:11:72: html-comment: HTML comment: delete it, or move the fact into code or a test
+./html-comment/fail/doc.md:3:1: html-comment: HTML comment: delete it, or move the fact into code or a test
+./html-comment/fail/doc.md:5:19: html-comment: HTML comment: delete it, or move the fact into code or a test
+./llm-bold-label/fail/doc.md:3:1: llm-bold-label: each list item starts with a bold label: delete the labels or use a table
+./llm-contrast/fail/doc.md:3:1: llm-contrast: "not X, but Y" contrast: state Y
+./llm-contrast/fail/doc.md:5:13: llm-contrast: "not X, but Y" contrast: state Y
+./llm-em-dash/fail/doc.md:3:18: llm-em-dash: em dash: write two sentences or use a comma
 ./llm-heading-emoji/fail/doc.md:1:3: llm-heading-emoji: emoji in a heading: delete it
 ./llm-heading-emoji/fail/fe0f/doc.md:1:3: llm-heading-emoji: emoji in a heading: delete it
-./llm-heavy-bold/fail/doc.md:1:1: llm-heavy-bold: paragraph has 3 bold spans: keep bold for one key term
-./llm-hedge/fail/doc.md:1:1: llm-hedge: "Basically" is filler: delete it
-./llm-hedge/fail/doc.md:1:24: llm-hedge: "very" is filler: delete it
-./llm-rule-of-three/fail/doc.md:1:13: llm-rule-of-three: "fast, simple, and reliable" is a rule-of-three adjective list: keep the one that matters
-./llm-stock/fail/doc.md:1:4: llm-stock: "delve" is an LLM stock word: use "look at"
-./llm-stock/fail/doc.md:3:1: llm-stock: "In conclusion" is an LLM stock phrase: rewrite it
-./llm-stock/fail/doc.md:5:13: llm-stock: "robust" is an LLM stock word: use "strong"
+./llm-heavy-bold/fail/doc.md:3:1: llm-heavy-bold: paragraph has 3 bold spans: keep bold for one key term
+./llm-hedge/fail/doc.md:3:1: llm-hedge: "Basically" is filler: delete it
+./llm-hedge/fail/doc.md:3:24: llm-hedge: "very" is filler: delete it
+./llm-rule-of-three/fail/doc.md:3:13: llm-rule-of-three: "fast, simple, and reliable" is a rule-of-three adjective list: keep the one that matters
+./llm-stock/fail/doc.md:3:4: llm-stock: "delve" is an LLM stock word: use "look at"
+./llm-stock/fail/doc.md:5:1: llm-stock: "In conclusion" is an LLM stock phrase: rewrite it
+./llm-stock/fail/doc.md:7:13: llm-stock: "robust" is an LLM stock word: use "strong"
 ./llm-summary-heading/fail/doc.md:5:1: llm-summary-heading: summary heading "summary" at the end: delete the summary
 ./readme-purpose/fail/none/README.md:3:1: readme-purpose: README has no purpose paragraph after the title
 ./readme-purpose/fail/two/README.md:3:1: readme-purpose: first paragraph has 2 sentences: state the purpose in 1 sentence
@@ -25,22 +78,22 @@
 ./skill-front-matter/fail/no-description/SKILL.md:5:1: skill-front-matter: front matter has no description
 ./skill-front-matter/fail/no-front-matter/SKILL.md:1:1: skill-front-matter: SKILL.md has no front matter: add name and description
 ./skill-front-matter/fail/no-when/SKILL.md:3:1: skill-front-matter: description does not say when to load the skill: add "Use when ..."
-./ste-contraction/fail/doc.md:1:19: ste-contraction: "doesn't" is a contraction: write "does not"
-./ste-contraction/fail/doc.md:3:1: ste-contraction: "Don't" is a contraction: write "do not"
-./ste-ing/fail/doc.md:1:13: ste-ing: warning: "running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
-./ste-ing/fail/doc.md:3:14: ste-ing: warning: "running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
-./ste-ing/fail/doc.md:5:24: ste-ing: warning: "running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
-./ste-ing/fail/doc.md:7:4: ste-ing: warning: "Running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
-./ste-ing/fail/doc.md:11:16: ste-ing: warning: "running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
-./ste-passive/fail/doc.md:1:10: ste-passive: "is read" is passive voice: name who does the action
-./ste-passive/fail/doc.md:3:10: ste-passive: "was not changed" is passive voice: name who does the action
-./ste-semicolon/fail/doc.md:1:16: ste-semicolon: semicolon: write two sentences
-./ste-sentence-length/fail/doc.md:1:1: ste-sentence-length: sentence has 29 words, limit 25
-./ste-sentence-length/fail/doc.md:3:1: ste-sentence-length: instruction has 24 words, limit 20
-./ste-word/fail/doc.md:1:1: ste-word: "Utilize" is not STE: use "use"
-./ste-word/fail/doc.md:3:14: ste-word: "in order to" is not STE: use "to"
-./ste-word/fail/doc.md:5:14: ste-word: "whitelist" is not STE: use "allow-list"
-./suppression/fail/doc.md:1:1: suppression: directive has no reason: write <!-- goosemarklint-disable-next-line RULE: reason -->
-./suppression/fail/doc.md:4:1: suppression: directive names an unknown rule: write <!-- goosemarklint-disable-next-line RULE: reason -->
-./suppression/fail/doc.md:7:1: suppression: directive suppresses nothing on line 8
-./suppression/fail/doc.md:10:1: suppression: unknown directive: write <!-- goosemarklint-disable-next-line RULE: reason -->
+./ste-contraction/fail/doc.md:3:19: ste-contraction: "doesn't" is a contraction: write "does not"
+./ste-contraction/fail/doc.md:5:1: ste-contraction: "Don't" is a contraction: write "do not"
+./ste-ing/fail/doc.md:3:13: ste-ing: warning: "running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
+./ste-ing/fail/doc.md:5:14: ste-ing: warning: "running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
+./ste-ing/fail/doc.md:7:24: ste-ing: warning: "running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
+./ste-ing/fail/doc.md:9:4: ste-ing: warning: "Running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
+./ste-ing/fail/doc.md:13:16: ste-ing: warning: "running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
+./ste-passive/fail/doc.md:3:10: ste-passive: "is read" is passive voice: name who does the action
+./ste-passive/fail/doc.md:5:10: ste-passive: "was not changed" is passive voice: name who does the action
+./ste-semicolon/fail/doc.md:3:16: ste-semicolon: semicolon: write two sentences
+./ste-sentence-length/fail/doc.md:3:1: ste-sentence-length: sentence has 29 words, limit 25
+./ste-sentence-length/fail/doc.md:5:1: ste-sentence-length: instruction has 24 words, limit 20
+./ste-word/fail/doc.md:3:1: ste-word: "Utilize" is not STE: use "use"
+./ste-word/fail/doc.md:5:14: ste-word: "in order to" is not STE: use "to"
+./ste-word/fail/doc.md:7:14: ste-word: "whitelist" is not STE: use "allow-list"
+./suppression/fail/doc.md:3:1: suppression: directive has no reason: write <!-- goosemarklint-disable-next-line RULE: reason -->
+./suppression/fail/doc.md:6:1: suppression: directive names an unknown rule: write <!-- goosemarklint-disable-next-line RULE: reason -->
+./suppression/fail/doc.md:9:1: suppression: directive suppresses nothing on line 10
+./suppression/fail/doc.md:12:1: suppression: unknown directive: write <!-- goosemarklint-disable-next-line RULE: reason -->

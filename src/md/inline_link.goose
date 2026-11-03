@@ -64,6 +64,7 @@ fn parse_ref_target(d: Doc&, p: Inl&, opener: Bracket, start: i64, t: Target&) -
     }
     if n == 0 { p.pos = start; } else { p.pos = before + n; }
     guard r >= 0 else { return false; }
+    d.refs[r].used = true;
     t.dest = d.refs[r].dest;
     t.title = d.refs[r].title;
     return true;
@@ -97,6 +98,7 @@ fn parse_close_bracket(d: Doc&, p: Inl&, parent: i64) {
         return;
     }
     let link = new_node(d, if opener.image { Kind.Image } else { Kind.Link }, 0, 0);
+    d.nodes[link].src = d.nodes[opener.node].content.at;
     d.nodes[link].info = t.dest;
     d.nodes[link].title = t.title;
     var n = d.nodes[opener.node].next;
@@ -151,6 +153,7 @@ fn parse_pointy_autolink(d: Doc&, p: Inl&, parent: i64) -> bool {
     if !email { end = scan_uri(s, p.pos); }
     guard end >= 0 else { return false; }
     let link = new_node(d, Kind.Link, 0, 0);
+    d.nodes[link].src = p.at + p.pos;
     var raw: u8[>..] = [];
     if email { raw.append("mailto:"); }
     raw.append(s[p.pos + 1..end - 1]);
