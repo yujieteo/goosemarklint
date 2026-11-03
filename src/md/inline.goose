@@ -39,7 +39,8 @@ fn parse_backticks(d: Doc&, p: Inl&, parent: i64) {
         if body.len > 1 && body[0] == ' ' && body[body.len - 1] == ' ' && !is_blank_spaces(body) {
             span = Span { at: span.at + 1, len: span.len - 2 };
         }
-        add_leaf(d, parent, Kind.Code, span);
+        let code = add_leaf(d, parent, Kind.Code, span);
+        d.nodes[code].src = p.at + start;
         p.pos = i;
         return;
     }
@@ -65,7 +66,8 @@ fn parse_entity(d: Doc&, p: Inl&, parent: i64) -> bool {
     let at = d.text.len;
     let n = decode_entity(d.text, subject(d, p), p.pos);
     guard n > 0 else { return false; }
-    add_leaf(d, parent, Kind.Text, Span { at: at, len: d.text.len - at });
+    let t = add_leaf(d, parent, Kind.Text, Span { at: at, len: d.text.len - at });
+    d.nodes[t].src = p.at + p.pos;
     p.pos += n;
     return true;
 }

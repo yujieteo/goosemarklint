@@ -1,0 +1,627 @@
+ban	utilize	use
+ban	utilizes	uses
+ban	utilized	used
+ban	utilise	use
+ban	utilises	uses
+ban	utilised	used
+ban	utilization	use
+ban	commence	start
+ban	commences	starts
+ban	commenced	started
+ban	initiate	start
+ban	initiates	starts
+ban	initiated	started
+ban	terminate	stop
+ban	terminates	stops
+ban	terminated	stopped
+ban	facilitate	help
+ban	facilitates	helps
+ban	demonstrate	show
+ban	demonstrates	shows
+ban	demonstrated	showed
+ban	endeavor	try
+ban	endeavour	try
+ban	attempt	try
+ban	attempts	tries
+ban	obtain	get
+ban	obtains	gets
+ban	obtained	got
+ban	purchase	buy
+ban	assist	help
+ban	assists	helps
+ban	approximately	about
+ban	subsequently	then
+ban	prior to	before
+ban	in order to	to
+ban	due to the fact that	because
+ban	in the event that	if
+ban	at this point in time	now
+ban	at the present time	now
+ban	a number of	some
+ban	a large number of	many
+ban	the majority of	most
+ban	sufficient	enough
+ban	numerous	many
+ban	additional	more
+ban	ascertain	find
+ban	regarding	about
+ban	with regard to	about
+ban	with respect to	about
+ban	whereas	but
+ban	via	through
+ban	whilst	while
+ban	amongst	among
+ban	upon	on
+ban	perform	do
+ban	performs	does
+ban	performed	did
+ban	modify	change
+ban	modifies	changes
+ban	modified	changed
+ban	ensure	make sure
+ban	ensures	makes sure
+ban	locate	find
+ban	locates	finds
+ban	possess	have
+ban	possesses	has
+ban	remainder	rest
+ban	retain	keep
+ban	retains	keeps
+ban	transmit	send
+ban	transmits	sends
+ban	inform	tell
+ban	informs	tells
+ban	notify	tell
+ban	notifies	tells
+ban	functionality	function
+ban	methodology	method
+ban	usage	use
+ban	individuals	people
+ban	optimal	best
+ban	expedite	make faster
+ban	currently	now
+ban	presently	now
+ban	frequently	often
+ban	inquire	ask
+ban	accomplish	do
+ban	accomplishes	does
+ban	consequently	as a result
+ban	nevertheless	but
+ban	furthermore	also
+ban	moreover	also
+ban	additionally	also
+ban	in addition	also
+ban	whether or not	whether
+ban	has the ability to	can
+ban	is able to	can
+ban	are able to	can
+ban	be able to	can
+ban	on a daily basis	daily
+ban	until such time as	until
+ban	for the purpose of	for
+ban	in close proximity to	near
+contraction	aren't	are not
+contraction	can't	cannot
+contraction	couldn't	could not
+contraction	didn't	did not
+contraction	doesn't	does not
+contraction	don't	do not
+contraction	hadn't	had not
+contraction	hasn't	has not
+contraction	haven't	have not
+contraction	isn't	is not
+contraction	mustn't	must not
+contraction	needn't	need not
+contraction	shan't	shall not
+contraction	shouldn't	should not
+contraction	wasn't	was not
+contraction	weren't	were not
+contraction	won't	will not
+contraction	wouldn't	would not
+contraction	ain't	is not
+contraction	it's	it is
+contraction	that's	that is
+contraction	there's	there is
+contraction	here's	here is
+contraction	what's	what is
+contraction	who's	who is
+contraction	where's	where is
+contraction	how's	how is
+contraction	let's	let us
+contraction	he's	he is
+contraction	she's	she is
+contraction	i'm	I am
+contraction	you're	you are
+contraction	we're	we are
+contraction	they're	they are
+contraction	i've	I have
+contraction	you've	you have
+contraction	we've	we have
+contraction	they've	they have
+contraction	could've	could have
+contraction	should've	should have
+contraction	would've	would have
+contraction	might've	might have
+contraction	must've	must have
+contraction	i'll	I will
+contraction	you'll	you will
+contraction	he'll	he will
+contraction	she'll	she will
+contraction	it'll	it will
+contraction	we'll	we will
+contraction	they'll	they will
+contraction	that'll	that will
+contraction	there'll	there will
+contraction	i'd	I would
+contraction	you'd	you would
+contraction	he'd	he would
+contraction	she'd	she would
+contraction	it'd	it would
+contraction	we'd	we would
+contraction	they'd	they would
+contraction	that'd	that would
+contraction	y'all	you
+allow	string
+allow	thing
+allow	during
+allow	nothing
+allow	something
+allow	anything
+allow	everything
+allow	bring
+allow	king
+allow	ring
+allow	sing
+allow	sting
+allow	spring
+allow	swing
+allow	wing
+allow	cling
+allow	fling
+allow	sling
+allow	wring
+allow	ping
+allow	ding
+allow	ceiling
+allow	morning
+allow	evening
+allow	heading
+allow	padding
+allow	warning
+allow	sibling
+allow	offspring
+allow	lightning
+allow	wedding
+allow	pudding
+allow	viking
+allow	darling
+allow	herring
+allow	awning
+allow	inkling
+allow	bearing
+allow	coupling
+allow	fitting
+allow	housing
+allow	wiring
+allow	tubing
+allow	casing
+allow	coating
+allow	spacing
+allow	rating
+allow	timing
+allow	setting
+allow	mapping
+allow	binding
+allow	kerning
+allow	meaning
+allow	wording
+allow	need
+allow	seed
+allow	feed
+allow	speed
+allow	weed
+allow	deed
+allow	breed
+allow	bleed
+allow	heed
+allow	greed
+allow	creed
+allow	hundred
+allow	kindred
+allow	naked
+allow	sacred
+allow	wicked
+allow	rugged
+allow	indeed
+allow	embed
+allow	proceed
+allow	exceed
+allow	succeed
+be	is
+be	are
+be	was
+be	were
+be	be
+be	been
+be	being
+be	am
+be	isn't
+be	aren't
+be	wasn't
+be	weren't
+adverb	not
+adverb	also
+adverb	always
+adverb	never
+adverb	often
+adverb	still
+adverb	then
+adverb	now
+adverb	already
+adverb	only
+adverb	just
+adverb	usually
+adverb	sometimes
+adverb	all
+adverb	both
+adverb	each
+adverb	first
+participle	done
+participle	made
+participle	written
+participle	given
+participle	taken
+participle	shown
+participle	known
+participle	built
+participle	sent
+participle	kept
+participle	found
+participle	held
+participle	left
+participle	lost
+participle	paid
+participle	said
+participle	seen
+participle	sold
+participle	told
+participle	thought
+participle	brought
+participle	bought
+participle	caught
+participle	taught
+participle	chosen
+participle	driven
+participle	eaten
+participle	fallen
+participle	forgotten
+participle	frozen
+participle	gotten
+participle	hidden
+participle	broken
+participle	spoken
+participle	stolen
+participle	worn
+participle	torn
+participle	born
+participle	drawn
+participle	grown
+participle	thrown
+participle	flown
+participle	blown
+participle	set
+participle	put
+participle	cut
+participle	hit
+participle	read
+participle	let
+participle	shut
+participle	spent
+participle	meant
+participle	bound
+participle	ground
+participle	understood
+participle	undone
+participle	rewritten
+participle	overridden
+participle	withheld
+participle	run
+participle	begun
+participle	sung
+participle	sunk
+participle	struck
+participle	stuck
+participle	spun
+participle	won
+participle	swept
+participle	slept
+participle	fed
+participle	led
+participle	met
+participle	bred
+participle	laid
+participle	split
+participle	spread
+participle	cast
+participle	cost
+participle	burnt
+participle	learnt
+participle	spelt
+participle	dealt
+participle	felt
+participle	heard
+participle	hung
+participle	lit
+participle	shot
+participle	sought
+participle	beaten
+participle	bitten
+participle	ridden
+participle	risen
+participle	shaken
+participle	sworn
+participle	woken
+participle	withdrawn
+participle	mistaken
+participle	forbidden
+participle	forgiven
+participle	overwritten
+participle	rebuilt
+participle	rerun
+participle	reset
+participle	upset
+participle	quit
+participle	shed
+verb	accept
+verb	act
+verb	add
+verb	adjust
+verb	allow
+verb	answer
+verb	append
+verb	apply
+verb	archive
+verb	ask
+verb	assign
+verb	attach
+verb	avoid
+verb	bind
+verb	block
+verb	branch
+verb	break
+verb	bring
+verb	build
+verb	bump
+verb	call
+verb	cancel
+verb	capture
+verb	change
+verb	check
+verb	choose
+verb	cite
+verb	clean
+verb	clear
+verb	click
+verb	clone
+verb	close
+verb	collect
+verb	combine
+verb	come
+verb	commit
+verb	compare
+verb	compile
+verb	compute
+verb	configure
+verb	confirm
+verb	connect
+verb	consider
+verb	continue
+verb	convert
+verb	copy
+verb	count
+verb	create
+verb	cut
+verb	debug
+verb	decide
+verb	declare
+verb	define
+verb	delete
+verb	deploy
+verb	describe
+verb	design
+verb	detect
+verb	disable
+verb	do
+verb	don't
+verb	download
+verb	drag
+verb	draw
+verb	drop
+verb	edit
+verb	emit
+verb	enable
+verb	end
+verb	enter
+verb	escalate
+verb	escape
+verb	examine
+verb	exclude
+verb	execute
+verb	exit
+verb	expand
+verb	explain
+verb	export
+verb	extract
+verb	fail
+verb	fetch
+verb	fill
+verb	filter
+verb	find
+verb	finish
+verb	fix
+verb	flag
+verb	follow
+verb	force
+verb	fork
+verb	format
+verb	gather
+verb	generate
+verb	get
+verb	give
+verb	go
+verb	grant
+verb	group
+verb	handle
+verb	hide
+verb	hold
+verb	ignore
+verb	import
+verb	include
+verb	increase
+verb	inspect
+verb	install
+verb	keep
+verb	kill
+verb	label
+verb	launch
+verb	leave
+verb	let
+verb	limit
+verb	link
+verb	list
+verb	load
+verb	lock
+verb	log
+verb	look
+verb	make
+verb	mark
+verb	match
+verb	measure
+verb	merge
+verb	move
+verb	name
+verb	never
+verb	always
+verb	note
+verb	open
+verb	order
+verb	output
+verb	pass
+verb	paste
+verb	pause
+verb	pick
+verb	pin
+verb	place
+verb	plan
+verb	point
+verb	poll
+verb	prefer
+verb	prepare
+verb	press
+verb	print
+verb	profile
+verb	protect
+verb	prove
+verb	publish
+verb	pull
+verb	push
+verb	put
+verb	query
+verb	quote
+verb	raise
+verb	read
+verb	rebase
+verb	rebuild
+verb	record
+verb	reduce
+verb	refer
+verb	refresh
+verb	reject
+verb	release
+verb	reload
+verb	remove
+verb	rename
+verb	render
+verb	repeat
+verb	replace
+verb	reply
+verb	report
+verb	request
+verb	rerun
+verb	reset
+verb	resolve
+verb	respond
+verb	restart
+verb	restore
+verb	resume
+verb	retry
+verb	return
+verb	reuse
+verb	review
+verb	revert
+verb	rewrite
+verb	run
+verb	save
+verb	scan
+verb	search
+verb	see
+verb	select
+verb	send
+verb	set
+verb	ship
+verb	show
+verb	sign
+verb	skip
+verb	sort
+verb	specify
+verb	split
+verb	squash
+verb	start
+verb	state
+verb	stay
+verb	stop
+verb	store
+verb	submit
+verb	swap
+verb	switch
+verb	sync
+verb	tag
+verb	take
+verb	tell
+verb	test
+verb	think
+verb	track
+verb	trace
+verb	treat
+verb	trigger
+verb	trim
+verb	try
+verb	turn
+verb	type
+verb	undo
+verb	unpin
+verb	update
+verb	upgrade
+verb	upload
+verb	use
+verb	validate
+verb	verify
+verb	view
+verb	wait
+verb	watch
+verb	weaken
+verb	wrap
+verb	write
+abbreviation	e.g
+abbreviation	i.e
+abbreviation	etc
+abbreviation	vs
+abbreviation	cf
+abbreviation	fig
+abbreviation	approx
+abbreviation	mr
+abbreviation	mrs
+abbreviation	ms
+abbreviation	dr
+abbreviation	st
+abbreviation	no

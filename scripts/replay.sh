@@ -21,11 +21,11 @@ fi
 goose build -q "$work/base/src/main.goose" -o "$work/base.bin" >/dev/null
 goose build -q "$root/src/main.goose" -o "$work/branch.bin" >/dev/null
 
-files=("$root"/test/corpus/*.md)
+mapfile -t files < <(find "$root/test/corpus" -name '*.md' | sort)
 limit=$((${#files[@]} / 5))
 changed=0
 for f in "${files[@]}"; do
-  name=$(basename "$f")
+  name=${f#"$root/"}
   { "$work/base.bin" tree "$f" || echo "exit $?"; } >"$work/base.out" 2>&1
   { "$work/branch.bin" tree "$f" || echo "exit $?"; } >"$work/branch.out" 2>&1
   if ! diff -u --label "base/$name" --label "branch/$name" "$work/base.out" "$work/branch.out"; then

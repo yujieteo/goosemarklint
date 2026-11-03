@@ -26,7 +26,7 @@ for f in $(git -C "$root" ls-files -co --exclude-standard '*.py'); do
   fi
 done
 
-for m in $(git -C "$root" ls-files -co --exclude-standard '*.sm.md'); do
+for m in $(git -C "$root" ls-files -co --exclude-standard '*.sm.md' ':!test/corpus'); do
   mapfile -t cited < <(awk -F '|' '
     !/^\|/ { col = 0; next }
     !col { for (i = 2; i < NF; i++) { h = $i; gsub(/ /, "", h); if (h == "source") col = i } next }
@@ -47,5 +47,6 @@ done
 tail -n +2 "$root/data/sources.tsv" | awk -F '\t' -v root="$root" '{ print $2 "  " root "/" $1 }' >"$out/sources.sha256"
 sha256sum --check --quiet "$out/sources.sha256"
 
+"$root/scripts/rule_tests.sh" "$out/main" "$@"
 "$root/scripts/replay.sh" "$@"
 echo "check: all checks passed"

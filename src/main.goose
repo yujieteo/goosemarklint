@@ -4,8 +4,10 @@ import dictionary;
 import md.node;
 import md.parse;
 import md.tree;
+import lint.context;
+import lint.check;
 
-let USAGE = "usage: goosemarklint tree <file>...\n";
+let USAGE = "usage: goosemarklint check <path>... | rules | tree <file>...\n";
 
 fn print_file_tree(path: const u8[:]) -> bool {
     var input: u8[>..] = [];
@@ -26,13 +28,29 @@ fn print_file_tree(path: const u8[:]) -> bool {
     return true;
 }
 
+fn print_trees(paths: u8[:][:]) -> i64 {
+    var ok = true;
+    for path in paths { if !print_file_tree(path) { ok = false; } }
+    return if ok { 0 } else { 1 };
+}
+
+fn print_rules() -> i64 {
+    for id in RULE_IDS { write_stdout(str(id, "\n")); }
+    return 0;
+}
+
 fn main() {
     let a = args();
-    if a.len < 3 || a[1] != "tree" {
+    let command = if a.len >= 2 { a[1] } else { "" };
+    let code = if command == "check" && a.len >= 3 {
+        run_check(a[2..])
+    } else if command == "tree" && a.len >= 3 {
+        print_trees(a[2..])
+    } else if command == "rules" && a.len == 2 {
+        print_rules()
+    } else {
         write_stderr(USAGE);
-        exit(2);
-    }
-    var ok = true;
-    for path in a[2..] { if !print_file_tree(path) { ok = false; } }
-    if !ok { exit(1); }
+        2
+    };
+    if code != 0 { exit(code); }
 }

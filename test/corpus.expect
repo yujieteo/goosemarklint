@@ -1,0 +1,347 @@
+./ap242-gauge/README.md:3:1: readme-purpose: first paragraph has 2 sentences: state the purpose in 1 sentence
+./ap242-gauge/README.md:10:98: ste-passive: "are shown" is passive voice: name who does the action
+./ap242-gauge/README.md:12:4: llm-bold-label: each list item starts with a bold label: delete the labels or use a table
+./ap242-gauge/README.md:29:3: ste-sentence-length: sentence has 27 words, limit 25
+./ap242-gauge/README.md:34:2: ste-sentence-length: sentence has 26 words, limit 25
+./ap242-gauge/README.md:34:15: ste-passive: "is fitted" is passive voice: name who does the action
+./ap242-gauge/README.md:51:1: ste-sentence-length: sentence has 37 words, limit 25
+./ap242-gauge/README.md:51:167: ste-ing: "drawing" is an -ing word: use another verb form
+./ap242-gauge/README.md:53:40: ste-ing: "working" is an -ing word: use another verb form
+./ap242-gauge/README.md:53:174: ste-ing: "working" is an -ing word: use another verb form
+./femahoy/AGENTS.md:18:3: ste-sentence-length: instruction has 21 words, limit 20
+./femahoy/AGENTS.md:18:30: ste-ing: "existing" is an -ing word: use another verb form
+./femahoy/AGENTS.md:18:253: ste-ing: "existing" is an -ing word: use another verb form
+./femahoy/AGENTS.md:22:88: ste-ing: "failing" is an -ing word: use another verb form
+./femahoy/AGENTS.md:22:126: ste-ing: "passing" is an -ing word: use another verb form
+./femahoy/README.md:3:1: readme-purpose: first paragraph has 2 sentences: state the purpose in 1 sentence
+./femahoy/README.md:42:4: ste-sentence-length: sentence has 30 words, limit 25
+./femahoy/README.md:57:83: ste-ing: "pitching" is an -ing word: use another verb form
+./femahoy/README.md:59:26: ste-ing: "pulsating" is an -ing word: use another verb form
+./femahoy/README.md:59:113: ste-ing: "pulsating" is an -ing word: use another verb form
+./femahoy/README.md:70:30: ste-ing: "buckling" is an -ing word: use another verb form
+./goosestrike/README.md:3:1: readme-purpose: first paragraph has 2 sentences: state the purpose in 1 sentence
+./goosestrike/README.md:8:1: ste-sentence-length: sentence has 28 words, limit 25
+./goosestrike/README.md:10:1: ste-sentence-length: sentence has 28 words, limit 25
+./goosestrike/README.md:30:54: ste-sentence-length: sentence has 60 words, limit 25
+./goosestrike/README.md:30:99: ste-ing: "completing" is an -ing word: use another verb form
+./goosestrike/README.md:30:178: llm-em-dash: em dash: write two sentences or use a comma
+./goosestrike/README.md:31:223: ste-semicolon: semicolon: write two sentences
+./goosestrike/README.md:53:1: ste-sentence-length: sentence has 26 words, limit 25
+./goosestrike/README.md:58:52: ste-ing: "drawing" is an -ing word: use another verb form
+./goosestrike/README.md:84:113: ste-ing: "hardening" is an -ing word: use another verb form
+./goosestrike/README.md:89:1: ste-sentence-length: sentence has 28 words, limit 25
+./goosestrike/README.md:111:44: ste-ing: "smoothing" is an -ing word: use another verb form
+./goosestrike/README.md:148:3: llm-hedge: "Very" is filler: delete it
+./goosestrike/README.md:165:1: ste-sentence-length: sentence has 28 words, limit 25
+./goosestrike/README.md:172:3: llm-hedge: "Very" is filler: delete it
+./goosestrike/README.md:177:34: ste-passive: "was tested" is passive voice: name who does the action
+./goosestrike/README.md:177:115: ste-passive: "were not tested" is passive voice: name who does the action
+./goosestrike/README.md:184:3: ste-sentence-length: sentence has 29 words, limit 25
+./goosestrike/README.md:187:103: ste-passive: "is lit" is passive voice: name who does the action
+./goosestrike/README.md:190:3: ste-sentence-length: sentence has 30 words, limit 25
+./goosestrike/README.md:192:3: ste-sentence-length: sentence has 41 words, limit 25
+./goosestrike/README.md:193:3: ste-sentence-length: sentence has 30 words, limit 25
+./goosestrike/README.md:199:1: ste-sentence-length: sentence has 36 words, limit 25
+./goosestrike/README.md:202:5: ste-ing: "handling" is an -ing word: use another verb form
+./goosestrike/README.md:205:175: ste-passive: "is released" is passive voice: name who does the action
+./goosestrike/README.md:216:39: ste-sentence-length: sentence has 30 words, limit 25
+./goosestrike/README.md:218:50: ste-sentence-length: sentence has 34 words, limit 25
+./goosestrike/README.md:225:96: ste-passive: "is computed" is passive voice: name who does the action
+./goosestrike/README.md:251:131: ste-passive: "is not known" is passive voice: name who does the action
+./goosestrike/README.md:290:3: ste-sentence-length: sentence has 27 words, limit 25
+./goosestrike/README.md:309:73: ste-ing: "testing" is an -ing word: use another verb form
+./marklove-web/README.md:3:1: readme-purpose: first paragraph has 2 sentences: state the purpose in 1 sentence
+./marklove-web/README.md:5:155: ste-sentence-length: sentence has 30 words, limit 25
+./marklove-web/README.md:5:312: ste-sentence-length: sentence has 30 words, limit 25
+./marklove-web/README.md:11:64: ste-word: "purchase" is not STE: use "buy"
+./marklove-web/README.md:51:128: ste-passive: "is installed" is passive voice: name who does the action
+./marklove-web/README.md:81:213: ste-ing: "Hugging" is an -ing word: use another verb form
+./marklove-web/README.md:85:482: ste-sentence-length: sentence has 28 words, limit 25
+./marklove-web/README.md:88:77: ste-passive: "is encoded" is passive voice: name who does the action
+./marklove-web/README.md:97:51: ste-passive: "is not saved" is passive voice: name who does the action
+./marklove-web/README.md:109:61: ste-passive: "is not imported" is passive voice: name who does the action
+./marklove-web/README.md:122:16: ste-word: "purchase" is not STE: use "buy"
+./neurons/README.md:18:62: ste-ing: "steering" is an -ing word: use another verb form
+./neurons/README.md:20:3: ste-sentence-length: instruction has 24 words, limit 20
+./neurons/README.md:52:59: ste-ing: "steering" is an -ing word: use another verb form
+./neurons/README.md:52:109: ste-ing: "steering" is an -ing word: use another verb form
+./neurons/README.md:65:1: ste-sentence-length: sentence has 27 words, limit 25
+./neurons/README.md:66:29: ste-passive: "was made" is passive voice: name who does the action
+./neurons/README.md:67:1: ste-sentence-length: sentence has 37 words, limit 25
+./neurons/README.md:77:1: ste-sentence-length: sentence has 29 words, limit 25
+./neurons/README.md:83:57: ste-sentence-length: sentence has 29 words, limit 25
+./neurons/README.md:86:114: ste-passive: "is selected" is passive voice: name who does the action
+./neurons/README.md:100:39: ste-sentence-length: sentence has 28 words, limit 25
+./neurons/README.md:125:18: ste-sentence-length: sentence has 33 words, limit 25
+./neurons/README.md:140:1: ste-sentence-length: sentence has 27 words, limit 25
+./neurons/README.md:140:79: ste-word: "with respect to" is not STE: use "about"
+./neurons/README.md:148:1: ste-sentence-length: sentence has 27 words, limit 25
+./neurons/README.md:149:54: ste-ing: "rounding" is an -ing word: use another verb form
+./neurons/README.md:150:1: ste-sentence-length: sentence has 26 words, limit 25
+./neurons/README.md:157:108: ste-ing: "patching" is an -ing word: use another verb form
+./neurons/README.md:164:4: ste-sentence-length: sentence has 28 words, limit 25
+./neurons/README.md:167:1: ste-sentence-length: sentence has 29 words, limit 25
+./neurons/README.md:167:133: ste-ing: "patching" is an -ing word: use another verb form
+./neurons/README.md:167:195: ste-semicolon: semicolon: write two sentences
+./neurons/README.md:168:1: ste-ing: "Steering" is an -ing word: use another verb form
+./neurons/README.md:183:115: ste-ing: "embedding" is an -ing word: use another verb form
+./neurons/README.md:232:3: ste-sentence-length: sentence has 45 words, limit 25
+./neurons/README.md:235:3: ste-sentence-length: sentence has 27 words, limit 25
+./neurons/README.md:237:3: ste-sentence-length: sentence has 34 words, limit 25
+./neurons/README.md:238:3: ste-sentence-length: sentence has 35 words, limit 25
+./neurons/README.md:238:267: ste-ing: "steering" is an -ing word: use another verb form
+./neurons/README.md:238:305: ste-passive: "is skipped" is passive voice: name who does the action
+./neurons/README.md:239:3: ste-sentence-length: sentence has 28 words, limit 25
+./neurons/README.md:241:3: ste-sentence-length: sentence has 29 words, limit 25
+./neurons/README.md:243:61: ste-ing: "Hugging" is an -ing word: use another verb form
+./neurons/README.md:243:155: ste-ing: "Hugging" is an -ing word: use another verb form
+./neurons/README.md:252:1: ste-sentence-length: sentence has 29 words, limit 25
+./neurons/README.md:252:130: ste-ing: "steering" is an -ing word: use another verb form
+./neurons/README.md:254:3: ste-sentence-length: sentence has 31 words, limit 25
+./neurons/README.md:271:279: ste-ing: "steering" is an -ing word: use another verb form
+./ps-profile/README.md:7:1: readme-purpose: first paragraph has 3 sentences: state the purpose in 1 sentence
+./ps-profile/README.md:26:66: ste-passive: "are compared" is passive voice: name who does the action
+./ps-profile/README.md:74:24: ste-passive: "are allowed" is passive voice: name who does the action
+./ps-profile/README.md:89:49: ste-passive: "is not finished" is passive voice: name who does the action
+./ps-profile/README.md:100:69: ste-ing: "unpacking" is an -ing word: use another verb form
+./ps-profile/README.md:100:92: ste-ing: "reading" is an -ing word: use another verb form
+./ps-profile/README.md:100:148: ste-passive: "are not read" is passive voice: name who does the action
+./ps-profile/README.md:103:32: ste-sentence-length: instruction has 22 words, limit 20
+./ps-profile/README.md:119:14: ste-passive: "is licensed" is passive voice: name who does the action
+./server/README.md:3:1: readme-purpose: first paragraph has 2 sentences: state the purpose in 1 sentence
+./server/README.md:4:1: ste-sentence-length: sentence has 33 words, limit 25
+./server/README.md:23:12: ste-sentence-length: sentence has 35 words, limit 25
+./server/README.md:25:12: ste-sentence-length: sentence has 29 words, limit 25
+./server/README.md:35:81: ste-sentence-length: instruction has 25 words, limit 20
+./server/README.md:75:58: ste-ing: "finding" is an -ing word: use another verb form
+./server/README.md:101:64: ste-ing: "Sharing" is an -ing word: use another verb form
+./server/README.md:110:8: ste-passive: "is not deployed" is passive voice: name who does the action
+./server/README.md:137:1: ste-sentence-length: instruction has 27 words, limit 20
+./server/README.md:148:46: ste-sentence-length: sentence has 28 words, limit 25
+./server/README.md:152:12: ste-passive: "was made" is passive voice: name who does the action
+./server/README.md:158:3: ste-sentence-length: sentence has 29 words, limit 25
+./server/README.md:161:1: ste-sentence-length: instruction has 25 words, limit 20
+./server/README.md:199:7: ste-contraction: "Let's" is a contraction: write "let us"
+./server/README.md:204:30: ste-contraction: "Let's" is a contraction: write "let us"
+./server/README.md:208:4: ste-sentence-length: sentence has 31 words, limit 25
+./server/README.md:213:1: ste-sentence-length: sentence has 31 words, limit 25
+./server/README.md:218:1: ste-sentence-length: sentence has 29 words, limit 25
+./server/README.md:219:68: ste-passive: "is read" is passive voice: name who does the action
+./server/README.md:228:65: ste-ing: "forwarding" is an -ing word: use another verb form
+./server/README.md:237:40: ste-contraction: "Let's" is a contraction: write "let us"
+./server/README.md:239:103: ste-passive: "are not set" is passive voice: name who does the action
+./site/AGENTS.md:3:64: ste-ing: "deleting" is an -ing word: use another verb form
+./site/AGENTS.md:3:76: ste-ing: "adding" is an -ing word: use another verb form
+./site/README.md:1:1: readme-run-block: README has no fenced code block: show the run steps in one
+./site/README.md:3:1: readme-purpose: first paragraph has 3 sentences: state the purpose in 1 sentence
+./site/README.md:3:71: ste-sentence-length: sentence has 34 words, limit 25
+./site/README.md:10:51: ste-passive: "is served" is passive voice: name who does the action
+./site/README.md:20:46: ste-sentence-length: sentence has 95 words, limit 25
+./site/README.md:20:612: ste-sentence-length: sentence has 41 words, limit 25
+./site/README.md:20:1085: ste-sentence-length: sentence has 28 words, limit 25
+./site/README.md:20:1205: ste-semicolon: semicolon: write two sentences
+./site/README.md:20:1259: ste-passive: "is given" is passive voice: name who does the action
+./site/README.md:23:76: ste-passive: "is set" is passive voice: name who does the action
+./skein/README.md:3:1: readme-purpose: first paragraph has 3 sentences: state the purpose in 1 sentence
+./skein/README.md:53:1: ste-sentence-length: sentence has 28 words, limit 25
+./skein/README.md:59:4: ste-ing: "Building" is an -ing word: use another verb form
+./skein/README.md:61:14: ste-passive: "is written" is passive voice: name who does the action
+./skein/README.md:62:52: ste-sentence-length: instruction has 25 words, limit 20
+./skein/README.md:113:18: ste-sentence-length: sentence has 34 words, limit 25
+./skein/README.md:124:1: llm-bold-label: each list item starts with a bold label: delete the labels or use a table
+./skein/README.md:128:11: ste-ing: "modelling" is an -ing word: use another verb form
+./skein/README.md:139:49: ste-ing: "buckling" is an -ing word: use another verb form
+./skein/README.md:167:4: ste-ing: "Grilling" is an -ing word: use another verb form
+./skills/README.md:8:53: ste-sentence-length: instruction has 45 words, limit 20
+./skills/README.md:9:55: ste-sentence-length: instruction has 21 words, limit 20
+./skills/README.md:9:95: ste-ing: "drawing" is an -ing word: use another verb form
+./skills/README.md:9:306: ste-ing: "drawing" is an -ing word: use another verb form
+./skills/README.md:10:73: ste-sentence-length: instruction has 36 words, limit 20
+./skills/README.md:10:223: ste-ing: "failing" is an -ing word: use another verb form
+./skills/README.md:58:1: ste-sentence-length: sentence has 32 words, limit 25
+./skills/concept-ui/SKILL.md:20:4: llm-bold-label: each list item starts with a bold label: delete the labels or use a table
+./skills/concept-ui/SKILL.md:26:4: llm-bold-label: each list item starts with a bold label: delete the labels or use a table
+./skills/concept-ui/SKILL.md:39:1: llm-bold-label: each list item starts with a bold label: delete the labels or use a table
+./skills/concept-ui/SKILL.md:44:43: ste-sentence-length: instruction has 22 words, limit 20
+./skills/concept-ui/SKILL.md:44:141: ste-ing: "remaining" is an -ing word: use another verb form
+./skills/concept-ui/SKILL.md:51:1: llm-bold-label: each list item starts with a bold label: delete the labels or use a table
+./skills/concept-ui/SKILL.md:52:4: ste-sentence-length: instruction has 21 words, limit 20
+./skills/concept-ui/SKILL.md:54:24: ste-ing: "floating" is an -ing word: use another verb form
+./skills/concept-ui/SKILL.md:58:75: ste-ing: "floating" is an -ing word: use another verb form
+./skills/concept-ui/SKILL.md:62:205: ste-passive: "is hidden" is passive voice: name who does the action
+./skills/concept-ui/SKILL.md:67:29: ste-ing: "Designing" is an -ing word: use another verb form
+./skills/concept-ui/SKILL.md:67:55: ste-semicolon: semicolon: write two sentences
+./skills/concept-ui/SKILL.md:79:54: ste-passive: "is replaced" is passive voice: name who does the action
+./skills/concept-ui/SKILL.md:100:4: ste-sentence-length: instruction has 23 words, limit 20
+./skills/concept-ui/SKILL.md:100:61: ste-ing: "missing" is an -ing word: use another verb form
+./skills/concept-ui/SKILL.md:120:1: ste-sentence-length: sentence has 33 words, limit 25
+./skills/concept-ui/SKILL.md:120:119: ste-ing: "floating" is an -ing word: use another verb form
+./skills/concept-ui/SKILL.md:131:11: ste-ing: "Designing" is an -ing word: use another verb form
+./skills/concept-ui/SKILL.md:131:65: llm-rule-of-three: "responsive, interruptible and redirectable" is a rule-of-three adjective list: keep the one that matters
+./skills/concept-ui/SKILL.md:136:208: ste-ing: "easing" is an -ing word: use another verb form
+./skills/concept-ui/references/design-audit.md:11:212: ste-contraction: "Don't" is a contraction: write "do not"
+./skills/concept-ui/references/design-audit.md:12:254: ste-contraction: "Don't" is a contraction: write "do not"
+./skills/concept-ui/references/design-audit.md:13:277: ste-sentence-length: sentence has 33 words, limit 25
+./skills/concept-ui/references/design-audit.md:13:297: ste-ing: "marketing" is an -ing word: use another verb form
+./skills/concept-ui/references/design-audit.md:13:433: ste-semicolon: semicolon: write two sentences
+./skills/concept-ui/references/design-audit.md:13:501: ste-semicolon: semicolon: write two sentences
+./skills/concept-ui/references/design-audit.md:13:503: ste-ing: "Building" is an -ing word: use another verb form
+./skills/concept-ui/references/design-audit.md:14:8: ste-ing: "Easing" is an -ing word: use another verb form
+./skills/concept-ui/references/design-audit.md:14:336: ste-passive: "is allowed" is passive voice: name who does the action
+./skills/concept-ui/references/design-audit.md:14:372: ste-semicolon: semicolon: write two sentences
+./skills/concept-ui/references/design-audit.md:15:181: ste-passive: "are named" is passive voice: name who does the action
+./skills/concept-ui/references/design-audit.md:15:225: ste-semicolon: semicolon: write two sentences
+./skills/concept-ui/references/design-audit.md:18:62: ste-passive: "is set" is passive voice: name who does the action
+./skills/concept-ui/references/design-audit.md:18:140: ste-semicolon: semicolon: write two sentences
+./skills/concept-ui/references/design-audit.md:20:110: ste-ing: "starting" is an -ing word: use another verb form
+./skills/concept-ui/references/design-audit.md:21:9: ste-sentence-length: instruction has 23 words, limit 20
+./skills/concept-ui/references/design-audit.md:21:57: ste-ing: "easing" is an -ing word: use another verb form
+./skills/concept-ui/references/design-audit.md:21:234: ste-semicolon: semicolon: write two sentences
+./skills/concept-ui/references/design-audit.md:22:322: ste-semicolon: semicolon: write two sentences
+./skills/concept-ui/references/design-audit.md:31:86: ste-passive: "is hidden" is passive voice: name who does the action
+./skills/concept-ui/references/design-audit.md:35:211: ste-semicolon: semicolon: write two sentences
+./skills/concept-ui/references/design-audit.md:37:53: ste-passive: "is scrolled" is passive voice: name who does the action
+./skills/concept-ui/references/design-audit.md:37:115: ste-ing: "dragging" is an -ing word: use another verb form
+./skills/concept-ui/references/design-audit.md:40:173: ste-semicolon: semicolon: write two sentences
+./skills/concept-ui/references/design-audit.md:43:54: ste-ing: "loading" is an -ing word: use another verb form
+./skills/concept-ui/references/design-audit.md:51:167: ste-semicolon: semicolon: write two sentences
+./skills/concept-ui/references/design-audit.md:52:8: ste-sentence-length: instruction has 23 words, limit 20
+./skills/concept-ui/references/design-audit.md:52:95: ste-passive: "be confused" is passive voice: name who does the action
+./skills/concept-ui/references/design-audit.md:59:58: ste-semicolon: semicolon: write two sentences
+./skills/concept-ui/references/design-audit.md:67:141: ste-ing: "missing" is an -ing word: use another verb form
+./skills/concept-ui/references/design-audit.md:69:87: ste-ing: "blocking" is an -ing word: use another verb form
+./skills/concept-ui/references/design-audit.md:70:23: ste-ing: "sizing" is an -ing word: use another verb form
+./skills/concept-ui/references/design-audit.md:70:101: ste-ing: "sizing" is an -ing word: use another verb form
+./skills/concept-ui/references/design-audit.md:71:214: ste-semicolon: semicolon: write two sentences
+./skills/concept-ui/references/design-audit.md:74:54: ste-ing: "loading" is an -ing word: use another verb form
+./skills/concept-ui/references/design-audit.md:88:130: ste-passive: "is known" is passive voice: name who does the action
+./skills/concept-ui/references/design-audit.md:93:22: ste-contraction: "Don't" is a contraction: write "do not"
+./skills/concept-ui/references/design-audit.md:95:18: ste-ing: "Building" is an -ing word: use another verb form
+./skills/concept-ui/references/design-audit.md:96:18: ste-ing: "Building" is an -ing word: use another verb form
+./skills/concept-ui/references/design-audit.md:99:18: ste-ing: "Developing" is an -ing word: use another verb form
+./skills/guardrails/SKILL.md:13:1: ste-sentence-length: sentence has 38 words, limit 25
+./skills/guardrails/SKILL.md:23:1: ste-sentence-length: instruction has 41 words, limit 20
+./skills/guardrails/SKILL.md:30:99: ste-ing: "failing" is an -ing word: use another verb form
+./skills/guardrails/SKILL.md:38:44: ste-sentence-length: sentence has 30 words, limit 25
+./skills/guardrails/SKILL.md:40:31: ste-sentence-length: instruction has 24 words, limit 20
+./skills/guardrails/SKILL.md:40:314: ste-passive: "are known" is passive voice: name who does the action
+./skills/guardrails/SKILL.md:41:59: ste-sentence-length: instruction has 22 words, limit 20
+./skills/guardrails/SKILL.md:41:164: ste-sentence-length: instruction has 27 words, limit 20
+./skills/guardrails/SKILL.md:44:4: ste-sentence-length: instruction has 25 words, limit 20
+./skills/guardrails/SKILL.md:44:118: ste-sentence-length: instruction has 23 words, limit 20
+./skills/guardrails/SKILL.md:44:228: ste-passive: "is broken" is passive voice: name who does the action
+./skills/guardrails/SKILL.md:46:4: ste-sentence-length: instruction has 22 words, limit 20
+./skills/guardrails/SKILL.md:52:1: ste-sentence-length: sentence has 26 words, limit 25
+./skills/guardrails/SKILL.md:55:4: ste-sentence-length: instruction has 30 words, limit 20
+./skills/guardrails/SKILL.md:55:104: ste-passive: "are always set" is passive voice: name who does the action
+./skills/guardrails/SKILL.md:56:4: ste-sentence-length: instruction has 35 words, limit 20
+./skills/guardrails/SKILL.md:56:130: ste-passive: "are set" is passive voice: name who does the action
+./skills/guardrails/SKILL.md:69:4: ste-sentence-length: sentence has 28 words, limit 25
+./skills/guardrails/SKILL.md:70:16: ste-passive: "is installed" is passive voice: name who does the action
+./skills/guardrails/SKILL.md:71:4: ste-sentence-length: instruction has 22 words, limit 20
+./skills/guardrails/SKILL.md:92:80: ste-sentence-length: instruction has 26 words, limit 20
+./skills/guardrails/SKILL.md:98:1: ste-sentence-length: sentence has 27 words, limit 25
+./skills/guardrails/SKILL.md:104:4: ste-sentence-length: instruction has 23 words, limit 20
+./skills/guardrails/SKILL.md:106:43: ste-passive: "be debugged" is passive voice: name who does the action
+./skills/guardrails/SKILL.md:113:4: ste-sentence-length: instruction has 24 words, limit 20
+./skills/guardrails/SKILL.md:120:1: ste-sentence-length: sentence has 30 words, limit 25
+./skills/guardrails/SKILL.md:123:4: ste-sentence-length: instruction has 23 words, limit 20
+./skills/guardrails/SKILL.md:123:115: ste-ing: "fuzzing" is an -ing word: use another verb form
+./skills/guardrails/SKILL.md:130:1: ste-sentence-length: sentence has 36 words, limit 25
+./skills/guardrails/SKILL.md:133:4: ste-sentence-length: instruction has 26 words, limit 20
+./skills/guardrails/SKILL.md:144:73: ste-ing: "existing" is an -ing word: use another verb form
+./skills/guardrails/SKILL.md:151:123: ste-ing: "existing" is an -ing word: use another verb form
+./skills/guardrails/SKILL.md:157:4: ste-sentence-length: instruction has 29 words, limit 20
+./skills/guardrails/SKILL.md:160:4: ste-sentence-length: instruction has 25 words, limit 20
+./skills/guardrails/SKILL.md:176:1: ste-sentence-length: sentence has 26 words, limit 25
+./skills/guardrails/SKILL.md:179:4: ste-sentence-length: instruction has 29 words, limit 20
+./skills/guardrails/SKILL.md:179:117: ste-passive: "is done" is passive voice: name who does the action
+./skills/guardrails/SKILL.md:188:3: ste-sentence-length: sentence has 34 words, limit 25
+./skills/guardrails/SKILL.md:190:62: ste-ing: "missing" is an -ing word: use another verb form
+./skills/guardrails/SKILL.md:191:3: ste-sentence-length: sentence has 42 words, limit 25
+./skills/schematic-emil/SKILL.md:33:1: llm-bold-label: each list item starts with a bold label: delete the labels or use a table
+./skills/schematic-emil/SKILL.md:40:140: ste-sentence-length: sentence has 31 words, limit 25
+./skills/schematic-emil/SKILL.md:46:90: ste-sentence-length: sentence has 29 words, limit 25
+./skills/schematic-emil/SKILL.md:64:16: ste-ing: "filing" is an -ing word: use another verb form
+./skills/schematic-emil/SKILL.md:69:43: ste-sentence-length: instruction has 23 words, limit 20
+./skills/state-machine/SKILL.md:22:34: ste-sentence-length: sentence has 26 words, limit 25
+./skills/state-machine/SKILL.md:33:73: ste-sentence-length: instruction has 22 words, limit 20
+./skills/state-machine/SKILL.md:33:178: ste-passive: "is deleted" is passive voice: name who does the action
+./skills/state-machine/SKILL.md:35:43: ste-ing: "finding" is an -ing word: use another verb form
+./skills/state-machine/SKILL.md:35:56: ste-ing: "finding" is an -ing word: use another verb form
+./skills/state-machine/SKILL.md:48:3: ste-ing: "Finding" is an -ing word: use another verb form
+./skills/state-machine/SKILL.md:60:136: ste-passive: "is hidden" is passive voice: name who does the action
+./skills/state-machine/SKILL.md:69:60: ste-ing: "overlapping" is an -ing word: use another verb form
+./skills/state-machine/SKILL.md:74:10: ste-ing: "finding" is an -ing word: use another verb form
+./skills/state-machine/SKILL.md:76:12: ste-ing: "failing" is an -ing word: use another verb form
+./skills/state-machine/SKILL.md:95:14: ste-ing: "failing" is an -ing word: use another verb form
+./skills/state-machine/SKILL.md:100:67: ste-ing: "failing" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/README.md:7:30: ste-sentence-length: sentence has 27 words, limit 25
+./skills/state-machine/examples/femahoy-chat/README.md:10:22: ste-ing: "Failing" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/README.md:16:135: ste-sentence-length: sentence has 27 words, limit 25
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:4:1: ste-sentence-length: sentence has 29 words, limit 25
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:9:69: llm-em-dash: em dash: write two sentences or use a comma
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:10:56: llm-em-dash: em dash: write two sentences or use a comma
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:11:110: llm-em-dash: em dash: write two sentences or use a comma
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:12:104: llm-em-dash: em dash: write two sentences or use a comma
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:13:68: llm-em-dash: em dash: write two sentences or use a comma
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:14:9: ste-ing: "missing" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:14:66: llm-em-dash: em dash: write two sentences or use a comma
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:15:111: llm-em-dash: em dash: write two sentences or use a comma
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:16:59: llm-em-dash: em dash: write two sentences or use a comma
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:17:97: llm-em-dash: em dash: write two sentences or use a comma
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:18:43: llm-em-dash: em dash: write two sentences or use a comma
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:22:148: llm-em-dash: em dash: write two sentences or use a comma
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:31:27: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:33:3: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:33:30: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:34:3: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:35:3: ste-ing: "resting" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:35:30: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:36:3: ste-ing: "resting" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:37:29: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:39:3: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:39:22: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:40:3: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:40:37: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:41:3: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:41:29: ste-ing: "resting" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:42:3: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:44:3: ste-ing: "resting" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:59:27: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:61:3: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:61:30: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:62:3: ste-ing: "resting" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:62:30: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:64:3: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:64:22: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:65:3: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:65:37: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:66:3: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:66:29: ste-ing: "resting" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:67:3: ste-ing: "working" is an -ing word: use another verb form
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:68:3: ste-ing: "resting" is an -ing word: use another verb form
+./skills/state-machine/references/format.md:42:63: ste-passive: "is required" is passive voice: name who does the action
+./skills/state-machine/references/format.md:43:67: ste-ing: "failing" is an -ing word: use another verb form
+./skills/state-machine/references/format.md:54:86: ste-passive: "is ignored" is passive voice: name who does the action
+./skills/state-machine/references/format.md:62:86: ste-ing: "finding" is an -ing word: use another verb form
+./skills/state-machine/references/format.md:73:126: ste-passive: "are ignored" is passive voice: name who does the action
+./skills/state-machine/references/format.md:82:163: ste-ing: "finding" is an -ing word: use another verb form
+./skills/state-machine/references/format.md:84:24: ste-ing: "finding" is an -ing word: use another verb form
+./skills/state-machine/references/format.md:84:67: ste-word: "usage" is not STE: use "use"
+./skills/state-machine/references/review.md:6:31: ste-ing: "failing" is an -ing word: use another verb form
+./skills/state-machine/references/review.md:7:96: ste-ing: "finding" is an -ing word: use another verb form
+./skills/state-machine/references/review.md:15:18: ste-passive: "is deleted" is passive voice: name who does the action
+./skills/state-machine/references/review.md:20:1: ste-sentence-length: sentence has 38 words, limit 25
+./skills/state-machine/references/review.md:40:114: ste-semicolon: semicolon: write two sentences
+./skills/state-machine/references/review.md:40:128: ste-semicolon: semicolon: write two sentences
+./skills/state-machine/references/review.md:41:110: ste-semicolon: semicolon: write two sentences
+./skills/state-machine/references/review.md:41:127: ste-passive: "is honoured" is passive voice: name who does the action
+./skills/state-machine/test/faults.sm.md:1:46: ste-ing: "finding" is an -ing word: use another verb form
+./skills/state-machine/test/faults.sm.md:5:33: llm-em-dash: em dash: write two sentences or use a comma
+./skills/state-machine/test/faults.sm.md:6:32: ste-passive: "is done" is passive voice: name who does the action
+./skills/state-machine/test/faults.sm.md:6:41: llm-em-dash: em dash: write two sentences or use a comma
+./skills/state-machine/test/faults.sm.md:7:39: llm-em-dash: em dash: write two sentences or use a comma
+./skills/state-machine/test/faults.sm.md:8:19: ste-passive: "be cancelled" is passive voice: name who does the action
+./skills/state-machine/test/faults.sm.md:8:33: llm-em-dash: em dash: write two sentences or use a comma
+./skills/state-machine/test/faults.sm.md:9:25: llm-em-dash: em dash: write two sentences or use a comma

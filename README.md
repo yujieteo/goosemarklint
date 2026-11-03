@@ -1,27 +1,98 @@
 # goosemarklint
 
-goosemarklint is an opinionated Markdown linter and formatter, written in Goose, that checks Markdown for ASD-STE100 and common style rules.
+goosemarklint is an opinionated Markdown linter, written in Goose, that checks Markdown for ASD-STE100 and for the marks of LLM text.
 
-The parser for CommonMark and GitHub Flavored Markdown is done.
-It also reads YAML front matter and GitHub alerts.
-The `check` and `fmt` commands and the profiles for README.md, SKILL.md, AGENTS.md and CLAUDE.md come in later steps.
+The parser reads CommonMark, GitHub Flavored Markdown, YAML front matter and GitHub alerts.
+The `fmt` command and the markdownlint rules come in later steps.
 
 ## Run
 
-Build the tool with the Goose compiler, then print the parse tree of a Markdown file:
+Build the tool with the Goose compiler, then check the Markdown files of a repo:
 
 ```sh
 goose build src/main.goose -o goosemarklint
-./goosemarklint tree README.md
+./goosemarklint check .
 ```
 
-Run all checks, which include the CommonMark and GFM spec tests and the output replay:
+`check` takes files and folders.
+In a folder, it reads each `.md` file and skips `node_modules` and each folder whose name starts with a dot.
+Each finding is one line: `file:line:col: rule: message`.
+The exit status is 0 for no finding, 1 for a finding, and 2 for a file or a config that the tool cannot read.
+
+`./goosemarklint rules` prints the rule IDs.
+`./goosemarklint tree FILE` prints the parse tree of a file.
+
+## Rules
+
+The rules check prose only.
+They skip code blocks, code spans, front matter, URLs and raw HTML.
+The rules for `SKILL.md`, `AGENTS.md`, `CLAUDE.md` and `README.md` apply by file name.
+Each other Markdown file, such as a blog post, gets all of the other rules.
+
+| Rule | Finds |
+| --- | --- |
+| `ste-word` | A word or a phrase from a `ban` list, with the STE word to use. |
+| `ste-sentence-length` | A sentence of more than 25 words, or an instruction of more than 20 words. An instruction starts with a verb, or has a verb after its first comma. |
+| `ste-contraction` | A contraction, such as `don't`. |
+| `ste-semicolon` | A semicolon. |
+| `ste-ing` | A word that ends in -ing and is not in an `allow` list. |
+| `ste-passive` | A form of "be" and then a past participle, such as `is used`. |
+| `llm-stock` | A stock word or a stock phrase of LLM text, such as `delve` or `seamless`. |
+| `llm-hedge` | A hedge or a filler word, such as `basically` or `very`. |
+| `llm-em-dash` | An em dash. |
+| `llm-contrast` | The forms `not just X, but Y` and `it is not X, it is Y`. |
+| `llm-rule-of-three` | A list of 3 adjectives, such as `fast, simple and safe`. |
+| `llm-heading-emoji` | An emoji in a heading. |
+| `llm-bold-label` | A list of 3 or more items where each item starts with bold text. |
+| `llm-heavy-bold` | A paragraph with 3 or more bold spans. |
+| `llm-summary-heading` | A summary heading, such as "Summary" or "Conclusion", as the last heading. |
+| `html-comment` | An HTML comment. Only the suppression directive can stay. |
+| `suppression` | A directive with no reason, with an unknown rule, or with no finding on the next line. |
+| `skill-front-matter` | In `SKILL.md`: front matter with no `name`, no `description`, or a description without the word "when". |
+| `agents-imperative` | In `AGENTS.md` and `CLAUDE.md`: a list item that does not start with an instruction. |
+| `readme-purpose` | In `README.md`: a first paragraph that is not 1 sentence. The tool skips the title, HTML and badge images before it. |
+| `readme-run-block` | In `README.md`: no fenced code block. |
+
+`data/ste.tsv` and `data/llm.tsv` hold the word lists.
+Each line has a category, a tab and a word or a phrase.
+A `ban`, `contraction` or `stock` line can then have a tab and the replacement.
+The other categories are `allow`, `be`, `adverb`, `participle`, `verb`, `abbreviation`, `hedge`, `summary`, `adjective` and `suffix`.
+
+## Suppression
+
+To stop a finding, put this directive on the line before it:
+
+```markdown
+<!-- goosemarklint-disable-next-line ste-ing: the name of a product -->
+```
+
+The directive names one or more rule IDs, then a colon and a reason.
+The reason is necessary.
+
+## Config
+
+A `.goosemarklint` file in the current folder adds words to the lists.
+Each line is `allow`, a tab and a word, or `ban`, a tab, a word or a phrase, a tab and the replacement:
+
+```text
+allow	Hugging
+ban	whitelist	allow-list
+```
+
+An `allow` word passes each word rule.
+A `ban` word gives a `ste-word` finding.
+
+## Checks
+
+Run all checks, which include the spec tests, the rule tests, the saved lint output and the parse tree replay:
 
 ```sh
 scripts/check.sh
 ```
 
-When a change must change the parse tree, read the replay diff, then accept it:
+Each rule has a `pass` folder and a `fail` folder in `test/rules`.
+`test/rules.expect` and `test/corpus.expect` hold the lint output of the rule tests and of the real Markdown files in `test/corpus`.
+When a change must change an output, read the diff, then accept it:
 
 ```sh
 scripts/check.sh --accept

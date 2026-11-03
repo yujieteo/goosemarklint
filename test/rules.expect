@@ -1,0 +1,46 @@
+./agents-imperative/fail/agents/AGENTS.md:4:3: agents-imperative: list item does not start with an imperative verb
+./agents-imperative/fail/claude/CLAUDE.md:3:4: agents-imperative: list item does not start with an imperative verb
+./html-comment/fail/blocks.md:2:1: html-comment: HTML comment: delete it, or move the fact into code or a test
+./html-comment/fail/blocks.md:5:28: html-comment: HTML comment: delete it, or move the fact into code or a test
+./html-comment/fail/blocks.md:7:72: html-comment: HTML comment: delete it, or move the fact into code or a test
+./html-comment/fail/doc.md:1:1: html-comment: HTML comment: delete it, or move the fact into code or a test
+./html-comment/fail/doc.md:3:19: html-comment: HTML comment: delete it, or move the fact into code or a test
+./llm-bold-label/fail/doc.md:1:1: llm-bold-label: each list item starts with a bold label: delete the labels or use a table
+./llm-contrast/fail/doc.md:1:1: llm-contrast: "not X, but Y" contrast: state Y
+./llm-contrast/fail/doc.md:3:13: llm-contrast: "not X, but Y" contrast: state Y
+./llm-em-dash/fail/doc.md:1:18: llm-em-dash: em dash: write two sentences or use a comma
+./llm-heading-emoji/fail/doc.md:1:3: llm-heading-emoji: emoji in a heading: delete it
+./llm-heading-emoji/fail/fe0f/doc.md:1:3: llm-heading-emoji: emoji in a heading: delete it
+./llm-heavy-bold/fail/doc.md:1:1: llm-heavy-bold: paragraph has 3 bold spans: keep bold for one key term
+./llm-hedge/fail/doc.md:1:1: llm-hedge: "Basically" is filler: delete it
+./llm-hedge/fail/doc.md:1:24: llm-hedge: "very" is filler: delete it
+./llm-rule-of-three/fail/doc.md:1:13: llm-rule-of-three: "fast, simple, and reliable" is a rule-of-three adjective list: keep the one that matters
+./llm-stock/fail/doc.md:1:4: llm-stock: "delve" is an LLM stock word: use "look at"
+./llm-stock/fail/doc.md:3:1: llm-stock: "In conclusion" is an LLM stock phrase: rewrite it
+./llm-stock/fail/doc.md:5:13: llm-stock: "robust" is an LLM stock word: use "strong"
+./llm-summary-heading/fail/doc.md:5:1: llm-summary-heading: summary heading "summary" at the end: delete the summary
+./readme-purpose/fail/none/README.md:3:1: readme-purpose: README has no purpose paragraph after the title
+./readme-purpose/fail/two/README.md:3:1: readme-purpose: first paragraph has 2 sentences: state the purpose in 1 sentence
+./readme-run-block/fail/README.md:1:1: readme-run-block: README has no fenced code block: show the run steps in one
+./skill-front-matter/fail/no-description/SKILL.md:5:1: skill-front-matter: front matter has no description
+./skill-front-matter/fail/no-front-matter/SKILL.md:1:1: skill-front-matter: SKILL.md has no front matter: add name and description
+./skill-front-matter/fail/no-when/SKILL.md:3:1: skill-front-matter: description does not say when to load the skill: add "Use when ..."
+./ste-contraction/fail/doc.md:1:19: ste-contraction: "doesn't" is a contraction: write "does not"
+./ste-contraction/fail/doc.md:3:1: ste-contraction: "Don't" is a contraction: write "do not"
+./ste-ing/fail/doc.md:1:13: ste-ing: "running" is an -ing word: use another verb form
+./ste-ing/fail/doc.md:3:14: ste-ing: "running" is an -ing word: use another verb form
+./ste-ing/fail/doc.md:5:24: ste-ing: "running" is an -ing word: use another verb form
+./ste-ing/fail/doc.md:7:4: ste-ing: "Running" is an -ing word: use another verb form
+./ste-ing/fail/doc.md:11:16: ste-ing: "running" is an -ing word: use another verb form
+./ste-passive/fail/doc.md:1:10: ste-passive: "is read" is passive voice: name who does the action
+./ste-passive/fail/doc.md:3:10: ste-passive: "was not changed" is passive voice: name who does the action
+./ste-semicolon/fail/doc.md:1:16: ste-semicolon: semicolon: write two sentences
+./ste-sentence-length/fail/doc.md:1:1: ste-sentence-length: sentence has 29 words, limit 25
+./ste-sentence-length/fail/doc.md:3:1: ste-sentence-length: instruction has 24 words, limit 20
+./ste-word/fail/doc.md:1:1: ste-word: "Utilize" is not STE: use "use"
+./ste-word/fail/doc.md:3:14: ste-word: "in order to" is not STE: use "to"
+./ste-word/fail/doc.md:5:14: ste-word: "whitelist" is not STE: use "allow-list"
+./suppression/fail/doc.md:1:1: suppression: directive has no reason: write <!-- goosemarklint-disable-next-line RULE: reason -->
+./suppression/fail/doc.md:4:1: suppression: directive names an unknown rule: write <!-- goosemarklint-disable-next-line RULE: reason -->
+./suppression/fail/doc.md:7:1: suppression: directive suppresses nothing on line 8
+./suppression/fail/doc.md:10:1: suppression: unknown directive: write <!-- goosemarklint-disable-next-line RULE: reason -->
