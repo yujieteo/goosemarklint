@@ -1,5 +1,6 @@
 import std;
 import md.node;
+import lint.facts;
 
 let RULE_IDS = [
     "ste-word",
@@ -23,6 +24,7 @@ let RULE_IDS = [
     "agents-imperative",
     "readme-purpose",
     "readme-run-block",
+    "repeated-fact",
     "MD001",
     "MD003",
     "MD004",
@@ -88,6 +90,7 @@ struct Lint {
     found: Finding[>..]&,
     msgs: u8[>..]&,
     directives: Directive[>..]&,
+    facts: Facts&,
 }
 
 fn source_of(L: Lint&) -> const u8[:] {

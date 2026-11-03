@@ -32,6 +32,10 @@ if [ "${dirs[*]}" != "${sorted[*]}" ]; then
 fi
 for r in "${rules[@]}"; do
   run 0 "$root/test/rules" "$r/pass"
+  if grep ": $r: " "$work/out"; then
+    echo "rule_tests: $r/pass gives a finding of $r"
+    exit 1
+  fi
   run findings "$root/test/rules" "$r/fail"
   if grep -v ": $r: " "$work/out"; then
     echo "rule_tests: $r/fail gives a finding of another rule"

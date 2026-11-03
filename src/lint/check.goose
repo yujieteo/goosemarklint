@@ -14,6 +14,9 @@ import lint.suppress;
 import lint.profiles;
 import lint.md_base;
 import lint.md_rules;
+import lint.facts;
+import lint.repeats;
+import lint.list_facts;
 
 let CONFIG = ".goosemarklint";
 
@@ -36,17 +39,25 @@ fn check_prose_block(L: Lint&, p: Prose&, w: Words&, b: i64) {
     check_sentences(L, p, w);
     check_inline_comments(L, p, b);
     if L.d.nodes[b].kind == Kind.Heading { check_heading_emoji(L, p); }
-    if L.d.nodes[b].kind == Kind.Paragraph { check_heavy_bold(L, b); }
+    if L.d.nodes[b].kind == Kind.Paragraph {
+        check_heavy_bold(L, b);
+        collect_sentences(L, p, w);
+        collect_lists(L, p, b);
+    }
 }
 
 fn check_tree(L: Lint&, p: Prose&, w: Words&) {
+    collect_description(L);
     var n = 0;
     while n >= 0 {
         let node = L.d.nodes[n];
         match node.kind {
             Paragraph, Heading, TableCell => check_prose_block(L, p, w, n),
             HtmlBlock => check_comments(L, text_of(L.d, node.content), node.line, max(node.col, 1)),
-            List => check_bold_labels(L, n),
+            List => {
+                check_bold_labels(L, n);
+                collect_bullets(L, p, n);
+            },
             _ => {},
         }
         n = if node.kind == Kind.Paragraph || node.kind == Kind.Heading || node.kind == Kind.TableCell {
@@ -58,6 +69,7 @@ fn check_tree(L: Lint&, p: Prose&, w: Words&) {
     check_summary_heading(L, p);
     check_profile(L, p, w);
     check_markdown(L, p);
+    collect_pins(L);
 }
 
 fn print_findings(out: u8[>..]&, path: const u8[:], L: Lint&) {
@@ -69,7 +81,7 @@ fn print_findings(out: u8[>..]&, path: const u8[:], L: Lint&) {
     }
 }
 
-fn lint_source(out: u8[>..]&, path: const u8[:], input: const u8[:]) -> i64 {
+fn lint_into(out: u8[>..]&, path: const u8[:], input: const u8[:], facts: Facts&) -> i64 {
     var nodes: Node[>..] = [];
     var text: u8[>..] = [];
     var refs: Ref[>..] = [];
@@ -82,7 +94,7 @@ fn lint_source(out: u8[>..]&, path: const u8[:], input: const u8[:]) -> i64 {
     var found: Finding[>..] = [];
     var msgs: u8[>..] = [];
     var directives: Directive[>..] = [];
-    var L = Lint { d: d, profile: profile_of(path), lines: lines, kinds: kinds, found: found, msgs: msgs, directives: directives };
+    var L = Lint { d: d, profile: profile_of(path), lines: lines, kinds: kinds, found: found, msgs: msgs, directives: directives, facts: facts };
     index_lines(L);
     index_kinds(L);
     var ptext: u8[>..] = [];
@@ -98,13 +110,22 @@ fn lint_source(out: u8[>..]&, path: const u8[:], input: const u8[:]) -> i64 {
     return count(L.found) { !it.warning };
 }
 
-fn lint_file(out: u8[>..]&, path: const u8[:]) -> i64 {
+fn lint_source(out: u8[>..]&, path: const u8[:], input: const u8[:]) -> i64 {
+    var text: u8[>..] = [];
+    var items: Fact[>..] = [];
+    var facts = Facts { text: text, items: items, path: Span { at: 0, len: 0 } };
+    return lint_into(out, path, input, facts);
+}
+
+fn lint_file(out: u8[>..]&, path: const u8[:], facts: Facts&) -> i64 {
     var input: u8[>..] = [];
     guard read_file(path, input) else {
         write_stderr(str("goosemarklint: cannot read ", path, "\n"));
         return -1;
     }
-    return lint_source(out, path, input);
+    facts.path = Span { at: facts.text.len, len: path.len };
+    facts.text.append(path);
+    return lint_into(out, path, input, facts);
 }
 
 fn join_path(dir: const u8[:], name: const u8[:]) -> u8[>..] { str(dir, if ends_with(dir, "/") { "" } else { "/" }, name) }
@@ -140,7 +161,7 @@ fn collect_files(root: const u8[:], files: u8[>..]&) -> bool {
     return ok;
 }
 
-fn lint_dir(out: u8[>..]&, dir: const u8[:]) -> i64 {
+fn lint_dir(out: u8[>..]&, dir: const u8[:], facts: Facts&) -> i64 {
     var files: u8[>..] = [];
     let ok = collect_files(dir, files);
     var list = split(files, '\n');
@@ -148,7 +169,7 @@ fn lint_dir(out: u8[>..]&, dir: const u8[:]) -> i64 {
     var total = 0;
     for f in list {
         guard f.len > 0;
-        let n = lint_file(out, f);
+        let n = lint_file(out, f, facts);
         if n < 0 { total = -1; } else if total >= 0 { total += n; }
     }
     return if ok { total } else { -1 };
@@ -169,11 +190,17 @@ fn run_check(paths: u8[:][:]) -> i64 {
     guard load_config() else { return 2; }
     var total = 0;
     var failed = false;
+    var text: u8[>..] = [];
+    var items: Fact[>..] = [];
+    var facts = Facts { text: text, items: items, path: Span { at: 0, len: 0 } };
     for path in paths {
         var out: u8[>..] = [];
-        let n = if is_dir(path) { lint_dir(out, path) } else { lint_file(out, path) };
+        let n = if is_dir(path) { lint_dir(out, path, facts) } else { lint_file(out, path, facts) };
         write_stdout(out);
         if n < 0 { failed = true; } else { total += n; }
     }
+    var repeats: u8[>..] = [];
+    report_repeats(repeats, facts);
+    write_stdout(repeats);
     return if failed { 2 } else if total > 0 { 1 } else { 0 };
 }

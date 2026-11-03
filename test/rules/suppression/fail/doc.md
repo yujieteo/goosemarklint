@@ -11,3 +11,6 @@ The tool is fast.
 
 <!-- goosemarklint-disable ste-ing: a reason -->
 The tool is fast.
+
+<!-- goosemarklint-disable-next-line repeated-fact: a reason -->
+The tool is fast.

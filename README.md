@@ -49,11 +49,30 @@ Each other Markdown file, such as a blog post, gets all of the other rules.
 | `llm-heavy-bold` | A paragraph with 3 or more bold spans. |
 | `llm-summary-heading` | A summary heading, such as "Summary" or "Conclusion", as the last heading. |
 | `html-comment` | An HTML comment. Only the suppression directive can stay. |
-| `suppression` | A directive with no reason, with an unknown rule, or with no finding on the next line. |
+| `suppression` | A directive with no reason, with an unknown rule or `repeated-fact`, or with no finding on the next line. |
 | `skill-front-matter` | In `SKILL.md`: front matter with no `name`, no `description`, or a description without the word "when". |
 | `agents-imperative` | In `AGENTS.md` and `CLAUDE.md`: a list item that does not start with an instruction. |
 | `readme-purpose` | In `README.md`: a first paragraph that is not 1 sentence. The tool skips the title, HTML and badge images before it. |
 | `readme-run-block` | In `README.md`: no fenced code block. |
+| `repeated-fact` | A warning. The same sentence or list in 2 places, or the same commit hash or version string in 2 files, in one run. |
+
+`repeated-fact` reads all files of one run together, so run `check` on the whole repo.
+It folds case, white space and punctuation, and it skips sentences of fewer than 8 words, sentences with code, headings and table cells.
+A pinned value is a commit hash of 7 to 40 hex characters or a version such as `1.4.2` or `v1.4.2`, outside front matter.
+A short hash and a longer hash that starts with it are one pinned value.
+A list is 3 or more items with commas, "and" or "or" between them, or a Markdown list.
+An inline list ends at the first "and" or "or" after a comma.
+The rule reads lists in paragraphs, in list items and in the `description` of front matter.
+It folds case, punctuation and code marks in each item, and it compares the items as a set.
+In a sentence, the words before the first item and after the last item can be part of these items.
+Thus for a list that is not in parentheses or after a colon, the rule compares only the interior items.
+A list of 5 or more items matches a list that has at most 1 different item and at most 1 more or fewer items.
+If a list has 1 more item, the rule can also skip its second or second-last item as part of the sentence.
+The warning then names the items that differ, so that you can see the drift.
+A list of fewer than 5 items must have the same set of items.
+A list that is in a repeated sentence gets only the warning for the sentence.
+The warning names each `file:line`, so you can keep one owner and point to it from the other places.
+A suppression directive cannot stop this warning.
 
 `data/ste.tsv` and `data/llm.tsv` hold the word lists.
 Each line has a category, a tab and a word or a phrase.
