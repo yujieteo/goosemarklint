@@ -4,7 +4,9 @@ import md.chars;
 import lint.context;
 import lint.md_base;
 
-struct Hit { line: i64, at: i64 }
+struct Hit { line: i64, at: i64, side: i64 = 0 }
+
+let SIDES = ["", " on the left", " on the right"];
 
 struct PipeStyle { set: bool = false, lead: bool = false, trail: bool = false }
 
@@ -95,20 +97,20 @@ fn spaced_hits(ln: i64, t: const u8[:], from: i64, compact: Hit[>..]&, tight: Hi
         if i > first {
             var j = i;
             while j > first && is_space(t[j - 1]) { j--; }
-            if i - j != 1 { compact.push(Hit { line: ln, at: i }); }
-            if i - j > 0 { tight.push(Hit { line: ln, at: i }); }
+            if i - j != 1 { compact.push(Hit { line: ln, at: i, side: 1 }); }
+            if i - j > 0 { tight.push(Hit { line: ln, at: i, side: 1 }); }
         }
         if i + 1 < end {
             var j = i + 1;
             while j < end && is_space(t[j]) { j++; }
-            if j - i - 1 != 1 { compact.push(Hit { line: ln, at: i }); }
-            if j - i - 1 > 0 { tight.push(Hit { line: ln, at: i }); }
+            if j - i - 1 != 1 { compact.push(Hit { line: ln, at: i, side: 2 }); }
+            if j - i - 1 > 0 { tight.push(Hit { line: ln, at: i, side: 2 }); }
         }
     }
 }
 
-fn report_hits(L: Lint&, hits: const Hit[:], msg: const u8[:]) {
-    for h in hits { report(L, L.lines[h.line] + h.at, "MD060", msg); }
+fn report_hits(L: Lint&, hits: const Hit[:], msg: const u8[:], fix: const u8[:]) {
+    for h in hits { report(L, L.lines[h.line] + h.at, "MD060", str(msg, SIDES[h.side], ": ", fix)); }
 }
 
 fn check_column_style(L: Lint&, n: i64) {
@@ -131,9 +133,9 @@ fn check_column_style(L: Lint&, n: i64) {
     }
     if tight.len < best { pick = 2; }
     match pick {
-        0 => report_hits(L, aligned, "table pipe is not in line with the header pipe: align the columns"),
-        1 => report_hits(L, compact, "table pipe does not have 1 space on each side: align the columns or use 1 space"),
-        _ => report_hits(L, tight, "table pipe has a space next to it: delete the space or align the columns"),
+        0 => report_hits(L, aligned, "table pipe is not in line with the header pipe", "align the columns"),
+        1 => report_hits(L, compact, "table pipe does not have 1 space", "align the columns or use 1 space"),
+        _ => report_hits(L, tight, "table pipe has a space", "delete the space or align the columns"),
     }
 }
 

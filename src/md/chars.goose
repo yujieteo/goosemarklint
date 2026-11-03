@@ -9,7 +9,8 @@ let UNICODE_DATA = embed_file("../../data/unicode.txt");
 var punct_ranges: Range[>..] = load_ranges('p');
 var space_ranges: Range[>..] = load_ranges('z');
 var fold_text: u8[>..] = [];
-var fold_index = load_folds();
+var fold_index = load_map('f');
+var lower_index = load_map('l');
 
 fn hex_value(s: const u8[:]) -> i64 {
     let v, ok = parse_int(s, 16);
@@ -27,10 +28,10 @@ fn load_ranges(tag: u8) -> Range[>..] {
     return out;
 }
 
-fn load_folds() -> dictionary<i64, Span> {
+fn load_map(tag: u8) -> dictionary<i64, Span> {
     var index = dictionary<i64, Span> {};
     each_split(UNICODE_DATA, '\n') {
-        guard it.len > 2 && it[0] == 'f' && it[1] == ' ';
+        guard it.len > 2 && it[0] == tag && it[1] == ' ';
         let parts = words(it[2..]);
         let at = fold_text.len;
         for p in parts[1..] { push_utf8(fold_text, hex_value(p)); }
@@ -97,8 +98,12 @@ fn decode_before(s: const u8[:], i: i64) -> i64 {
     if start + n == i { cp } else { s[i - 1] }
 }
 
-fn fold_into(out: u8[>..]&, cp: i64) {
-    let f = fold_index.get(cp);
+fn fold_into(out: u8[>..]&, cp: i64) { map_into(out, fold_index, cp); }
+
+fn lower_into(out: u8[>..]&, cp: i64) { map_into(out, lower_index, cp); }
+
+fn map_into(out: u8[>..]&, index: dictionary<i64, Span>&, cp: i64) {
+    let f = index.get(cp);
     if f {
         out.append(fold_text[f.at..f.at + f.len]);
     } else {

@@ -41,9 +41,16 @@ fn attr_value(t: const u8[:], name: const u8[:]) -> const u8[:], bool {
 fn each_open_tag(t: const u8[:], at: i64[>..]&) {
     var i = position(t, '<');
     while i >= 0 && i < t.len {
-        if open_tag_name(t[i..]).len > 0 { at.push(i); }
-        let next = position(t[i + 1..], '<');
-        i = if next < 0 { -1 } else { i + 1 + next };
+        var from = i + 1;
+        if starts_with(t[i..], "<!--") {
+            let e = find(t[i..], "-->");
+            guard e >= 0 else { return; }
+            from = i + e + 3;
+        } else if open_tag_name(t[i..]).len > 0 {
+            at.push(i);
+        }
+        let next = position(t[from..], '<');
+        i = if next < 0 { -1 } else { from + next };
     }
 }
 
@@ -64,7 +71,7 @@ fn slug_char(out: u8[>..]&, s: const u8[:], i: i64) -> i64 {
         let c = lower_ascii(s[i]);
         if is_alnum(c) || c == '_' || c == '-' { out.push(c); } else if c == ' ' { out.push('-'); }
     } else if !is_unicode_punct(cp) && !is_unicode_space(cp) {
-        fold_into(out, cp);
+        lower_into(out, cp);
     }
     return n;
 }

@@ -18,12 +18,12 @@
 ./femahoy/README.md:5:1: MD033: HTML element <p>: use Markdown
 ./femahoy/README.md:5:19: MD033: HTML element <img>: use Markdown
 ./femahoy/README.md:42:4: ste-sentence-length: sentence has 30 words, limit 25
-./femahoy/README.md:55:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./femahoy/README.md:55:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./femahoy/README.md:55:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./femahoy/README.md:55:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./femahoy/README.md:55:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./femahoy/README.md:55:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./femahoy/README.md:55:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./femahoy/README.md:55:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./femahoy/README.md:55:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./femahoy/README.md:55:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./femahoy/README.md:55:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./femahoy/README.md:55:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./femahoy/README.md:57:83: ste-ing: warning: "pitching" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./femahoy/README.md:59:26: ste-ing: warning: "pulsating" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./femahoy/README.md:59:113: ste-ing: warning: "pulsating" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
@@ -39,12 +39,12 @@
 ./goosestrike/README.md:31:135: MD033: HTML element <sub>: use Markdown
 ./goosestrike/README.md:31:169: MD033: HTML element <sub>: use Markdown
 ./goosestrike/README.md:31:223: ste-semicolon: semicolon: write two sentences
-./goosestrike/README.md:34:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:34:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:34:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:34:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:34:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:34:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./goosestrike/README.md:34:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:34:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:34:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:34:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:34:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:34:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./goosestrike/README.md:36:4: MD033: HTML element <sub>: use Markdown
 ./goosestrike/README.md:36:47: MD033: HTML element <sub>: use Markdown
 ./goosestrike/README.md:36:87: MD033: HTML element <sub>: use Markdown
@@ -52,12 +52,12 @@
 ./goosestrike/README.md:36:357: MD033: HTML element <sub>: use Markdown
 ./goosestrike/README.md:38:32: MD033: HTML element <sub>: use Markdown
 ./goosestrike/README.md:38:71: MD033: HTML element <sub>: use Markdown
-./goosestrike/README.md:47:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:47:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:47:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:47:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:47:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:47:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./goosestrike/README.md:47:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:47:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:47:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:47:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:47:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:47:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./goosestrike/README.md:51:45: MD033: HTML element <sub>: use Markdown
 ./goosestrike/README.md:51:58: MD033: HTML element <sub>: use Markdown
 ./goosestrike/README.md:51:79: MD033: HTML element <sub>: use Markdown
@@ -65,24 +65,24 @@
 ./goosestrike/README.md:51:112: MD033: HTML element <sub>: use Markdown
 ./goosestrike/README.md:53:1: ste-sentence-length: sentence has 26 words, limit 25
 ./goosestrike/README.md:58:52: ste-ing: warning: "drawing" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
-./goosestrike/README.md:61:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:61:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:61:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:61:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:72:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:72:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:72:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:72:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:72:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:72:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:72:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:72:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:72:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:72:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:72:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:72:25: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:72:25: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:72:29: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./goosestrike/README.md:61:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:61:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:61:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:61:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:72:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:72:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:72:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:72:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:72:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:72:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:72:13: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:72:17: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:72:17: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:72:21: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:72:21: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:72:25: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:72:25: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:72:29: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./goosestrike/README.md:84:113: ste-ing: warning: "hardening" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./goosestrike/README.md:89:1: ste-sentence-length: sentence has 28 words, limit 25
 ./goosestrike/README.md:95:50: MD033: HTML element <sub>: use Markdown
@@ -96,74 +96,74 @@
 ./goosestrike/README.md:98:74: MD033: HTML element <sub>: use Markdown
 ./goosestrike/README.md:102:52: MD033: HTML element <sub>: use Markdown
 ./goosestrike/README.md:102:95: MD033: HTML element <sub>: use Markdown
-./goosestrike/README.md:103:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:103:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:103:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:103:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:103:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:103:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:103:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:103:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:103:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:103:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:103:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:103:25: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:103:25: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:103:29: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:103:29: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:103:33: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./goosestrike/README.md:103:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:103:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:103:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:103:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:103:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:103:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:103:13: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:103:17: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:103:17: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:103:21: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:103:21: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:103:25: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:103:25: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:103:29: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:103:29: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:103:33: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./goosestrike/README.md:110:27: MD033: HTML element <sub>: use Markdown
 ./goosestrike/README.md:111:44: ste-ing: warning: "smoothing" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
-./goosestrike/README.md:121:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:121:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:121:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:121:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:121:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:121:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:121:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:121:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:121:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:121:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:121:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:121:25: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:121:25: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:121:29: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:121:29: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:121:33: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:121:33: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:121:37: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:121:37: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:121:41: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:145:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:145:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:145:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:145:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:145:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:145:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:145:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:145:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:145:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:145:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:145:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:145:25: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./goosestrike/README.md:121:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:121:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:121:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:121:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:121:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:121:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:121:13: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:121:17: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:121:17: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:121:21: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:121:21: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:121:25: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:121:25: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:121:29: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:121:29: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:121:33: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:121:33: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:121:37: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:121:37: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:121:41: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:145:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:145:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:145:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:145:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:145:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:145:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:145:13: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:145:17: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:145:17: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:145:21: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:145:21: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:145:25: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./goosestrike/README.md:148:3: llm-hedge: "Very" is filler: delete it
-./goosestrike/README.md:157:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:157:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:157:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:157:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:157:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:157:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:157:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:157:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./goosestrike/README.md:157:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:157:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:157:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:157:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:157:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:157:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:157:13: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:157:17: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./goosestrike/README.md:165:1: ste-sentence-length: sentence has 28 words, limit 25
-./goosestrike/README.md:169:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:169:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:169:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:169:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:169:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:169:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:169:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:169:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./goosestrike/README.md:169:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:169:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:169:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:169:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:169:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:169:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:169:13: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:169:17: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./goosestrike/README.md:172:3: llm-hedge: "Very" is filler: delete it
 ./goosestrike/README.md:177:34: ste-passive: "was tested" is passive voice: name who does the action
 ./goosestrike/README.md:177:115: ste-passive: "were not tested" is passive voice: name who does the action
@@ -175,31 +175,31 @@
 ./goosestrike/README.md:199:1: ste-sentence-length: sentence has 36 words, limit 25
 ./goosestrike/README.md:202:5: ste-ing: warning: "handling" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./goosestrike/README.md:205:175: ste-passive: "is released" is passive voice: name who does the action
-./goosestrike/README.md:215:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:215:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:215:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:215:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:215:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:215:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./goosestrike/README.md:215:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:215:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:215:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:215:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:215:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:215:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./goosestrike/README.md:216:39: ste-sentence-length: sentence has 30 words, limit 25
 ./goosestrike/README.md:218:50: ste-sentence-length: sentence has 34 words, limit 25
 ./goosestrike/README.md:225:96: ste-passive: "is computed" is passive voice: name who does the action
-./goosestrike/README.md:232:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:232:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:232:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:232:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:232:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:232:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./goosestrike/README.md:232:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:232:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:232:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:232:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:232:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:232:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./goosestrike/README.md:244:27: MD033: HTML element <sub>: use Markdown
 ./goosestrike/README.md:244:65: MD033: HTML element <sub>: use Markdown
-./goosestrike/README.md:245:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:245:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:245:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:245:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:245:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:245:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:245:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./goosestrike/README.md:245:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./goosestrike/README.md:245:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:245:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:245:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:245:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:245:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:245:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./goosestrike/README.md:245:13: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./goosestrike/README.md:245:17: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./goosestrike/README.md:251:131: ste-passive: "is not known" is passive voice: name who does the action
 ./goosestrike/README.md:290:3: ste-sentence-length: sentence has 27 words, limit 25
 ./goosestrike/README.md:309:73: ste-ing: warning: "testing" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
@@ -218,12 +218,12 @@
 ./neurons/README.md:3:12: MD034: bare URL: put it in <> or in a link
 ./neurons/README.md:18:62: ste-ing: warning: "steering" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./neurons/README.md:20:3: ste-sentence-length: instruction has 24 words, limit 20
-./neurons/README.md:37:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:37:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:37:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:37:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:37:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:37:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./neurons/README.md:37:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./neurons/README.md:37:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./neurons/README.md:37:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./neurons/README.md:37:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./neurons/README.md:37:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./neurons/README.md:37:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./neurons/README.md:52:59: ste-ing: warning: "steering" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./neurons/README.md:52:109: ste-ing: warning: "steering" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./neurons/README.md:65:1: ste-sentence-length: sentence has 27 words, limit 25
@@ -232,19 +232,19 @@
 ./neurons/README.md:77:1: ste-sentence-length: sentence has 29 words, limit 25
 ./neurons/README.md:83:57: ste-sentence-length: sentence has 29 words, limit 25
 ./neurons/README.md:86:114: ste-passive: "is selected" is passive voice: name who does the action
-./neurons/README.md:93:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:93:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:93:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:93:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:93:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:93:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./neurons/README.md:93:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./neurons/README.md:93:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./neurons/README.md:93:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./neurons/README.md:93:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./neurons/README.md:93:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./neurons/README.md:93:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./neurons/README.md:100:39: ste-sentence-length: sentence has 28 words, limit 25
-./neurons/README.md:117:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:117:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:117:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:117:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:117:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:117:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./neurons/README.md:117:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./neurons/README.md:117:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./neurons/README.md:117:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./neurons/README.md:117:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./neurons/README.md:117:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./neurons/README.md:117:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./neurons/README.md:125:18: ste-sentence-length: sentence has 33 words, limit 25
 ./neurons/README.md:134:1: MD033: HTML element <img>: use Markdown
 ./neurons/README.md:140:1: ste-sentence-length: sentence has 27 words, limit 25
@@ -259,12 +259,12 @@
 ./neurons/README.md:167:195: ste-semicolon: semicolon: write two sentences
 ./neurons/README.md:168:1: ste-ing: warning: "Steering" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./neurons/README.md:174:1: MD033: HTML element <img>: use Markdown
-./neurons/README.md:182:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:182:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:182:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:182:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:182:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./neurons/README.md:182:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./neurons/README.md:182:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./neurons/README.md:182:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./neurons/README.md:182:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./neurons/README.md:182:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./neurons/README.md:182:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./neurons/README.md:182:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./neurons/README.md:183:115: ste-ing: warning: "embedding" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./neurons/README.md:232:3: ste-sentence-length: sentence has 45 words, limit 25
 ./neurons/README.md:235:3: ste-sentence-length: sentence has 27 words, limit 25
@@ -281,15 +281,15 @@
 ./neurons/README.md:254:3: ste-sentence-length: sentence has 31 words, limit 25
 ./neurons/README.md:271:279: ste-ing: warning: "steering" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./ps-profile/README.md:7:1: readme-purpose: first paragraph has 3 sentences: state the purpose in 1 sentence
-./ps-profile/README.md:14:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./ps-profile/README.md:14:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./ps-profile/README.md:14:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./ps-profile/README.md:14:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./ps-profile/README.md:14:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./ps-profile/README.md:14:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./ps-profile/README.md:14:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./ps-profile/README.md:14:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./ps-profile/README.md:26:66: ste-passive: "are compared" is passive voice: name who does the action
-./ps-profile/README.md:47:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./ps-profile/README.md:47:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./ps-profile/README.md:47:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./ps-profile/README.md:47:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./ps-profile/README.md:47:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./ps-profile/README.md:47:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./ps-profile/README.md:47:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./ps-profile/README.md:47:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./ps-profile/README.md:74:24: ste-passive: "are allowed" is passive voice: name who does the action
 ./ps-profile/README.md:89:49: ste-passive: "is not finished" is passive voice: name who does the action
 ./ps-profile/README.md:100:69: ste-ing: warning: "unpacking" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
@@ -299,19 +299,19 @@
 ./ps-profile/README.md:119:14: ste-passive: "is licensed" is passive voice: name who does the action
 ./server/README.md:3:1: readme-purpose: first paragraph has 2 sentences: state the purpose in 1 sentence
 ./server/README.md:4:1: ste-sentence-length: sentence has 33 words, limit 25
-./server/README.md:14:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./server/README.md:14:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./server/README.md:14:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./server/README.md:14:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./server/README.md:14:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./server/README.md:14:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./server/README.md:14:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./server/README.md:14:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./server/README.md:23:12: ste-sentence-length: sentence has 35 words, limit 25
 ./server/README.md:25:12: ste-sentence-length: sentence has 29 words, limit 25
 ./server/README.md:35:81: ste-sentence-length: instruction has 25 words, limit 20
-./server/README.md:57:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./server/README.md:57:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./server/README.md:57:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./server/README.md:57:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./server/README.md:57:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./server/README.md:57:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./server/README.md:57:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./server/README.md:57:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./server/README.md:57:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./server/README.md:57:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./server/README.md:57:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./server/README.md:57:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./server/README.md:75:58: ste-ing: warning: "finding" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./server/README.md:86:1: MD040: fenced code block has no language: add one after the fence
 ./server/README.md:101:64: ste-ing: warning: "Sharing" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
@@ -323,12 +323,12 @@
 ./server/README.md:158:3: ste-sentence-length: sentence has 29 words, limit 25
 ./server/README.md:161:1: ste-sentence-length: instruction has 25 words, limit 20
 ./server/README.md:164:1: MD040: fenced code block has no language: add one after the fence
-./server/README.md:175:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./server/README.md:175:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./server/README.md:175:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./server/README.md:175:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./server/README.md:175:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./server/README.md:175:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./server/README.md:175:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./server/README.md:175:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./server/README.md:175:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./server/README.md:175:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./server/README.md:175:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./server/README.md:175:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./server/README.md:183:1: MD033: HTML element <img>: use Markdown
 ./server/README.md:199:7: ste-contraction: "Let's" is a contraction: write "let us"
 ./server/README.md:204:30: ste-contraction: "Let's" is a contraction: write "let us"
@@ -363,10 +363,10 @@
 ./skein/README.md:66:1: MD040: fenced code block has no language: add one after the fence
 ./skein/README.md:79:1: MD040: fenced code block has no language: add one after the fence
 ./skein/README.md:89:1: MD040: fenced code block has no language: add one after the fence
-./skein/README.md:96:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skein/README.md:96:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skein/README.md:96:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skein/README.md:96:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./skein/README.md:96:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skein/README.md:96:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skein/README.md:96:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skein/README.md:96:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./skein/README.md:113:18: ste-sentence-length: sentence has 34 words, limit 25
 ./skein/README.md:124:1: llm-bold-label: each list item starts with a bold label: delete the labels or use a table
 ./skein/README.md:128:11: ste-ing: warning: "modelling" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
@@ -510,20 +510,20 @@
 ./skills/state-machine/SKILL.md:35:43: ste-ing: warning: "finding" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./skills/state-machine/SKILL.md:35:56: ste-ing: warning: "finding" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./skills/state-machine/SKILL.md:48:3: ste-ing: warning: "Finding" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
-./skills/state-machine/SKILL.md:49:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/SKILL.md:49:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/SKILL.md:49:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/SKILL.md:49:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./skills/state-machine/SKILL.md:49:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/SKILL.md:49:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/SKILL.md:49:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/SKILL.md:49:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./skills/state-machine/SKILL.md:60:136: ste-passive: "is hidden" is passive voice: name who does the action
 ./skills/state-machine/SKILL.md:69:60: ste-ing: warning: "overlapping" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./skills/state-machine/SKILL.md:74:10: ste-ing: warning: "finding" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./skills/state-machine/SKILL.md:76:12: ste-ing: warning: "failing" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./skills/state-machine/SKILL.md:95:14: ste-ing: warning: "failing" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./skills/state-machine/SKILL.md:100:67: ste-ing: warning: "failing" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
-./skills/state-machine/examples/femahoy-chat/README.md:6:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/README.md:6:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/README.md:6:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/README.md:6:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/README.md:6:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/README.md:6:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/README.md:6:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/README.md:6:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./skills/state-machine/examples/femahoy-chat/README.md:7:30: ste-sentence-length: sentence has 27 words, limit 25
 ./skills/state-machine/examples/femahoy-chat/README.md:10:22: ste-ing: warning: "Failing" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./skills/state-machine/examples/femahoy-chat/README.md:16:135: ste-sentence-length: sentence has 27 words, limit 25
@@ -540,18 +540,18 @@
 ./skills/state-machine/examples/femahoy-chat/chat.sm.md:17:97: llm-em-dash: em dash: write two sentences or use a comma
 ./skills/state-machine/examples/femahoy-chat/chat.sm.md:18:43: llm-em-dash: em dash: write two sentences or use a comma
 ./skills/state-machine/examples/femahoy-chat/chat.sm.md:22:148: llm-em-dash: em dash: write two sentences or use a comma
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:25: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:13: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:17: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:17: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:21: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:21: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:30:25: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./skills/state-machine/examples/femahoy-chat/chat.sm.md:31:27: ste-ing: warning: "working" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./skills/state-machine/examples/femahoy-chat/chat.sm.md:33:3: ste-ing: warning: "working" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./skills/state-machine/examples/femahoy-chat/chat.sm.md:33:30: ste-ing: warning: "working" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
@@ -568,18 +568,18 @@
 ./skills/state-machine/examples/femahoy-chat/chat.sm.md:41:29: ste-ing: warning: "resting" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./skills/state-machine/examples/femahoy-chat/chat.sm.md:42:3: ste-ing: warning: "working" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./skills/state-machine/examples/femahoy-chat/chat.sm.md:44:3: ste-ing: warning: "resting" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:25: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:13: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:17: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:17: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:21: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:21: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:58:25: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./skills/state-machine/examples/femahoy-chat/chat.sm.md:59:27: ste-ing: warning: "working" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./skills/state-machine/examples/femahoy-chat/chat.sm.md:61:3: ste-ing: warning: "working" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./skills/state-machine/examples/femahoy-chat/chat.sm.md:61:30: ste-ing: warning: "working" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
@@ -593,36 +593,36 @@
 ./skills/state-machine/examples/femahoy-chat/chat.sm.md:66:29: ste-ing: warning: "resting" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./skills/state-machine/examples/femahoy-chat/chat.sm.md:67:3: ste-ing: warning: "working" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./skills/state-machine/examples/femahoy-chat/chat.sm.md:68:3: ste-ing: warning: "resting" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:25: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/format.md:40:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/format.md:40:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/format.md:40:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/format.md:40:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:13: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:17: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:17: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:21: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:21: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/examples/femahoy-chat/chat.sm.md:82:25: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/references/format.md:40:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/references/format.md:40:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/references/format.md:40:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/references/format.md:40:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./skills/state-machine/references/format.md:42:63: ste-passive: "is required" is passive voice: name who does the action
 ./skills/state-machine/references/format.md:43:67: ste-ing: warning: "failing" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
-./skills/state-machine/references/format.md:50:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/format.md:50:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/format.md:50:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/format.md:50:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./skills/state-machine/references/format.md:50:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/references/format.md:50:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/references/format.md:50:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/references/format.md:50:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./skills/state-machine/references/format.md:54:86: ste-passive: "is ignored" is passive voice: name who does the action
 ./skills/state-machine/references/format.md:62:86: ste-ing: warning: "finding" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
-./skills/state-machine/references/format.md:65:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/format.md:65:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/format.md:65:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/format.md:65:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/format.md:65:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/format.md:65:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./skills/state-machine/references/format.md:65:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/references/format.md:65:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/references/format.md:65:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/references/format.md:65:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/references/format.md:65:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/references/format.md:65:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./skills/state-machine/references/format.md:73:126: ste-passive: "are ignored" is passive voice: name who does the action
 ./skills/state-machine/references/format.md:82:163: ste-ing: warning: "finding" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./skills/state-machine/references/format.md:84:24: ste-ing: warning: "finding" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
@@ -631,20 +631,20 @@
 ./skills/state-machine/references/review.md:7:96: ste-ing: warning: "finding" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
 ./skills/state-machine/references/review.md:15:18: ste-passive: "is deleted" is passive voice: name who does the action
 ./skills/state-machine/references/review.md:20:1: ste-sentence-length: sentence has 38 words, limit 25
-./skills/state-machine/references/review.md:27:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/review.md:27:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/review.md:27:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/review.md:27:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/review.md:27:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/review.md:27:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/review.md:27:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/review.md:27:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/review.md:39:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/review.md:39:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/review.md:39:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/review.md:39:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/review.md:39:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/references/review.md:39:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./skills/state-machine/references/review.md:27:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/references/review.md:27:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/references/review.md:27:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/references/review.md:27:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/references/review.md:27:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/references/review.md:27:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/references/review.md:27:13: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/references/review.md:27:17: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/references/review.md:39:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/references/review.md:39:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/references/review.md:39:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/references/review.md:39:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/references/review.md:39:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/references/review.md:39:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./skills/state-machine/references/review.md:40:114: ste-semicolon: semicolon: write two sentences
 ./skills/state-machine/references/review.md:40:128: ste-semicolon: semicolon: write two sentences
 ./skills/state-machine/references/review.md:41:110: ste-semicolon: semicolon: write two sentences
@@ -657,78 +657,78 @@
 ./skills/state-machine/test/faults.sm.md:8:19: ste-passive: "be cancelled" is passive voice: name who does the action
 ./skills/state-machine/test/faults.sm.md:8:33: llm-em-dash: em dash: write two sentences or use a comma
 ./skills/state-machine/test/faults.sm.md:9:25: llm-em-dash: em dash: write two sentences or use a comma
-./skills/state-machine/test/faults.sm.md:17:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:17:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:17:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:17:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:17:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:17:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:17:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:17:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:17:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:17:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:17:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:17:25: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:35:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:35:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:35:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:35:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:35:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:35:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:35:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:35:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:35:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:35:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:35:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:35:25: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:57:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:57:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:57:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:57:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:57:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:57:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:57:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:57:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:57:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:57:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:57:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:57:25: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:73:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:73:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:73:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:73:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:73:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:73:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:73:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:73:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:73:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:73:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:73:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:73:25: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:91:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:91:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:91:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:91:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:91:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:91:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:91:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:91:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:91:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:91:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:91:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:91:25: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:103:1: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:103:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:103:5: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:103:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:103:9: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:103:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:103:13: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:103:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:103:17: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:103:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:103:21: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
-./skills/state-machine/test/faults.sm.md:103:25: MD060: table pipe does not have 1 space on each side: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:17:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:17:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:17:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:17:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:17:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:17:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:17:13: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:17:17: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:17:17: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:17:21: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:17:21: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:17:25: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:35:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:35:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:35:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:35:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:35:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:35:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:35:13: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:35:17: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:35:17: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:35:21: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:35:21: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:35:25: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:57:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:57:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:57:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:57:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:57:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:57:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:57:13: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:57:17: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:57:17: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:57:21: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:57:21: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:57:25: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:73:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:73:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:73:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:73:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:73:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:73:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:73:13: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:73:17: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:73:17: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:73:21: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:73:21: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:73:25: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:91:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:91:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:91:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:91:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:91:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:91:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:91:13: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:91:17: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:91:17: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:91:21: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:91:21: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:91:25: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:103:1: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:103:5: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:103:5: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:103:9: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:103:9: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:103:13: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:103:13: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:103:17: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:103:17: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:103:21: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:103:21: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
+./skills/state-machine/test/faults.sm.md:103:25: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
 ./skills/state-machine/test/faults.sm.md:117:5: MD060: table pipe is not in line with the header pipe: align the columns
 ./skills/state-machine/test/faults.sm.md:117:13: MD060: table pipe is not in line with the header pipe: align the columns
 ./skills/state-machine/test/faults.sm.md:117:21: MD060: table pipe is not in line with the header pipe: align the columns
