@@ -7,6 +7,12 @@ import lint.prose;
 import lint.tokens;
 
 let PHRASE_RULES = [BAN, CONTRACTION, STOCK, HEDGE];
+let ING_AFTER = ["without", "before", "after", "by", "while", "when", "than", "upon", "of", "for", "in", "from", "about", "on", "to"];
+let ING_VERBS = [
+    "prefer", "prefers", "preferred", "avoid", "avoids", "avoided", "start", "starts", "started", "stop", "stops", "stopped",
+    "keep", "keeps", "kept", "finish", "finishes", "finished", "consider", "considers", "considered", "begin", "begins", "began", "begun",
+    "enjoy", "enjoys", "enjoyed", "suggest", "suggests", "suggested", "recommend", "recommends", "recommended",
+];
 
 fn lower_ends_with(w: const u8[:], suffix: const u8[:]) -> bool {
     w.len >= suffix.len && lower_equal(w[w.len - suffix.len..], suffix)
@@ -57,8 +63,12 @@ fn phrase_rule(cat: i64) -> const u8[:] {
     }
 }
 
-fn check_phrases_at(L: Lint&, p: Prose&, w: Words&, i: i64) {
+fn is_capital(p: Prose&, t: Tok) -> bool { p.text[t.at] >= 'A' && p.text[t.at] <= 'Z' }
+
+fn check_phrases_at(L: Lint&, p: Prose&, w: Words&, i: i64, starts: bool) {
+    let in_name = !starts && is_capital(p, w.toks[i]);
     for cat in PHRASE_RULES {
+        guard !(in_name && (cat == BAN || cat == STOCK));
         let e, end = match_phrase(p, w, i, cat);
         guard e >= 0;
         let words = p.text[w.toks[i].at..w.toks[end - 1].at + w.toks[end - 1].len];
@@ -69,16 +79,29 @@ fn check_phrases_at(L: Lint&, p: Prose&, w: Words&, i: i64) {
     }
 }
 
-fn check_ing(L: Lint&, p: Prose&, t: Tok) {
+fn is_verb_slot(p: Prose&, w: Words&, i: i64, series: bool) -> bool {
+    var k = i - 1;
+    if k > 0 && is_plain(w, k) && tok_text(p, w.toks[k]).len > 3 && lower_ends_with(tok_text(p, w.toks[k]), "ly") { k--; }
+    guard k >= 0 && is_plain(w, k) else { return false; }
+    let prev = tok_text(p, w.toks[k]);
+    guard !(lower_equal(prev, "and") || lower_equal(prev, "or")) else { return series; }
+    return in_list(BE, prev) || any(ING_AFTER) { lower_equal(prev, it) } || any(ING_VERBS) { lower_equal(prev, it) };
+}
+
+fn check_ing(L: Lint&, p: Prose&, w: Words&, i: i64, starts: bool, series: bool) -> bool {
+    guard (starts || !is_capital(p, w.toks[i])) && is_verb_slot(p, w, i, series) else { return false; }
+    let t = w.toks[i];
     let word = tok_text(p, t);
     var at = 0;
+    var found = false;
     each_split(word, '-') {
-        let css_at_rule = at == 0 && t.at > 0 && p.text[t.at - 1] == '@';
-        if it.len >= 4 && lower_ends_with(it, "ing") && !is_allowed(it) && !css_at_rule {
-            report_warning(L, p.pos[t.at + at], "ste-ing", str("\"", it, "\" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then"));
+        if it.len >= 4 && lower_ends_with(it, "ing") && !is_allowed(it) {
+            report_warning(L, p.pos[t.at + at], "ste-ing", str("\"", it, "\" is an -ing verb form: use another verb form"));
+            found = true;
         }
         at += it.len + 1;
     };
+    return found;
 }
 
 fn is_participle(word: const u8[:]) -> bool {
@@ -99,10 +122,14 @@ fn check_passive(L: Lint&, p: Prose&, w: Words&, i: i64) {
     report(L, p.pos[w.toks[i].at], "ste-passive", str("\"", words, "\" is passive voice: name who does the action"));
 }
 
+fn is_em_dash(s: const u8[:], i: i64) -> bool { s[i] == 0xE2 && i + 2 < s.len && s[i + 1] == 0x80 && s[i + 2] == 0x94 }
+
 fn check_marks(L: Lint&, p: Prose&) {
+    let alone = trim(p.text);
+    let placeholder = alone.len == 3 && is_em_dash(alone, 0);
     for c, i in p.text {
         if c == ';' { report(L, p.pos[i], "ste-semicolon", "semicolon: write two sentences"); }
-        if c == 0xE2 && i + 2 < p.text.len && p.text[i + 1] == 0x80 && p.text[i + 2] == 0x94 {
+        if is_em_dash(p.text, i) && !placeholder {
             report(L, p.pos[i], "llm-em-dash", "em dash: write two sentences or use a comma");
         }
     }
@@ -110,10 +137,19 @@ fn check_marks(L: Lint&, p: Prose&) {
 
 fn check_words(L: Lint&, p: Prose&, w: Words&) {
     check_marks(L, p);
+    var starts: bool[>..] = [];
+    for t in w.toks { starts.push(false); }
+    for s in w.sents {
+        var k = s.first;
+        while k < s.end && !is_word(w.toks[k]) { k++; }
+        if k < s.end { starts[k] = true; }
+    }
+    var series = false;
     for t, i in w.toks {
+        if starts[i] { series = false; }
         guard t.kind == Tk.Plain;
-        check_phrases_at(L, p, w, i);
-        check_ing(L, p, t);
+        check_phrases_at(L, p, w, i, starts[i]);
+        if check_ing(L, p, w, i, starts[i], series) { series = true; }
         check_passive(L, p, w, i);
     }
 }

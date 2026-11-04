@@ -9,9 +9,27 @@ fn comment_body(t: const u8[:]) -> const u8[:] { trim(t[4..if ends_with(t, "-->"
 
 fn is_directive(t: const u8[:]) -> bool { starts_with(t, "<!--") && starts_with(comment_body(t), "goosemarklint-") }
 
+fn is_lower(c: u8) -> bool { c >= 'a' && c <= 'z' }
+
+fn is_marker(t: const u8[:]) -> bool {
+    guard t.len > 4 && ends_with(t, "-->") && (is_lower(t[4]) || t[4] == '/') else { return false; }
+    let body = comment_body(t);
+    var ok = !any(body) { position(":;,!?", it) >= 0 };
+    var first = true;
+    for word in words(body) {
+        if first {
+            ok = ok && all(word) { is_lower(it) || it == '-' || it == '/' };
+        } else {
+            ok = ok && !ends_with(word, ".") && any(word) { !is_lower(it) };
+        }
+        first = false;
+    }
+    return ok;
+}
+
 fn check_comment(L: Lint&, t: const u8[:], line: i64, col: i64) {
     guard is_directive(t) && ends_with(t, "-->") else {
-        report_at(L, line, col, "html-comment", "HTML comment: delete it, or move the fact into code or a test");
+        if !is_marker(t) { report_at(L, line, col, "html-comment", "HTML comment: delete it, or move the fact into code or a test"); }
         return;
     }
     let why = read_directive(L, comment_body(t), line, col, line + count(t) { it == '\n' });

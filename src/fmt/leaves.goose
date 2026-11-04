@@ -94,6 +94,39 @@ fn has_directive(d: Doc&, para: i64) -> bool {
     return false;
 }
 
+fn tag_at(t: const u8[:], i: i64, tag: const u8[:]) -> bool {
+    let end = i + tag.len;
+    guard end <= t.len && lower_equal(t[i..end], tag) else { return false; }
+    return end == t.len || position(" \t\n>", t[end]) >= 0;
+}
+
+fn pre_tags(t: const u8[:]) -> i64, i64 {
+    var opens = 0;
+    var closes = 0;
+    for c, i in t {
+        guard c == '<';
+        if tag_at(t, i, "<pre") { opens++; }
+        if tag_at(t, i, "</pre") { closes++; }
+    }
+    return opens, closes;
+}
+
+fn track_pre(f: Fmt&, t: const u8[:]) -> bool {
+    let opens, closes = pre_tags(t);
+    f.pre = max(f.pre + opens - closes, 0);
+    return opens + closes > 0;
+}
+
+fn put_raw_paragraph(f: Fmt&, n: i64) {
+    var keep = f.pre > 0 || is_target(f, first_line(f.d, n)) || has_directive(f.d, n);
+    var k = f.d.nodes[n].first;
+    while k >= 0 {
+        if f.d.nodes[k].kind == Kind.HtmlInline && track_pre(f, text_of(f.d, f.d.nodes[k].content)) { keep = true; }
+        k = f.d.nodes[k].next;
+    }
+    put_paragraph(f, n, keep);
+}
+
 fn after_list(d: Doc&, n: i64) -> bool { d.nodes[n].prev >= 0 && d.nodes[d.nodes[n].prev].kind == Kind.List }
 
 fn first_line(d: Doc&, n: i64) -> i64 {
@@ -108,10 +141,13 @@ fn put_leaf(f: Fmt&, n: i64) {
     let node = f.d.nodes[n];
     match node.kind {
         FrontMatter => put_front_matter(f, n),
-        Paragraph => put_paragraph(f, n, is_target(f, first_line(f.d, n)) || has_directive(f.d, n)),
+        Paragraph => put_raw_paragraph(f, n),
         Heading => put_heading(f, n),
         CodeBlock => if node.fenced || after_list(f.d, n) { put_fenced(f, n); } else { put_indented(f, n); },
-        HtmlBlock => put_lines(f, text_of(f.d, node.content)),
+        HtmlBlock => {
+            put_lines(f, text_of(f.d, node.content));
+            track_pre(f, text_of(f.d, node.content));
+        },
         Table => put_table(f, n),
         _ => {},
     }

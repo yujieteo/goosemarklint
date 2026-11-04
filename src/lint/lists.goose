@@ -20,6 +20,7 @@ let CATEGORIES = [
     "summary",
     "adjective",
     "suffix",
+    "generated",
 ];
 let BAN = 0;
 let CONTRACTION = 1;
@@ -34,7 +35,8 @@ let HEDGE = 9;
 let SUMMARY = 10;
 let ADJECTIVE = 11;
 let SUFFIX = 12;
-let CONFIG_CATEGORIES = [BAN, ALLOW];
+let GENERATED = 13;
+let CONFIG_CATEGORIES = [BAN, ALLOW, GENERATED];
 
 struct Entry { cat: i64, phrase: Span, repl: Span, next: i64 = -1 }
 
@@ -115,3 +117,8 @@ fn find_entry(cat: i64, word: const u8[:]) -> i64 {
 fn in_list(cat: i64, word: const u8[:]) -> bool { find_entry(cat, word) >= 0 }
 
 fn is_allowed(word: const u8[:]) -> bool { in_list(ALLOW, word) }
+
+fn is_generated(path: const u8[:]) -> bool {
+    let rel = if starts_with(path, "./") { path[2..] } else { path };
+    return any(entries) { it.cat == GENERATED && rel.len >= it.phrase.len && lower_equal(rel[..it.phrase.len], phrase_of(it)) && (rel.len == it.phrase.len || rel[it.phrase.len] == '/' || ends_with(phrase_of(it), "/")) };
+}

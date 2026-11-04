@@ -4,7 +4,7 @@ enum FactKind { Sentence, Version, Hash, List }
 
 struct Fact { kind: FactKind, path: Span, line: i64, col: i64, key: Span, ends: Span }
 
-struct Facts { text: u8[>..]&, items: Fact[>..]&, path: Span }
+struct Facts { text: u8[>..]&, items: Fact[>..]&, path: Span, skip: bool = false }
 
 fn put_fact_text(F: Facts&, s: const u8[:]) -> Span {
     let at = F.text.len;
@@ -13,6 +13,7 @@ fn put_fact_text(F: Facts&, s: const u8[:]) -> Span {
 }
 
 fn add_fact(F: Facts&, kind: FactKind, line: i64, col: i64, key: const u8[:], ends: const u8[:]) {
+    guard !F.skip;
     let k = put_fact_text(F, key);
     let e = put_fact_text(F, ends);
     F.items.push(Fact { kind: kind, path: F.path, line: line, col: col, key: k, ends: e });

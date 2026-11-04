@@ -298,6 +298,20 @@ femahoy is under the MIT License, see `LICENSE`.
 <!-- goosemarklint-disable-next-line llm-hedge: the test needs a blank line here -->
 
 The value is 1.
+==> fmt/raw-pre.md <==
+# Raw pre
+
+<table>
+<tr><td valign="top"><pre>
+
+let a = 1
+let b = 2
+
+</pre></td></tr>
+
+</table>
+
+Text after the table joins.
 ==> fmt/sentences.md <==
 # Sentence breaks
 

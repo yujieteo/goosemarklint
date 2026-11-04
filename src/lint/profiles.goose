@@ -3,7 +3,9 @@ import md.node;
 import md.html_scan;
 import lint.context;
 import lint.prose;
+import lint.lists;
 import lint.tokens;
+import lint.word_rules;
 import lint.sentence_rules;
 import lint.suppress;
 
@@ -85,12 +87,29 @@ fn check_skill(L: Lint&) {
     }
 }
 
+let MODALS = ["must", "should", "shall"];
+let CONDITIONS = ["if", "when", "whenever", "unless"];
+
+fn word_in(p: Prose&, w: Words&, i: i64, set: const u8[:][:]) -> bool { is_plain(w, i) && any(set) { lower_equal(tok_text(p, w.toks[i]), it) } }
+
+fn modal_at(p: Prose&, w: Words&, s: Sent) -> i64 {
+    var from = s.first;
+    if word_in(p, w, from, CONDITIONS) {
+        from = s.end;
+        for i in s.first..s.end { if from == s.end && is_comma(p, w, i) { from = i + 1; } }
+    }
+    for i in from..s.end { if word_in(p, w, i, MODALS) { return i; } }
+    return -1;
+}
+
 fn check_agents_item(L: Lint&, p: Prose&, w: Words&, item: i64) {
     let para = L.d.nodes[item].first;
     guard para >= 0 && L.d.nodes[para].kind == Kind.Paragraph;
     read_words(L, p, w, para);
     guard w.sents.len > 0 && !is_instruction(p, w, w.sents[0]);
-    report(L, p.pos[w.toks[0].at], "agents-imperative", "list item does not start with an imperative verb");
+    let m = modal_at(p, w, w.sents[0]);
+    guard m >= 0;
+    report(L, p.pos[w.toks[0].at], "agents-imperative", str("list item gives an instruction with \"", tok_text(p, w.toks[m]), "\": start it with the verb"));
 }
 
 fn has_words(L: Lint&, p: Prose&, w: Words&, b: i64) -> bool {

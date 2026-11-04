@@ -1,2 +1,4 @@
 ban	whitelist	allow-list
 allow	rendering
+generated	repeated-fact/pass/generated
+generated	repeated-fact/fail/READ

@@ -40,6 +40,7 @@ It is 2 for a file or a config that the tool cannot read.
   Each table pipe has 1 space on each side.
 - Front matter, code, HTML blocks and link reference definitions do not change.
 - A paragraph after a suppression directive keeps its lines, so the directive stays on the line before its target.
+- A paragraph in a raw HTML `<pre>` element keeps its lines, because the browser shows each line break of a `pre` element.
 
 `fmt` parses its output again and compares the two parse trees.
 The comparison ignores soft line breaks.
@@ -56,30 +57,31 @@ Each other Markdown file, such as a blog post, gets all of the other rules.
 
 | Rule | Finds |
 | --- | --- |
-| `ste-word` | A word or a phrase from a `ban` list, with the STE word to use. |
+| `ste-word` | A word or a phrase from a `ban` list, with the STE word to use. It skips a word with a capital letter after the start of a sentence, because that word is part of a name or a title. |
 | `ste-sentence-length` | A sentence of more than 25 words, or an instruction of more than 20 words. An instruction starts with a verb, or has a verb after its first comma. |
 | `ste-contraction` | A contraction, such as `don't`. |
 | `ste-semicolon` | A semicolon. |
-| `ste-ing` | A warning for a word that ends in -ing and is not in an `allow` list. The rule also flags nouns, adjectives, titles and CSS names, so the reader decides if a hit is a verb form. It skips a CSS at-rule such as `@starting-style`. |
+| `ste-ing` | A warning for an -ing verb form. This is a word that ends in -ing and is not in an `allow` list. It comes after a form of "be" or after a word such as `without`, `of`, `for` or `to`. It also comes after a verb such as `prefer`, `avoid` or `stop`, which takes an -ing object. One adverb can come between them. It also comes after `and` or `or` when the sentence has a found -ing word before it. It skips a word with a capital letter that does not start a sentence. Thus the rule skips most nouns, adjectives, titles and names. |
 | `ste-passive` | A form of "be" and then a past participle, such as `is used`. |
-| `llm-stock` | A stock word or a stock phrase of LLM text, such as `delve` or `seamless`. |
+| `llm-stock` | A stock word or a stock phrase of LLM text, such as `delve` or `seamless`. It skips a name or a title, as `ste-word` does. |
 | `llm-hedge` | A hedge or a filler word, such as `basically` or `very`. |
-| `llm-em-dash` | An em dash. |
+| `llm-em-dash` | An em dash. It skips a table cell that holds only an em dash, because that dash is a placeholder. |
 | `llm-contrast` | The forms `not just X, but Y` and `it is not X, it is Y`. |
 | `llm-rule-of-three` | A list of 3 adjectives, such as `fast, simple and safe`. |
 | `llm-heading-emoji` | An emoji in a heading. |
 | `llm-bold-label` | A list of 3 or more items where each item starts with bold text. |
 | `llm-heavy-bold` | A paragraph with 3 or more bold spans. |
 | `llm-summary-heading` | A summary heading, such as "Summary" or "Conclusion", as the last heading. |
-| `html-comment` | An HTML comment. Only the suppression directive can stay. |
+| `html-comment` | An HTML comment. Only the suppression directive and a marker can stay. A marker has one lowercase word immediately after `<!--`, such as `<!--curve NAME-->`, so that a script can find it. The word can start with `/`, such as `<!--/hand-check-->`. Each argument after this word has a character that is not a lowercase letter. A marker has no colon and no sentence punctuation. Thus `<!--todo fix this-->` is not a marker. |
 | `suppression` | A directive with no reason, with an unknown rule or `repeated-fact`, or with no finding on the next line. |
 | `skill-front-matter` | In `SKILL.md`: front matter with no `name`, no `description`, or a description without the word "when". |
-| `agents-imperative` | In `AGENTS.md` and `CLAUDE.md`: a list item that does not start with an instruction. |
+| `agents-imperative` | In `AGENTS.md` and `CLAUDE.md`: a list item that gives an instruction with "must", "should" or "shall" and does not start with the verb. A fact or a list of files passes. |
 | `readme-purpose` | In `README.md`: a first paragraph that is not 1 sentence. The tool skips the title, HTML and badge images before it. |
 | `readme-run-block` | In `README.md`: no fenced code block. |
 | `repeated-fact` | A warning. The same sentence or list in 2 places, or the same commit hash or version string in 2 files, in one run. |
 
 `repeated-fact` reads all files of one run together, so run `check` on the whole repo.
+It skips each file under a `generated` path of the config, because a script copies text into these files.
 It folds case, white space and punctuation, and it skips sentences of fewer than 8 words, sentences with code, headings and table cells.
 A pinned value is a commit hash of 7 to 40 hex characters or a version such as `1.4.2` or `v1.4.2`, outside front matter.
 A short hash and a longer hash that starts with it are one pinned value.
@@ -138,7 +140,7 @@ They check the Markdown syntax, so they also read the lines that the prose rules
 | `MD034` | A bare URL. |
 | `MD035` | A thematic break that is not in the style of the first one. |
 | `MD036` | A paragraph of only bold or italic text, in the place of a heading. |
-| `MD037` | A space inside an emphasis marker, such as `* text *`. |
+| `MD037` | A space inside an emphasis marker, such as `* text *`. A marker after a letter or a digit, such as the star of `E* = E / 2`, does not open emphasis. |
 | `MD038` | A space inside a code span. |
 | `MD039` | A space inside the text of a link. |
 | `MD040` | A fenced code block with no language. |
@@ -157,7 +159,7 @@ They check the Markdown syntax, so they also read the lines that the prose rules
 | `MD056` | A table row with more or fewer cells than the header. |
 | `MD058` | A table with no blank line above or below it. |
 | `MD059` | A link text that does not tell where the link goes, such as "here" or "more". |
-| `MD060` | A table with pipes that do not line up, and that is not in the compact or the tight style. |
+| `MD060` | A table with pipes that do not line up, and that is not in the compact or the tight style. The rule does not check the delimiter row, so `\|---\|` is correct in each style. |
 
 The tool does not have these markdownlint rules:
 
@@ -178,15 +180,21 @@ The reason is necessary.
 ## Config
 
 A `.goosemarklint` file in the current folder adds words to the lists.
-Each line is `allow`, a tab and a word, or `ban`, a tab, a word or a phrase, a tab and the replacement.
+Each line is one of these:
+
+- `allow`, a tab and a word.
+- `ban`, a tab, a word or a phrase, a tab and the replacement.
+- `generated`, a tab and a path from the current folder.
+
 This command makes a config with 1 line of each type:
 
 ```sh
-printf 'allow\tHugging\nban\twhitelist\tallow-list\n' > .goosemarklint
+printf 'allow\tHugging\nban\twhitelist\tallow-list\ngenerated\tvalidation/reports/\n' > .goosemarklint
 ```
 
 An `allow` word passes each word rule.
 A `ban` word gives a `ste-word` finding.
+`repeated-fact` skips each file whose path is a `generated` path or is in a `generated` folder.
 
 ## Checks
 
