@@ -83,7 +83,8 @@ Each other Markdown file, such as a blog post, gets all of the other rules.
 
 `repeated-fact` reads all files of one run together, so run `check` on the whole repo.
 It skips each file under a `generated` path of the config, because a script copies text into these files.
-A pass fixture is a `pass` folder beside a `fail` folder, at or under the path you pass. Its text is test data, not a repeat source.
+A pass fixture is a `pass` folder beside a `fail` folder, at or under the path you pass.
+Its text is test data, not a repeat source.
 It folds case, white space and punctuation, and it skips sentences of fewer than 8 words, sentences with code, headings and table cells.
 A pinned value is a commit hash of 7 to 40 hex characters or a version such as `1.4.2` or `v1.4.2`, outside front matter.
 A short hash and a longer hash that starts with it are one pinned value.
