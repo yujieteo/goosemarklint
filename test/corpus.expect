@@ -17,6 +17,7 @@
 ./goosestrike/README.md:8:1: ste-sentence-length: sentence has 28 words, limit 25
 ./goosestrike/README.md:10:1: ste-sentence-length: sentence has 28 words, limit 25
 ./goosestrike/README.md:30:54: ste-sentence-length: sentence has 60 words, limit 25
+./goosestrike/README.md:30:99: ste-ing: warning: "completing" is an -ing verb form: use another verb form
 ./goosestrike/README.md:30:178: llm-em-dash: em dash: write two sentences or use a comma
 ./goosestrike/README.md:31:135: MD033: HTML element <sub>: use Markdown
 ./goosestrike/README.md:31:169: MD033: HTML element <sub>: use Markdown
@@ -110,6 +111,7 @@
 ./ps-profile/README.md:74:24: ste-passive: "are allowed" is passive voice: name who does the action
 ./ps-profile/README.md:89:49: ste-passive: "is not finished" is passive voice: name who does the action
 ./ps-profile/README.md:100:69: ste-ing: warning: "unpacking" is an -ing verb form: use another verb form
+./ps-profile/README.md:100:92: ste-ing: warning: "reading" is an -ing verb form: use another verb form
 ./ps-profile/README.md:100:148: ste-passive: "are not read" is passive voice: name who does the action
 ./ps-profile/README.md:103:32: ste-sentence-length: instruction has 22 words, limit 20
 ./ps-profile/README.md:119:14: ste-passive: "is licensed" is passive voice: name who does the action
@@ -118,6 +120,7 @@
 ./server/README.md:23:12: ste-sentence-length: sentence has 35 words, limit 25
 ./server/README.md:25:12: ste-sentence-length: sentence has 29 words, limit 25
 ./server/README.md:35:81: ste-sentence-length: instruction has 25 words, limit 20
+./server/README.md:75:58: ste-ing: warning: "finding" is an -ing verb form: use another verb form
 ./server/README.md:86:1: MD040: fenced code block has no language: add one after the fence
 ./server/README.md:110:8: ste-passive: "is not deployed" is passive voice: name who does the action
 ./server/README.md:125:1: MD040: fenced code block has no language: add one after the fence
@@ -138,6 +141,7 @@
 ./server/README.md:237:40: ste-contraction: "Let's" is a contraction: write "let us"
 ./server/README.md:239:103: ste-passive: "are not set" is passive voice: name who does the action
 ./server/README.md:246:1: MD040: fenced code block has no language: add one after the fence
+./site/AGENTS.md:3:76: ste-ing: warning: "adding" is an -ing verb form: use another verb form
 ./site/README.md:1:1: readme-run-block: README has no fenced code block: show the run steps in one
 ./site/README.md:3:1: readme-purpose: first paragraph has 3 sentences: state the purpose in 1 sentence
 ./site/README.md:3:48: MD034: bare URL: put it in <> or in a link

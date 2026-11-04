@@ -61,6 +61,8 @@
 ./html-comment/fail/blocks.md:11:77: html-comment: HTML comment: delete it, or move the fact into code or a test
 ./html-comment/fail/doc.md:3:1: html-comment: HTML comment: delete it, or move the fact into code or a test
 ./html-comment/fail/doc.md:5:19: html-comment: HTML comment: delete it, or move the fact into code or a test
+./html-comment/fail/doc.md:7:1: html-comment: HTML comment: delete it, or move the fact into code or a test
+./html-comment/fail/doc.md:9:1: html-comment: HTML comment: delete it, or move the fact into code or a test
 ./llm-bold-label/fail/doc.md:3:1: llm-bold-label: each list item starts with a bold label: delete the labels or use a table
 ./llm-contrast/fail/doc.md:3:1: llm-contrast: "not X, but Y" contrast: state Y
 ./llm-contrast/fail/doc.md:5:13: llm-contrast: "not X, but Y" contrast: state Y
@@ -87,6 +89,10 @@
 ./ste-ing/fail/doc.md:5:23: ste-ing: warning: "regenerating" is an -ing verb form: use another verb form
 ./ste-ing/fail/doc.md:7:32: ste-ing: warning: "running" is an -ing verb form: use another verb form
 ./ste-ing/fail/doc.md:11:37: ste-ing: warning: "competing" is an -ing verb form: use another verb form
+./ste-ing/fail/doc.md:13:26: ste-ing: warning: "reading" is an -ing verb form: use another verb form
+./ste-ing/fail/doc.md:15:18: ste-ing: warning: "unpacking" is an -ing verb form: use another verb form
+./ste-ing/fail/doc.md:15:41: ste-ing: warning: "writing" is an -ing verb form: use another verb form
+./ste-ing/fail/doc.md:17:20: ste-ing: warning: "adding" is an -ing verb form: use another verb form
 ./ste-passive/fail/doc.md:3:10: ste-passive: "is read" is passive voice: name who does the action
 ./ste-passive/fail/doc.md:5:10: ste-passive: "was not changed" is passive voice: name who does the action
 ./ste-semicolon/fail/doc.md:3:16: ste-semicolon: semicolon: write two sentences

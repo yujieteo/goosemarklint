@@ -61,7 +61,7 @@ Each other Markdown file, such as a blog post, gets all of the other rules.
 | `ste-sentence-length` | A sentence of more than 25 words, or an instruction of more than 20 words. An instruction starts with a verb, or has a verb after its first comma. |
 | `ste-contraction` | A contraction, such as `don't`. |
 | `ste-semicolon` | A semicolon. |
-| `ste-ing` | A warning for an -ing verb form. This is a word that ends in -ing and is not in an `allow` list. It comes after a form of "be", or after a word such as `without`, `before` or `than`. Thus the rule skips nouns, adjectives, titles and names. |
+| `ste-ing` | A warning for an -ing verb form. This is a word that ends in -ing and is not in an `allow` list. It comes after a form of "be" or after a word such as `without`, `of`, `for` or `to`, with possibly one adverb between them. It also comes after `and` or `or` when the sentence has a found -ing word before it. It skips a word with a capital letter that does not start a sentence. Thus the rule skips most nouns, adjectives, titles and names. |
 | `ste-passive` | A form of "be" and then a past participle, such as `is used`. |
 | `llm-stock` | A stock word or a stock phrase of LLM text, such as `delve` or `seamless`. It skips a name or a title, as `ste-word` does. |
 | `llm-hedge` | A hedge or a filler word, such as `basically` or `very`. |
@@ -72,7 +72,7 @@ Each other Markdown file, such as a blog post, gets all of the other rules.
 | `llm-bold-label` | A list of 3 or more items where each item starts with bold text. |
 | `llm-heavy-bold` | A paragraph with 3 or more bold spans. |
 | `llm-summary-heading` | A summary heading, such as "Summary" or "Conclusion", as the last heading. |
-| `html-comment` | An HTML comment. Only the suppression directive and a marker can stay. A marker has a lowercase letter or `/` immediately after `<!--`, such as `<!--curve NAME-->`, so that a script can find it. |
+| `html-comment` | An HTML comment. Only the suppression directive and a marker can stay. A marker has one lowercase word immediately after `<!--`, such as `<!--curve NAME-->`, so that a script can find it. Each argument after this word has a character that is not a lowercase letter. A marker has no colon and no sentence punctuation. Thus `<!--todo fix this-->` is not a marker. |
 | `suppression` | A directive with no reason, with an unknown rule or `repeated-fact`, or with no finding on the next line. |
 | `skill-front-matter` | In `SKILL.md`: front matter with no `name`, no `description`, or a description without the word "when". |
 | `agents-imperative` | In `AGENTS.md` and `CLAUDE.md`: a list item that gives an instruction with "must", "should" or "shall" and does not start with the verb. A fact or a list of files passes. |
@@ -194,7 +194,7 @@ printf 'allow\tHugging\nban\twhitelist\tallow-list\ngenerated\tvalidation/report
 
 An `allow` word passes each word rule.
 A `ban` word gives a `ste-word` finding.
-`repeated-fact` skips each file whose path starts with a `generated` path.
+`repeated-fact` skips each file whose path is a `generated` path or is in a `generated` folder.
 
 ## Checks
 
