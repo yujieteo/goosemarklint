@@ -94,6 +94,7 @@
 ./ste-ing/fail/doc.md:15:41: ste-ing: warning: "writing" is an -ing verb form: use another verb form
 ./ste-ing/fail/doc.md:17:8: ste-ing: warning: "deleting" is an -ing verb form: use another verb form
 ./ste-ing/fail/doc.md:17:20: ste-ing: warning: "adding" is an -ing verb form: use another verb form
+./ste-ing/fail/doc.md:19:6: ste-ing: warning: "planning" is an -ing verb form: use another verb form
 ./ste-passive/fail/doc.md:3:10: ste-passive: "is read" is passive voice: name who does the action
 ./ste-passive/fail/doc.md:5:10: ste-passive: "was not changed" is passive voice: name who does the action
 ./ste-semicolon/fail/doc.md:3:16: ste-semicolon: semicolon: write two sentences

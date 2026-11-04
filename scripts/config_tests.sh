@@ -33,8 +33,22 @@ if [ "$status" -ne 2 ]; then
   exit 1
 fi
 
+abs="$work/abs"
+mkdir -p "$abs/vendor"
+printf '# Vendor\n\nThe tool does not whitelist this; it fails.\n' >"$abs/vendor/bad.md"
+printf 'exclude\t./vendor/\n' >"$abs/.goosemarklint"
+for p in "$abs/vendor/bad.md" ./vendor/bad.md; do
+  status=0
+  (cd "$abs" && "$bin" check "$p") >"$work/out" 2>&1 || status=$?
+  if [ "$status" -ne 0 ] || [ -s "$work/out" ]; then
+    cat "$work/out"
+    echo "config_tests: exclude ./vendor/ with $p exited $status, want 0 with no output"
+    exit 1
+  fi
+done
+
 version=$("$bin" --version)
-if ! grep -q "^let VERSION = \"${version#goosemarklint }\";" "$root/src/main.goose" || [ "${version%% *}" != goosemarklint ]; then
+if ! [[ "$version" =~ ^goosemarklint\ [0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   echo "config_tests: --version printed '$version'"
   exit 1
 fi

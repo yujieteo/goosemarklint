@@ -1,4 +1,5 @@
 import std;
+import os;
 import dictionary;
 import md.node;
 import md.chars;
@@ -82,7 +83,9 @@ fn add_list_line(line: const u8[:], allowed: const i64[:]) -> bool {
     guard f.len == 2 || f.len == 3 else { return false; }
     let cat = position(CATEGORIES, f[0]);
     guard cat >= 0 && (allowed.len == 0 || position(allowed, cat) >= 0) && f[1].len > 0 else { return false; }
-    add_entry(cat, f[1], if f.len == 3 { f[2] } else { "" });
+    var phrase: u8[>..] = [];
+    if cat == EXCLUDE || cat == GENERATED { phrase = full_path(f[1]); } else { phrase.append(f[1]); }
+    add_entry(cat, phrase, if f.len == 3 { f[2] } else { "" });
     return true;
 }
 
@@ -122,9 +125,35 @@ fn in_list(cat: i64, word: const u8[:]) -> bool { find_entry(cat, word) >= 0 }
 
 fn is_allowed(word: const u8[:]) -> bool { in_list(ALLOW, word) }
 
+fn full_path(path: const u8[:]) -> u8[>..] {
+    var base: u8[>..] = [];
+    env("PWD", base);
+    var joined: u8[>..] = [];
+    if !starts_with(path, "/") {
+        joined.append(base);
+        joined.push('/');
+    }
+    joined.append(path);
+    var kept: const u8[:][>..] = [];
+    for c in split(joined, '/') {
+        if c == ".." {
+            if kept.len > 0 { kept.pop(); }
+        } else if c.len > 0 && c != "." {
+            kept.push(c);
+        }
+    }
+    var out: u8[>..] = [];
+    for c in kept {
+        out.push('/');
+        out.append(c);
+    }
+    if out.len == 0 { out.push('/'); }
+    if ends_with(path, "/") && !ends_with(out, "/") { out.push('/'); }
+    return out;
+}
+
 fn is_under(cat: i64, path: const u8[:]) -> bool {
-    let rel = if starts_with(path, "./") { path[2..] } else { path };
-    return any(entries) { it.cat == cat && rel.len >= it.phrase.len && lower_equal(rel[..it.phrase.len], phrase_of(it)) && (rel.len == it.phrase.len || rel[it.phrase.len] == '/' || ends_with(phrase_of(it), "/")) };
+    return any(entries) { it.cat == cat && path.len >= it.phrase.len && lower_equal(path[..it.phrase.len], phrase_of(it)) && (path.len == it.phrase.len || path[it.phrase.len] == '/' || ends_with(phrase_of(it), "/")) };
 }
 
 fn is_generated(path: const u8[:]) -> bool { is_under(GENERATED, path) }
@@ -135,6 +164,10 @@ fn is_disabled(rule: const u8[:]) -> bool { in_list(DISABLE, rule) }
 
 fn in_pass_fixture(path: const u8[:]) -> bool {
     var found = false;
-    each_split(path, '/') { if it == "pass" { found = true; } };
+    var parent: u8[>..] = [];
+    each_split(path, '/') {
+        if it == "pass" && is_dir(str(parent, "fail")) { found = true; }
+        format(parent, it, "/");
+    };
     return found;
 }

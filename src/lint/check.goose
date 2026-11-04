@@ -138,14 +138,15 @@ fn lint_source(out: u8[>..]&, path: const u8[:], input: const u8[:]) -> i64 {
 
 fn lint_file(out: u8[>..]&, path: const u8[:], facts: Facts&) -> i64 {
     var input: u8[>..] = [];
-    guard !is_excluded(path) else { return 0; }
+    let full = full_path(path);
+    guard !is_excluded(full) else { return 0; }
     guard read_file(path, input) else {
         write_stderr(str("goosemarklint: cannot read ", path, "\n"));
         return -1;
     }
     facts.path = Span { at: facts.text.len, len: path.len };
     facts.text.append(path);
-    facts.skip = is_generated(path) || in_pass_fixture(path);
+    facts.skip = is_generated(full) || in_pass_fixture(full);
     return lint_into(out, path, input, facts);
 }
 
