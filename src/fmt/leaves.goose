@@ -83,7 +83,7 @@ fn put_table(f: Fmt&, n: i64) {
     }
 }
 
-fn holds_directive(f: Fmt&, ln: i64) -> bool { find(source_line(f, ln), DIRECTIVE) >= 0 }
+fn is_target(f: Fmt&, ln: i64) -> bool { position(f.targets, ln) >= 0 }
 
 fn has_directive(d: Doc&, para: i64) -> bool {
     var n = d.nodes[para].first;
@@ -108,7 +108,7 @@ fn put_leaf(f: Fmt&, n: i64) {
     let node = f.d.nodes[n];
     match node.kind {
         FrontMatter => put_front_matter(f, n),
-        Paragraph => put_paragraph(f, n, holds_directive(f, first_line(f.d, n) - 1) || has_directive(f.d, n)),
+        Paragraph => put_paragraph(f, n, is_target(f, first_line(f.d, n)) || has_directive(f.d, n)),
         Heading => put_heading(f, n),
         CodeBlock => if node.fenced || after_list(f.d, n) { put_fenced(f, n); } else { put_indented(f, n); },
         HtmlBlock => put_lines(f, text_of(f.d, node.content)),

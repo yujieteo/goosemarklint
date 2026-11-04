@@ -81,6 +81,33 @@ fn print_findings(out: u8[>..]&, path: const u8[:], L: Lint&) {
     }
 }
 
+fn run_checks(L: Lint&) {
+    index_lines(L);
+    index_kinds(L);
+    var ptext: u8[>..] = [];
+    var pos: i64[>..] = [];
+    var cmap: i64[>..] = [];
+    var p = Prose { text: ptext, pos: pos, cmap: cmap, .. };
+    var toks: Tok[>..] = [];
+    var sents: Sent[>..] = [];
+    var w = Words { toks: toks, sents: sents };
+    check_tree(L, p, w);
+}
+
+fn directive_targets(d: Doc&, targets: i64[>..]&) {
+    var lines: i64[>..] = [];
+    var kinds: i64[>..] = [];
+    var found: Finding[>..] = [];
+    var msgs: u8[>..] = [];
+    var directives: Directive[>..] = [];
+    var text: u8[>..] = [];
+    var items: Fact[>..] = [];
+    var facts = Facts { text: text, items: items, path: Span { at: 0, len: 0 } };
+    var L = Lint { d: d, profile: Profile.Docs, lines: lines, kinds: kinds, found: found, msgs: msgs, directives: directives, facts: facts };
+    run_checks(L);
+    for dir in L.directives { targets.push(dir.target); }
+}
+
 fn lint_into(out: u8[>..]&, path: const u8[:], input: const u8[:], facts: Facts&) -> i64 {
     var nodes: Node[>..] = [];
     var text: u8[>..] = [];
@@ -95,16 +122,7 @@ fn lint_into(out: u8[>..]&, path: const u8[:], input: const u8[:], facts: Facts&
     var msgs: u8[>..] = [];
     var directives: Directive[>..] = [];
     var L = Lint { d: d, profile: profile_of(path), lines: lines, kinds: kinds, found: found, msgs: msgs, directives: directives, facts: facts };
-    index_lines(L);
-    index_kinds(L);
-    var ptext: u8[>..] = [];
-    var pos: i64[>..] = [];
-    var cmap: i64[>..] = [];
-    var p = Prose { text: ptext, pos: pos, cmap: cmap, .. };
-    var toks: Tok[>..] = [];
-    var sents: Sent[>..] = [];
-    var w = Words { toks: toks, sents: sents };
-    check_tree(L, p, w);
+    run_checks(L);
     apply_suppressions(L);
     print_findings(out, path, L);
     return count(L.found) { !it.warning };

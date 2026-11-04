@@ -23,7 +23,9 @@ fn emit_doc(d: Doc&, out: u8[>..]&) {
     var starts: i64[>..] = [];
     var levels: Level[>..] = [];
     var marks: u8[>..] = [];
-    var f = Fmt { d: d, starts: starts, out: out, levels: levels, marks: marks };
+    var targets: i64[>..] = [];
+    directive_targets(d, targets);
+    var f = Fmt { d: d, starts: starts, targets: targets, out: out, levels: levels, marks: marks };
     index_starts(f);
     put_document(f);
 }

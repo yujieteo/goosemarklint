@@ -333,6 +333,14 @@ The tool is good. We delve into it.
 
    <!-- goosemarklint-disable-next-line llm-stock: the test needs a stock word -->
 2. The next step is good. We delve into it.
+
+<!-- goosemarklint-disable-next-line llm-stock:
+     the test needs a stock word -->
+The comment is long. We delve into it.
+
+<!-- goosemarklint-disable-next-line llm-stock:
+     the test needs a stock word -->
+- The long item is good. We delve into it.
 ==> goosestrike/README.md <==
 # goosestrike
 

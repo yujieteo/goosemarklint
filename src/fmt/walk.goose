@@ -14,7 +14,7 @@ fn is_tight(d: Doc&, parent: i64) -> bool {
 }
 
 fn put_separator(f: Fmt&, from: i64, parent: i64, joined: bool) {
-    guard !(joined && holds_directive(f, from - 1)) && !is_tight(f.d, parent);
+    guard !(joined && is_target(f, from)) && !is_tight(f.d, parent);
     put_blank(f);
 }
 

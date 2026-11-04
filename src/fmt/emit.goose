@@ -6,6 +6,7 @@ struct Level { quote: bool, width: i64 = 0, marker: Span, used: bool = false }
 struct Fmt {
     d: Doc&,
     starts: i64[>..]&,
+    targets: i64[>..]&,
     out: u8[>..]&,
     levels: Level[>..]&,
     marks: u8[>..]&,
