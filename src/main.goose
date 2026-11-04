@@ -8,7 +8,8 @@ import lint.context;
 import lint.check;
 import fmt.run;
 
-let USAGE = "usage: goosemarklint check <path>... | fmt [--check] <path>... | rules | tree <file>...\n";
+let VERSION = "0.2.0";
+let USAGE = "usage: goosemarklint check <path>... | fmt [--check] <path>... | rules | tree <file>... | --version\n";
 
 fn print_file_tree(path: const u8[:]) -> bool {
     var input: u8[>..] = [];
@@ -50,6 +51,9 @@ fn main() {
         fmt_code
     } else if command == "tree" && a.len >= 3 {
         print_trees(a[2..])
+    } else if command == "--version" && a.len == 2 {
+        write_stdout(str("goosemarklint ", VERSION, "\n"));
+        0
     } else if command == "rules" && a.len == 2 {
         print_rules()
     } else {

@@ -75,6 +75,7 @@ fn check_tree(L: Lint&, p: Prose&, w: Words&) {
 fn print_findings(out: u8[>..]&, path: const u8[:], L: Lint&) {
     stable_sort(L.found) { a, b => a.line < b.line || (a.line == b.line && (a.col < b.col || (a.col == b.col && a.rule < b.rule))) };
     for f in L.found {
+        guard !is_disabled(RULE_IDS[f.rule]);
         format(out, path, ":", f.line, ":", f.col, ": ", RULE_IDS[f.rule], ": ", if f.warning { "warning: " } else { "" });
         out.append(L.msgs[f.msg.at..f.msg.at + f.msg.len]);
         out.push('\n');
@@ -125,7 +126,7 @@ fn lint_into(out: u8[>..]&, path: const u8[:], input: const u8[:], facts: Facts&
     run_checks(L);
     apply_suppressions(L);
     print_findings(out, path, L);
-    return count(L.found) { !it.warning };
+    return count(L.found) { !it.warning && !is_disabled(RULE_IDS[it.rule]) };
 }
 
 fn lint_source(out: u8[>..]&, path: const u8[:], input: const u8[:]) -> i64 {
@@ -137,13 +138,14 @@ fn lint_source(out: u8[>..]&, path: const u8[:], input: const u8[:]) -> i64 {
 
 fn lint_file(out: u8[>..]&, path: const u8[:], facts: Facts&) -> i64 {
     var input: u8[>..] = [];
+    guard !is_excluded(path) else { return 0; }
     guard read_file(path, input) else {
         write_stderr(str("goosemarklint: cannot read ", path, "\n"));
         return -1;
     }
     facts.path = Span { at: facts.text.len, len: path.len };
     facts.text.append(path);
-    facts.skip = is_generated(path);
+    facts.skip = is_generated(path) || in_pass_fixture(path);
     return lint_into(out, path, input, facts);
 }
 
@@ -199,8 +201,16 @@ fn load_config() -> bool {
     guard file_exists(CONFIG) && read_file(CONFIG, text) else { return true; }
     let bad = add_lists(text, CONFIG_CATEGORIES);
     guard bad == 0 else {
-        write_stderr(str(CONFIG, ":", bad, ": write allow<TAB>word, ban<TAB>word<TAB>replacement or generated<TAB>path\n"));
+        write_stderr(str(CONFIG, ":", bad, ": write allow<TAB>word, ban<TAB>word<TAB>replacement, generated<TAB>path, exclude<TAB>path or disable<TAB>rule\n"));
         return false;
+    }
+    for e in entries {
+        let name = phrase_of(e);
+        let known = any(RULE_IDS) { lower_equal(it, name) };
+        if e.cat == DISABLE && !known {
+            write_stderr(str(CONFIG, ": unknown rule ", name, ": run goosemarklint rules\n"));
+            return false;
+        }
     }
     return true;
 }
@@ -219,7 +229,7 @@ fn run_check(paths: u8[:][:]) -> i64 {
         if n < 0 { failed = true; } else { total += n; }
     }
     var repeats: u8[>..] = [];
-    report_repeats(repeats, facts);
+    if !is_disabled("repeated-fact") { report_repeats(repeats, facts); }
     write_stdout(repeats);
     return if failed { 2 } else if total > 0 { 1 } else { 0 };
 }
