@@ -49,5 +49,6 @@ sha256sum --check --quiet "$out/sources.sha256"
 
 "$root/scripts/rule_tests.sh" "$out/main" "$@"
 "$root/scripts/fmt_tests.sh" "$out/main" "$@"
+"$root/scripts/config_tests.sh" "$out/main"
 "$root/scripts/replay.sh" "$@"
 echo "check: all checks passed"

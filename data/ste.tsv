@@ -216,6 +216,8 @@ allow	kerning
 allow	meaning
 allow	wording
 allow	missing
+allow	engineering
+allow	programming
 allow	need
 allow	seed
 allow	feed

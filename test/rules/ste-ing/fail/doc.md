@@ -15,3 +15,5 @@ Keep the cost of quickly reading the file low.
 Read the file by unpacking the file and writing its XML.
 
 Prefer deleting to adding.
+
+Keep planning the release.

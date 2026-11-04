@@ -23,6 +23,7 @@ The exit status is 0 for no finding or only warnings, and 1 for an error.
 It is 2 for a file or a config that the tool cannot read.
 
 `./goosemarklint rules` prints the rule IDs.
+`./goosemarklint --version` prints the version.
 `./goosemarklint tree FILE` prints the parse tree of a file.
 
 ## Format
@@ -82,6 +83,7 @@ Each other Markdown file, such as a blog post, gets all of the other rules.
 
 `repeated-fact` reads all files of one run together, so run `check` on the whole repo.
 It skips each file under a `generated` path of the config, because a script copies text into these files.
+A pass fixture is a `pass` folder beside a `fail` folder, at or under the path you pass. Its text is test data, not a repeat source.
 It folds case, white space and punctuation, and it skips sentences of fewer than 8 words, sentences with code, headings and table cells.
 A pinned value is a commit hash of 7 to 40 hex characters or a version such as `1.4.2` or `v1.4.2`, outside front matter.
 A short hash and a longer hash that starts with it are one pinned value.
@@ -179,32 +181,41 @@ The reason is necessary.
 
 ## Config
 
-A `.goosemarklint` file in the current folder adds words to the lists.
+A `.goosemarklint` file in the current folder changes the word lists and the rules.
 Each line is one of these:
 
 - `allow`, a tab and a word.
 - `ban`, a tab, a word or a phrase, a tab and the replacement.
 - `generated`, a tab and a path from the current folder.
+- `exclude`, a tab and a path from the current folder.
+- `disable`, a tab and a rule ID.
+
+Config paths match paths relative to the folder where you run goosemarklint.
 
 This command makes a config with 1 line of each type:
 
 ```sh
-printf 'allow\tHugging\nban\twhitelist\tallow-list\ngenerated\tvalidation/reports/\n' > .goosemarklint
+printf 'allow\tHugging\nban\twhitelist\tallow-list\ngenerated\tvalidation/reports/\nexclude\tvendor/\ndisable\tste-ing\n' > .goosemarklint
 ```
 
 An `allow` word passes each word rule.
 A `ban` word gives a `ste-word` finding.
 `repeated-fact` skips each file whose path is a `generated` path or is in a `generated` folder.
+`check` and `fmt` skip each file under an `exclude` path.
+`fmt` also skips each file under a `generated` path.
+Thus a vendored file or a test fixture gets no finding.
+A `disable` rule gives no finding in the project, and an unknown rule ID is a config error.
 
 ## Checks
 
-Run all checks: the spec tests, the rule tests, the saved lint and `fmt` output, and the parse tree replay:
+Run all checks: the spec, rule and config tests, the saved lint and fmt output, and the parse tree replay:
 
 ```sh
 scripts/check.sh
 ```
 
 Each rule has a `pass` folder and a `fail` folder in `test/rules`.
+Each config test has a `pass` folder and a `fail` folder in `test/config`.
 `test/rules.expect` and `test/corpus.expect` hold the lint output of the rule tests and of the real Markdown files in `test/corpus`.
 `test/fmt.expect` holds the `fmt` output of `test/corpus` and `test/fmt`.
 The spec tests also format each spec example two times.

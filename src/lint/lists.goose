@@ -1,4 +1,5 @@
 import std;
+import os;
 import dictionary;
 import md.node;
 import md.chars;
@@ -21,6 +22,8 @@ let CATEGORIES = [
     "adjective",
     "suffix",
     "generated",
+    "exclude",
+    "disable",
 ];
 let BAN = 0;
 let CONTRACTION = 1;
@@ -36,7 +39,9 @@ let SUMMARY = 10;
 let ADJECTIVE = 11;
 let SUFFIX = 12;
 let GENERATED = 13;
-let CONFIG_CATEGORIES = [BAN, ALLOW, GENERATED];
+let EXCLUDE = 14;
+let DISABLE = 15;
+let CONFIG_CATEGORIES = [BAN, ALLOW, GENERATED, EXCLUDE, DISABLE];
 
 struct Entry { cat: i64, phrase: Span, repl: Span, next: i64 = -1 }
 
@@ -78,7 +83,8 @@ fn add_list_line(line: const u8[:], allowed: const i64[:]) -> bool {
     guard f.len == 2 || f.len == 3 else { return false; }
     let cat = position(CATEGORIES, f[0]);
     guard cat >= 0 && (allowed.len == 0 || position(allowed, cat) >= 0) && f[1].len > 0 else { return false; }
-    add_entry(cat, f[1], if f.len == 3 { f[2] } else { "" });
+    let phrase = if cat == EXCLUDE || cat == GENERATED { strip_dot(f[1]) } else { f[1] };
+    add_entry(cat, phrase, if f.len == 3 { f[2] } else { "" });
     return true;
 }
 
@@ -118,7 +124,33 @@ fn in_list(cat: i64, word: const u8[:]) -> bool { find_entry(cat, word) >= 0 }
 
 fn is_allowed(word: const u8[:]) -> bool { in_list(ALLOW, word) }
 
-fn is_generated(path: const u8[:]) -> bool {
-    let rel = if starts_with(path, "./") { path[2..] } else { path };
-    return any(entries) { it.cat == GENERATED && rel.len >= it.phrase.len && lower_equal(rel[..it.phrase.len], phrase_of(it)) && (rel.len == it.phrase.len || rel[it.phrase.len] == '/' || ends_with(phrase_of(it), "/")) };
+fn strip_dot(path: const u8[:]) -> const u8[:] { if starts_with(path, "./") { path[2..] } else { path } }
+
+fn is_under(cat: i64, path: const u8[:]) -> bool {
+    let rel = strip_dot(path);
+    return any(entries) { it.cat == cat && rel.len >= it.phrase.len && lower_equal(rel[..it.phrase.len], phrase_of(it)) && (rel.len == it.phrase.len || rel[it.phrase.len] == '/' || ends_with(phrase_of(it), "/")) };
+}
+
+fn is_generated(path: const u8[:]) -> bool { is_under(GENERATED, path) }
+
+fn is_excluded(path: const u8[:]) -> bool { is_under(EXCLUDE, path) }
+
+fn is_disabled(rule: const u8[:]) -> bool { in_list(DISABLE, rule) }
+
+fn fixture_base(root: const u8[:]) -> i64 {
+    var end = root.len;
+    while end > 0 && root[end - 1] == '/' { end -= 1; }
+    var at = end;
+    while at > 0 && root[at - 1] != '/' { at -= 1; }
+    return at;
+}
+
+fn in_pass_fixture(path: const u8[:], from: i64) -> bool {
+    var found = false;
+    var parent: u8[>..] = [];
+    each_split(path, '/') {
+        if it == "pass" && parent.len >= from && is_dir(str(parent, "fail")) { found = true; }
+        format(parent, it, "/");
+    };
+    return found;
 }
