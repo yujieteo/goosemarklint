@@ -78,10 +78,11 @@ sibling="$work/sibling"
 mkdir -p "$sibling/pass" "$sibling/fail"
 printf '# Pass\n\n%s\n' "$sentence" >"$sibling/pass/doc.md"
 printf '# Fail\n\n%s\n' "$sentence" >"$sibling/fail/doc.md"
-(cd "$sibling" && PWD=/nonexistent "$bin" check .) >"$work/out" 2>&1 || true
-if grep -q 'repeated-fact' "$work/out"; then
+status=0
+(cd "$sibling" && PWD=/nonexistent "$bin" check .) >"$work/out" 2>&1 || status=$?
+if [ "$status" -ne 0 ] || [ -s "$work/out" ]; then
   cat "$work/out"
-  echo "config_tests: a pass folder with a sibling fail folder gave a repeated-fact finding"
+  echo "config_tests: a pass folder with a sibling fail folder exited $status, want 0 with no output"
   exit 1
 fi
 
