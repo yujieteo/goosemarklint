@@ -181,7 +181,7 @@ The reason is necessary.
 
 ## Config
 
-A `.goosemarklint` file in the current folder adds words to the lists.
+A `.goosemarklint` file in the current folder changes the word lists and the rules.
 Each line is one of these:
 
 - `allow`, a tab and a word.
@@ -208,13 +208,14 @@ A `disable` rule gives no finding in the project, and an unknown rule ID is a co
 
 ## Checks
 
-Run all checks: the spec tests, the rule tests, the saved lint and `fmt` output, and the parse tree replay:
+Run all checks: the spec, rule and config tests, the saved lint and fmt output, and the parse tree replay:
 
 ```sh
 scripts/check.sh
 ```
 
 Each rule has a `pass` folder and a `fail` folder in `test/rules`.
+Each config test has a `pass` folder and a `fail` folder in `test/config`.
 `test/rules.expect` and `test/corpus.expect` hold the lint output of the rule tests and of the real Markdown files in `test/corpus`.
 `test/fmt.expect` holds the `fmt` output of `test/corpus` and `test/fmt`.
 The spec tests also format each spec example two times.
