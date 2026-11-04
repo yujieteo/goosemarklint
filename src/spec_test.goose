@@ -6,6 +6,7 @@ import md.parse;
 import md.html;
 import md.tree;
 import lint.check;
+import fmt.run;
 
 let FENCE = "````````````````````````````````";
 let TAB_MARK = "\xE2\x86\x92";
@@ -14,7 +15,7 @@ struct Example { markdown: Span, expected: Span, section: Span, line: i64, opts:
 
 enum Part { Prose, Markdown, Expected }
 
-struct Tally { passed: i64 = 0, failed: i64 = 0 }
+struct Tally { passed: i64 = 0, failed: i64 = 0, refused: i64 = 0, unstable: i64 = 0 }
 
 fn restore_tabs(out: u8[>..]&, s: const u8[:]) { format_replaced(out, s, TAB_MARK, "\t"); }
 
@@ -111,6 +112,20 @@ fn lint_examples(examples: const Example[:], buf: const u8[:]) -> i64 {
     return findings;
 }
 
+fn fmt_example(e: Example, buf: const u8[:], file: const u8[:], t: Tally&) {
+    let input = buf[e.markdown.at..e.markdown.at + e.markdown.len];
+    var once: u8[>..] = [];
+    guard format_markdown(input, e.opts, once) else {
+        t.refused++;
+        write_stdout(str("FMT CHANGES THE TREE ", file, ":", e.line, "\n--- markdown\n", input, "--- fmt\n", once));
+        return;
+    }
+    var twice: u8[>..] = [];
+    guard !format_markdown(once, e.opts, twice) || twice != once else { return; }
+    t.unstable++;
+    write_stdout(str("FMT NOT IDEMPOTENT ", file, ":", e.line, "\n--- markdown\n", input, "--- once\n", once, "--- twice\n", twice));
+}
+
 fn count_openings(spec: const u8[:]) -> i64 {
     var n = 0;
     each_split(spec, '\n') { if starts_with(it, FENCE) && it.len > FENCE.len { n++; } };
@@ -129,7 +144,10 @@ fn run_file(profile: const u8[:], file: const u8[:], t: Tally&) -> bool {
     let before = t.failed;
     for e in examples { run_example(e, buf, file, t); }
     let findings = lint_examples(examples, buf);
-    write_stdout(str(file, ": ", examples.len, " examples, ", t.failed - before, " failed, ", findings, " lint findings\n"));
+    let refused = t.refused;
+    for e in examples { fmt_example(e, buf, file, t); }
+    write_stdout(str(file, ": ", examples.len, " examples, ", t.failed - before, " failed, ", findings, " lint findings, "));
+    write_stdout(str(t.refused - refused, " not formatted\n"));
     let openings = count_openings(spec);
     guard examples.len == openings else {
         write_stdout(str(file, ": ", openings - examples.len, " of ", openings, " examples not collected\n"));
@@ -148,5 +166,6 @@ fn main() {
         i += 2;
     }
     write_stdout(str(t.passed, " passed, ", t.failed, " failed\n"));
-    if !ok || t.failed > 0 { exit(1); }
+    write_stdout(str("fmt: ", t.refused, " examples not formatted, ", t.unstable, " not idempotent\n"));
+    if !ok || t.failed > 0 || t.refused > 0 || t.unstable > 0 { exit(1); }
 }

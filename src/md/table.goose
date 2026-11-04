@@ -164,6 +164,7 @@ fn try_table_header(d: Doc&, b: LineState&, para: i64) -> Start {
         parse_row(head_text, heads);
     }
     add_row(d, b.number - 1, para, head_text, d.nodes[para].col, heads, true);
+    note_line_col(d, b.number, b.next_nonspace);
     advance_offset(d, b, b.len - b.offset, false);
     return Start.Container;
 }
@@ -181,6 +182,7 @@ fn try_table_row(d: Doc&, b: LineState&, table: i64) -> Start {
     guard parse_row(line, cells) >= 0 else { return Start.None; }
     let first = d.nodes[table].col;
     add_row(d, b.number, table, line, first, cells, false);
+    note_line_col(d, b.number, b.next_nonspace);
     d.nodes[table].end_line = b.number;
     advance_offset(d, b, b.len - b.offset, false);
     return Start.Container;

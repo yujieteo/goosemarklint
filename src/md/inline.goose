@@ -52,8 +52,8 @@ fn parse_backslash(d: Doc&, p: Inl&, parent: i64) {
     p.pos++;
     let c = peek_at(d, p, p.pos);
     if c == '\n' {
+        add_leaf(d, parent, Kind.LineBreak, Span { at: p.at + p.pos, len: 0 });
         p.pos++;
-        add_leaf(d, parent, Kind.LineBreak, Span {});
     } else if c >= 0 && is_ascii_punct(c) {
         add_text(d, p, parent, p.pos, p.pos + 1);
         p.pos++;
@@ -81,6 +81,7 @@ fn parse_html_inline(d: Doc&, p: Inl&, parent: i64) -> bool {
 }
 
 fn parse_newline(d: Doc&, p: Inl&, parent: i64) {
+    let at = p.at + p.pos;
     p.pos++;
     let last = d.nodes[parent].last;
     var hard = false;
@@ -93,7 +94,7 @@ fn parse_newline(d: Doc&, p: Inl&, parent: i64) {
             d.nodes[last].content.len = n;
         }
     }
-    add_leaf(d, parent, if hard { Kind.LineBreak } else { Kind.SoftBreak }, Span {});
+    add_leaf(d, parent, if hard { Kind.LineBreak } else { Kind.SoftBreak }, Span { at: at, len: 0 });
     while peek_at(d, p, p.pos) == ' ' { p.pos++; }
 }
 

@@ -48,5 +48,6 @@ tail -n +2 "$root/data/sources.tsv" | awk -F '\t' -v root="$root" '{ print $2 " 
 sha256sum --check --quiet "$out/sources.sha256"
 
 "$root/scripts/rule_tests.sh" "$out/main" "$@"
+"$root/scripts/fmt_tests.sh" "$out/main" "$@"
 "$root/scripts/replay.sh" "$@"
 echo "check: all checks passed"

@@ -1,17 +1,18 @@
 # goosemarklint
 
-goosemarklint is an opinionated Markdown linter, written in Goose, that checks Markdown for ASD-STE100 and for the marks of LLM text.
+goosemarklint is an opinionated Markdown linter and formatter, written in Goose, that checks Markdown for ASD-STE100 and for the marks of LLM text.
 
 The parser reads CommonMark, GitHub Flavored Markdown, YAML front matter and GitHub alerts.
-The `fmt` command comes in a later step.
 
 ## Run
 
-Build the tool with the Goose compiler, then check the Markdown files of a repo:
+Build the tool with the Goose compiler, then check the Markdown files of a repo.
+`fmt --check` fails when `fmt` would change a file:
 
 ```sh
 goose build src/main.goose -o goosemarklint
 ./goosemarklint check .
+./goosemarklint fmt --check .
 ```
 
 `check` takes files and folders.
@@ -23,6 +24,28 @@ It is 2 for a file or a config that the tool cannot read.
 
 `./goosemarklint rules` prints the rule IDs.
 `./goosemarklint tree FILE` prints the parse tree of a file.
+
+## Format
+
+`./goosemarklint fmt .` writes each Markdown file again in one layout:
+
+- Each sentence of a paragraph goes on its own line.
+  A sentence ends at `.`, `!` or `?` before a space and a capital letter or a digit.
+  The line does not break after a word from the `abbreviation` list, or in a code span, a URL or inline HTML.
+- One blank line goes between two blocks, except in a tight list.
+- Headings start with `#`.
+  Bullets use `-`, with an indent of 2 spaces for each level.
+  The numbers of an ordered list count up from the first number.
+- Code fences use backticks.
+  Each table pipe has 1 space on each side.
+- Front matter, code, HTML blocks and link reference definitions do not change.
+- A paragraph after a suppression directive keeps its lines, so the directive stays on the line before its target.
+
+`fmt` parses its output again and compares the two parse trees.
+The comparison ignores soft line breaks.
+When the trees differ, `fmt` does not write the file, and the exit status is 2.
+`./goosemarklint fmt --check .` writes nothing.
+It prints each file that `fmt` would change, and then its exit status is 1.
 
 ## Rules
 
@@ -167,7 +190,7 @@ A `ban` word gives a `ste-word` finding.
 
 ## Checks
 
-Run all checks, which include the spec tests, the rule tests, the saved lint output and the parse tree replay:
+Run all checks: the spec tests, the rule tests, the saved lint and `fmt` output, and the parse tree replay:
 
 ```sh
 scripts/check.sh
@@ -175,6 +198,9 @@ scripts/check.sh
 
 Each rule has a `pass` folder and a `fail` folder in `test/rules`.
 `test/rules.expect` and `test/corpus.expect` hold the lint output of the rule tests and of the real Markdown files in `test/corpus`.
+`test/fmt.expect` holds the `fmt` output of `test/corpus` and `test/fmt`.
+The spec tests also format each spec example two times.
+The parse tree must stay the same, and the second `fmt` must change nothing.
 When a change must change an output, read the diff, then accept it:
 
 ```sh
