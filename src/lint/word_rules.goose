@@ -124,12 +124,28 @@ fn check_passive(L: Lint&, p: Prose&, w: Words&, i: i64) {
 
 fn is_em_dash(s: const u8[:], i: i64) -> bool { s[i] == 0xE2 && i + 2 < s.len && s[i + 1] == 0x80 && s[i + 2] == 0x94 }
 
+fn source_separator(L: Lint&, p: Prose&) -> i64 {
+    guard L.machine else { return -1; }
+    var colon = -1;
+    for c, i in p.text {
+        if colon < 0 && c == ':' { colon = i; }
+        if colon < 0 && c == ' ' { return -1; }
+    }
+    guard colon > 0 && colon + 1 < p.text.len && p.text[colon + 1] == ' ' else { return -1; }
+    var at = -1;
+    for c, i in p.text {
+        if i > colon && i > 0 && is_em_dash(p.text, i) && p.text[i - 1] == ' ' && i + 3 < p.text.len && p.text[i + 3] == ' ' { at = i; }
+    }
+    return at;
+}
+
 fn check_marks(L: Lint&, p: Prose&) {
     let alone = trim(p.text);
     let placeholder = alone.len == 3 && is_em_dash(alone, 0);
+    let separator = source_separator(L, p);
     for c, i in p.text {
         if c == ';' { report(L, p.pos[i], "ste-semicolon", "semicolon: write two sentences"); }
-        if is_em_dash(p.text, i) && !placeholder {
+        if is_em_dash(p.text, i) && !placeholder && i != separator {
             report(L, p.pos[i], "llm-em-dash", "em dash: write two sentences or use a comma");
         }
     }

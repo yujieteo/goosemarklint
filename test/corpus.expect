@@ -268,17 +268,6 @@
 ./skills/state-machine/examples/femahoy-chat/README.md:7:30: ste-sentence-length: sentence has 27 words, limit 25
 ./skills/state-machine/examples/femahoy-chat/README.md:16:135: ste-sentence-length: sentence has 27 words, limit 25
 ./skills/state-machine/examples/femahoy-chat/chat.sm.md:4:1: ste-sentence-length: sentence has 29 words, limit 25
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:9:69: llm-em-dash: em dash: write two sentences or use a comma
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:10:56: llm-em-dash: em dash: write two sentences or use a comma
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:11:110: llm-em-dash: em dash: write two sentences or use a comma
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:12:104: llm-em-dash: em dash: write two sentences or use a comma
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:13:68: llm-em-dash: em dash: write two sentences or use a comma
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:14:66: llm-em-dash: em dash: write two sentences or use a comma
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:15:111: llm-em-dash: em dash: write two sentences or use a comma
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:16:59: llm-em-dash: em dash: write two sentences or use a comma
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:17:97: llm-em-dash: em dash: write two sentences or use a comma
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:18:43: llm-em-dash: em dash: write two sentences or use a comma
-./skills/state-machine/examples/femahoy-chat/chat.sm.md:22:148: llm-em-dash: em dash: write two sentences or use a comma
 ./skills/state-machine/references/format.md:42:63: ste-passive: "is required" is passive voice: name who does the action
 ./skills/state-machine/references/format.md:54:86: ste-passive: "is ignored" is passive voice: name who does the action
 ./skills/state-machine/references/format.md:73:126: ste-passive: "are ignored" is passive voice: name who does the action
@@ -289,13 +278,8 @@
 ./skills/state-machine/references/review.md:40:128: ste-semicolon: semicolon: write two sentences
 ./skills/state-machine/references/review.md:41:110: ste-semicolon: semicolon: write two sentences
 ./skills/state-machine/references/review.md:41:127: ste-passive: "is honoured" is passive voice: name who does the action
-./skills/state-machine/test/faults.sm.md:5:33: llm-em-dash: em dash: write two sentences or use a comma
 ./skills/state-machine/test/faults.sm.md:6:32: ste-passive: "is done" is passive voice: name who does the action
-./skills/state-machine/test/faults.sm.md:6:41: llm-em-dash: em dash: write two sentences or use a comma
-./skills/state-machine/test/faults.sm.md:7:39: llm-em-dash: em dash: write two sentences or use a comma
 ./skills/state-machine/test/faults.sm.md:8:19: ste-passive: "be cancelled" is passive voice: name who does the action
-./skills/state-machine/test/faults.sm.md:8:33: llm-em-dash: em dash: write two sentences or use a comma
-./skills/state-machine/test/faults.sm.md:9:25: llm-em-dash: em dash: write two sentences or use a comma
 ./ap242-gauge/README.md:40:32: repeated-fact: warning: pinned value "1.4.4" is in 2 places: ./ap242-gauge/README.md:40, ./site/README.md:23: keep one owner and point to it from the others
 ./goosestrike/README.md:260:26: repeated-fact: warning: pinned value "a108677d300cb0e8bbb842c35a353abe67a20c6c" is in 4 places: ./goosestrike/README.md:260, ./neurons/README.md:211, ./neurons/README.md:216, ./server/README.md:162: keep one owner and point to it from the others
 ./skills/README.md:8:53: repeated-fact: warning: list "dead code check, expect test, find the parts that a project has, fuzz target, output replay, page budget, property test, replay, sanitizer build, state model, test, then add the lint rule, type, verification rule that stops the related fault in the tools of that project" is in 2 places: ./skills/README.md:8, ./skills/guardrails/SKILL.md:3, and these items differ: "page budget", "budget check": keep one owner and point to it from the others

@@ -1,1 +1,5 @@
 allow	finding
+exclude	test/rules
+exclude	test/config
+exclude	test/fmt
+exclude	test/corpus

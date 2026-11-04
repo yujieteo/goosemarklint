@@ -8,7 +8,7 @@ The lines that continue an enclosing block quote or list item, and lazy paragrap
 ## Requirements
 
 - R1: A sequence of non-blank lines that no other block takes is a paragraph. A blank line ends it. — test/spec/commonmark-0.31.2.txt:3516
-- R2: Blank lines between blocks are ignored. — test/spec/commonmark-0.31.2.txt:3624
+- R2: The parser ignores blank lines between blocks. — test/spec/commonmark-0.31.2.txt:3624
 - R3: A fenced code block holds each line up to a closing fence, or to the end of the containing block. A fence can interrupt a paragraph. — test/spec/commonmark-0.31.2.txt:1959
 - R4: An indented code block holds indented chunks separated by blank lines. It cannot interrupt a paragraph. — test/spec/commonmark-0.31.2.txt:1737
 - R5: An HTML block ends at the first line that meets the end condition of its type. Types 6 and 7 end at a blank line. — test/spec/commonmark-0.31.2.txt:2366

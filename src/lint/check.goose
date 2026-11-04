@@ -103,7 +103,7 @@ fn directive_targets(d: Doc&, targets: i64[>..]&) {
     var text: u8[>..] = [];
     var items: Fact[>..] = [];
     var facts = Facts { text: text, items: items, path: Span { at: 0, len: 0 } };
-    var L = Lint { d: d, profile: Profile.Docs, lines: lines, kinds: kinds, found: found, msgs: msgs, directives: directives, facts: facts };
+    var L = Lint { d: d, profile: Profile.Docs, machine: false, lines: lines, kinds: kinds, found: found, msgs: msgs, directives: directives, facts: facts };
     run_checks(L);
     for dir in L.directives { targets.push(dir.target); }
 }
@@ -121,7 +121,7 @@ fn lint_into(out: u8[>..]&, path: const u8[:], input: const u8[:], facts: Facts&
     var found: Finding[>..] = [];
     var msgs: u8[>..] = [];
     var directives: Directive[>..] = [];
-    var L = Lint { d: d, profile: profile_of(path), lines: lines, kinds: kinds, found: found, msgs: msgs, directives: directives, facts: facts };
+    var L = Lint { d: d, profile: profile_of(path), machine: ends_with(path, ".sm.md"), lines: lines, kinds: kinds, found: found, msgs: msgs, directives: directives, facts: facts };
     run_checks(L);
     apply_suppressions(L);
     retain(L.found) { !is_disabled(RULE_IDS[it.rule]) };
