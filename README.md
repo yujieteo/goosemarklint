@@ -72,7 +72,7 @@ Each other Markdown file, such as a blog post, gets all of the other rules.
 | `llm-bold-label` | A list of 3 or more items where each item starts with bold text. |
 | `llm-heavy-bold` | A paragraph with 3 or more bold spans. |
 | `llm-summary-heading` | A summary heading, such as "Summary" or "Conclusion", as the last heading. |
-| `html-comment` | An HTML comment. Only the suppression directive and a marker can stay. A marker has one lowercase word immediately after `<!--`, such as `<!--curve NAME-->`, so that a script can find it. Each argument after this word has a character that is not a lowercase letter. A marker has no colon and no sentence punctuation. Thus `<!--todo fix this-->` is not a marker. |
+| `html-comment` | An HTML comment. Only the suppression directive and a marker can stay. A marker has one lowercase word immediately after `<!--`, such as `<!--curve NAME-->`, so that a script can find it. The word can start with `/`, such as `<!--/hand-check-->`. Each argument after this word has a character that is not a lowercase letter. A marker has no colon and no sentence punctuation. Thus `<!--todo fix this-->` is not a marker. |
 | `suppression` | A directive with no reason, with an unknown rule or `repeated-fact`, or with no finding on the next line. |
 | `skill-front-matter` | In `SKILL.md`: front matter with no `name`, no `description`, or a description without the word "when". |
 | `agents-imperative` | In `AGENTS.md` and `CLAUDE.md`: a list item that gives an instruction with "must", "should" or "shall" and does not start with the verb. A fact or a list of files passes. |
