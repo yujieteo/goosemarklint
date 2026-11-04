@@ -42,6 +42,7 @@ It is 2 for a file or a config that the tool cannot read.
 - Front matter, code, HTML blocks and link reference definitions do not change.
 - A paragraph after a suppression directive keeps its lines, so the directive stays on the line before its target.
 - A paragraph in a raw HTML `<pre>` element keeps its lines, because the browser shows each line break of a `pre` element.
+- A paragraph that starts with `initial:` keeps its lines, so the `initial:` and `final:` lines of a state machine stay apart.
 
 `fmt` parses its output again and compares the two parse trees.
 The comparison ignores soft line breaks.

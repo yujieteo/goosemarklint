@@ -298,6 +298,18 @@ femahoy is under the MIT License, see `LICENSE`.
 <!-- goosemarklint-disable-next-line llm-hedge: the test needs a blank line here -->
 
 The value is 1.
+==> fmt/machine-header.md <==
+# Machine header
+
+## Machine upload
+
+initial: idle
+final: stored
+
+## Machine bugs
+
+initial: a
+final: done. It stays.
 ==> fmt/raw-pre.md <==
 # Raw pre
 
@@ -2726,7 +2738,8 @@ It is a parallel region of `chat`.
 
 ## Machine chat
 
-initial: none final:
+initial: none
+final:
 
 | state | event | guard | next | req | source |
 | --- | --- | --- | --- | --- | --- |
@@ -2753,7 +2766,8 @@ initial: none final:
 
 ## Proposal chat
 
-initial: none final:
+initial: none
+final:
 
 | state | event | guard | next | req | source |
 | --- | --- | --- | --- | --- | --- |
@@ -2776,7 +2790,8 @@ initial: none final:
 
 ## Machine job
 
-initial: idle final:
+initial: idle
+final:
 
 | state | event | guard | next | req | source |
 | --- | --- | --- | --- | --- | --- |
@@ -3138,7 +3153,8 @@ When the owner approves a proposal, do not refactor in the same step.
 
 ## Machine bugs
 
-initial: a final: done
+initial: a
+final: done
 
 | state | event | guard | next | req | source |
 | --- | --- | --- | --- | --- | --- |
@@ -3155,7 +3171,8 @@ initial: a final: done
 
 ## Machine simp
 
-initial: idle final: done
+initial: idle
+final: done
 
 | state | event | guard | next | req | source |
 | --- | --- | --- | --- | --- | --- |
@@ -3176,7 +3193,8 @@ initial: idle final: done
 
 ## Machine twins
 
-initial: s final: done
+initial: s
+final: done
 
 | state | event | guard | next | req | source |
 | --- | --- | --- | --- | --- | --- |
@@ -3191,7 +3209,8 @@ initial: s final: done
 
 ## Machine flags
 
-initial: on_open final:
+initial: on_open
+final:
 
 | state | event | guard | next | req | source |
 | --- | --- | --- | --- | --- | --- |
@@ -3208,7 +3227,8 @@ initial: on_open final:
 
 ## Machine pipe
 
-initial: read final: written
+initial: read
+final: written
 
 | state | event | guard | next | req | source |
 | --- | --- | --- | --- | --- | --- |
@@ -3219,7 +3239,8 @@ initial: read final: written
 
 ## Proposal twins
 
-initial: s final: done
+initial: s
+final: done
 
 | state | event | guard | next | req | source |
 | --- | --- | --- | --- | --- | --- |
@@ -3232,7 +3253,8 @@ initial: s final: done
 
 ## Proposal bugs
 
-initial: a final: done
+initial: a
+final: done
 
 | state | event | guard | next | req | source |
 | --- | --- | --- | --- | --- | --- |
