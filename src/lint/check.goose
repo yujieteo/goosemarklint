@@ -35,7 +35,7 @@ fn check_inline_comments(L: Lint&, p: Prose&, b: i64) {
 
 fn check_prose_block(L: Lint&, p: Prose&, w: Words&, b: i64) {
     read_words(L, p, w, b);
-    check_words(L, p, w);
+    check_words(L, p, w, b);
     check_sentences(L, p, w);
     check_inline_comments(L, p, b);
     if L.d.nodes[b].kind == Kind.Heading { check_heading_emoji(L, p); }

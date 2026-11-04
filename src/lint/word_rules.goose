@@ -124,25 +124,34 @@ fn check_passive(L: Lint&, p: Prose&, w: Words&, i: i64) {
 
 fn is_em_dash(s: const u8[:], i: i64) -> bool { s[i] == 0xE2 && i + 2 < s.len && s[i + 1] == 0x80 && s[i + 2] == 0x94 }
 
-fn source_separator(L: Lint&, p: Prose&) -> i64 {
-    guard L.machine else { return -1; }
-    var colon = -1;
-    for c, i in p.text {
-        if colon < 0 && c == ':' { colon = i; }
-        if colon < 0 && c == ' ' { return -1; }
+fn in_requirements(L: Lint&, b: i64) -> bool {
+    let line = L.d.nodes[b].line;
+    var h = -1;
+    for node, i in L.d.nodes {
+        if node.kind == Kind.Heading && node.parent >= 0 && node.line < line && (h < 0 || node.line > L.d.nodes[h].line) { h = i; }
     }
-    guard colon > 0 && colon + 1 < p.text.len && p.text[colon + 1] == ' ' else { return -1; }
+    guard h >= 0 else { return false; }
+    let name = heading_slug(L, h);
+    return lower_equal(name, "requirements");
+}
+
+fn source_separator(L: Lint&, p: Prose&, b: i64) -> i64 {
+    guard L.machine else { return -1; }
+    let item = L.d.nodes[b].parent;
+    guard item >= 0 && L.d.nodes[item].kind == Kind.Item else { return -1; }
+    guard in_requirements(L, b) else { return -1; }
     var at = -1;
     for c, i in p.text {
-        if i > colon && i > 0 && is_em_dash(p.text, i) && p.text[i - 1] == ' ' && i + 3 < p.text.len && p.text[i + 3] == ' ' { at = i; }
+        if is_em_dash(p.text, i) && i > 0 && p.text[i - 1] == ' ' && i + 3 < p.text.len && p.text[i + 3] == ' ' { at = i; }
     }
+    guard at >= 0 && find(p.text[at..], " -- ") < 0 else { return -1; }
     return at;
 }
 
-fn check_marks(L: Lint&, p: Prose&) {
+fn check_marks(L: Lint&, p: Prose&, b: i64) {
     let alone = trim(p.text);
     let placeholder = alone.len == 3 && is_em_dash(alone, 0);
-    let separator = source_separator(L, p);
+    let separator = source_separator(L, p, b);
     for c, i in p.text {
         if c == ';' { report(L, p.pos[i], "ste-semicolon", "semicolon: write two sentences"); }
         if is_em_dash(p.text, i) && !placeholder && i != separator {
@@ -151,8 +160,8 @@ fn check_marks(L: Lint&, p: Prose&) {
     }
 }
 
-fn check_words(L: Lint&, p: Prose&, w: Words&) {
-    check_marks(L, p);
+fn check_words(L: Lint&, p: Prose&, w: Words&, b: i64) {
+    check_marks(L, p, b);
     var starts: bool[>..] = [];
     for t in w.toks { starts.push(false); }
     for s in w.sents {
