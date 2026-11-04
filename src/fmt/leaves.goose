@@ -98,11 +98,18 @@ fn has_directive(d: Doc&, para: i64) -> bool {
 
 fn after_list(d: Doc&, n: i64) -> bool { d.nodes[n].prev >= 0 && d.nodes[d.nodes[n].prev].kind == Kind.List }
 
+fn after_directive(d: Doc&, n: i64) -> bool {
+    var a = n;
+    while d.nodes[a].prev < 0 && d.nodes[a].parent > 0 { a = d.nodes[a].parent; }
+    let p = d.nodes[a].prev;
+    return is_directive_block(d, p) && d.nodes[p].end_line + 1 == d.nodes[n].line;
+}
+
 fn put_leaf(f: Fmt&, n: i64) {
     let node = f.d.nodes[n];
     match node.kind {
         FrontMatter => put_front_matter(f, n),
-        Paragraph => put_paragraph(f, n, is_directive_block(f.d, node.prev) || has_directive(f.d, n)),
+        Paragraph => put_paragraph(f, n, after_directive(f.d, n) || has_directive(f.d, n)),
         Heading => put_heading(f, n),
         CodeBlock => if node.fenced || after_list(f.d, n) { put_fenced(f, n); } else { put_indented(f, n); },
         HtmlBlock => put_lines(f, text_of(f.d, node.content)),
