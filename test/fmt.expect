@@ -1,0 +1,3189 @@
+==> ap242-gauge/README.md <==
+# ap242-gauge
+
+ap242-gauge opens a STEP AP242 file (for example from CATIA V5) in your browser.
+It measures distances, angles, diameters and radii of features from a reference feature.
+
+It is one HTML file that works offline.
+It needs no server and no network.
+It uses occt-import-js (WebAssembly) to read the STEP file.
+
+## Use
+
+1. Download [`dist/ap242-gauge.html`](https://github.com/yujieteo/ap242-gauge/raw/main/dist/ap242-gauge.html) (about 10 MB).
+   Open it in a current browser (Chrome, Edge, Firefox or Safari).
+   It works from a local file.
+2. Click **Open STEP file**, or drop a `.stp` or `.step` file on the page.
+   All parts of the file are shown.
+3. Select a pick mode and click a reference feature (A), then a second feature (B):
+   - **Face**: a plane, or a cylinder (axis, diameter and radius).
+     Other faces (cone, torus, free form) give their centroid.
+   - **Edge**: the boundary of the clicked face nearest to the click, as a line or a circle (centre, axis, diameter).
+   - **Point**: the mesh vertex nearest to the click.
+4. The **Measure** table shows, as applicable:
+   - plane to plane: angle, and distance when the planes are parallel
+   - plane to axis: angle, and distance when the axis is parallel to the plane
+   - axis to axis: angle, and distance between parallel axes or shortest distance between skew axes
+   - point to plane, point to axis, and the plain point-to-point distance between the two pick points (with dx, dy, dz)
+
+Lengths are in the length unit of the STEP file (mm, cm, m, inch or foot), read from its `LENGTH_UNIT`.
+Angles are in degrees.
+Drag to rotate, right-drag or shift-drag to pan, use the wheel to zoom.
+
+## How it measures
+
+occt-import-js tessellates each B-rep face of the STEP file into triangles.
+The mesh vertices lie on the exact CAD surface.
+The tool fits the vertices of one face:
+
+- plane: least squares (smallest eigenvector of the point covariance)
+- cylinder: the axis is the direction normal to all triangle normals, and the radius comes from a least squares circle in the plane normal to the axis
+- edge: the boundary segments of the face, grown along the boundary, fitted to a line or a circle
+
+<img src="docs/figures/face-fit.svg" width="640" alt="Three panels. a: a plane patch of mesh triangles with its normal n, the direction of least spread of the vertices. b: a faceted cylinder whose triangle normals all point across the axis. c: the view along the axis, where the vertices lie on a least squares circle of radius r.">
+
+*How one face is fitted: (a) plane normal n, (b) cylinder axis normal to all triangle normals, (c) radius r from a circle across the axis.
+The 12 facets are illustrative.*
+
+Each fit shows its rms residual.
+A face fits a plane or a cylinder only when the residual is below 1e-4 of the face size.
+
+## Build and test
+
+You need [Bun](https://bun.sh) 1.4.4.
+
+```sh
+bun install
+bun run build   # writes dist/ap242-gauge.html
+bun test        # no browser
+bun run check   # type check, source rules, dead code, tests, dist, page budget, output replay
+```
+
+`build.ts` puts into one HTML file: `occt-import-js.js`, the `occt-import-js.wasm` file (base64) and `src/app.ts` with its imports, bundled by `bun build`.
+The build is deterministic, because it does not minify or compress.
+CI rebuilds and checks that the committed `dist/` is the same.
+
+The test (`test/nist.test.ts`) loads two NIST AP242 test models with occt-import-js, fits the faces that the NIST drawings dimension and compares the values with the drawing values: within 0.001 file units for lengths and 0.01° for angles.
+See [`test/data/SOURCE.md`](test/data/SOURCE.md) for the files and their source.
+
+`bun run replay` runs the tests on the working tree and records the input of each fit and measurement.
+It runs these inputs through `src/geom` on the base commit and on the working tree, and fails on each difference.
+Run `bun run replay -- --accept` to accept a change of the output after you read the diff.
+
+`bun run scripts/figure.ts` renders `docs/figures/face-fit.ts` with the schematic-figure engine and compares the result with `docs/figures/face-fit.svg`.
+
+## Licences
+
+`dist/ap242-gauge.html` contains [occt-import-js](https://github.com/kovacsv/occt-import-js) 0.0.23 by Viktor Kovacs, under the **GNU Lesser General Public License v2.1** (LGPL-2.1). occt-import-js contains Open CASCADE Technology, under LGPL-2.1 with the Open CASCADE exception.
+The HTML file holds both licence texts (button **Licences**) and a notice at the top.
+To use a different build of occt-import-js, replace it in `node_modules/occt-import-js` and run `bun run build`.
+
+The NIST test files are a work of the US Government.
+==> femahoy/AGENTS.md <==
+# femahoy: Rules for Build Agents
+
+This file is for the agents that build femahoy itself.
+The product design is in `DESIGN.md`.
+
+---
+
+## 1. Dependencies
+
+Do not add a dependency unless the owner approves it.
+Every dependency must be under MIT, Apache-2.0, BSD, ISC, Zlib, or a similar permissive licence.
+Never link GPL or AGPL code.
+
+## 2. Forbidden
+
+- Copy text, `.inp` files, figures, or numbers from the Abaqus manuals.
+- Add any Dassault Systèmes file to the repo.
+- Use "Abaqus" as a product name or in a product name.
+  Abaqus is a trademark of Dassault Systèmes.
+- Put secrets, API keys, or tokens in code, fixtures, logs, or commits.
+- Weaken, skip, or delete a validation case or a test so that a change can pass.
+- Change the tolerance of an existing case without a written reason in its fixture file and the approval of the owner.
+  A new case with a written tolerance budget in its fixture file needs no approval.
+  Reason: a wider tolerance can hide a fault that an existing case found.
+  A new case has no earlier result to hide.
+
+## 3. Bugs
+
+A bug fix adds a test only when the bug can come back.
+Write that test first.
+Show the failing output.
+Fix the bug.
+Show the passing output.
+==> femahoy/README.md <==
+# femahoy
+
+femahoy is a chat for finite element and CFD analyses.
+You ask for an analysis, and Claude Code, signed in with your own Claude subscription, does the work on your computer.
+
+<p align="center"><img src="docs/figures/architecture.svg" width="320" alt="Diagram of the parts of femahoy. The browser, with the chat and the 3D viewer, sends HTTP requests with the token to fh serve at 127.0.0.1:8790. On your computer, fh serve starts Claude Code with your own login. Claude Code runs the fh commands to mesh, solve and report. The fh commands write the runs and results to the state folder, and fh serve reads them."></p>
+
+fh serve starts Claude Code, Claude Code runs the fh commands, and fh serve shows what they write to the state folder.
+
+## Start
+
+Do these 4 steps on macOS (Apple Silicon) or Linux (x86-64 or ARM64).
+
+1. Install femahoy and the solvers for your user.
+   You need no root and no Nix.
+
+   ```sh
+   git clone https://github.com/yujieteo/femahoy
+   cd femahoy
+   scripts/install.sh
+   ```
+
+   The script copies `fh` to `~/.local/bin`.
+   If this folder is not on PATH, the script prints the line to add to your shell start file.
+   See "Install" below.
+
+2. Install Claude Code and sign in with your Claude subscription.
+   If `claude auth status` already shows a login, skip this step.
+
+   ```sh
+   curl -fsSL https://claude.ai/install.sh | bash
+   claude
+   ```
+
+   femahoy reads no credential.
+   The login stays in Claude Code.
+
+3. Start the page.
+
+   ```sh
+   fh serve
+   ```
+
+   On macOS, `fh serve` opens the page in your browser.
+   On Linux, open the address that it prints.
+   At start, `fh serve` checks that Claude Code starts and has a login.
+   If not, the chat tells you what to do.
+
+   The address is the same at each start: `http://127.0.0.1:8790/?token=TOKEN`.
+   Set `FH_PORT` to use a different port.
+   If the port is in use, `fh serve` stops with an error.
+   The token is in the file `token` of the state folder.
+   Keep the address private, because each person with the address can use the page.
+   To make a new token, remove the file `token` and start `fh serve` again.
+
+   To open the page on a phone, forward a local port of the phone to `127.0.0.1:8790` on the computer through SSH, for example with a local port forward in Termius.
+   On a computer, use `ssh -L 8790:127.0.0.1:8790 HOST`.
+   Then open the same address on the phone.
+   The page accepts only the host `127.0.0.1:8790`, so the local port must also be 8790.
+
+4. Ask for an analysis in the chat.
+   For example: "Build and solve a steel cantilever of 100 x 10 x 10 mm with 1 MPa on the top face".
+
+   The agent writes a CAD script for the part, meshes it with gmsh, writes the solver input and solves it.
+   It solves at least 2 meshes to find the mesh error.
+   The chat shows each command of the agent, and the viewer beside the chat shows the model and the results.
+   At the end, the agent writes 1 HTML report with the results, a hand check and the viewer.
+
+Stop `fh serve` with Ctrl+C.
+The chat ignores your personal Claude Code setup (`~/.claude/CLAUDE.md`, settings, hooks, plugins, MCP servers and connectors).
+Thus each person gets the same agent.
+
+## Analysis types
+
+The agent has instructions for each analysis type in this table.
+Validation cases check each type against a published or measured reference.
+
+| Analysis type | Example case | The case checks |
+| --- | --- | --- |
+| Structures | [contact-hertz](validation/reports/contact-hertz.md) | The largest contact pressure of a steel ball on a flat steel block, against the Hertz theory |
+| CFD | [naca23012-flap](validation/reports/naca23012-flap.md) | The lift and the pitching moment of an airfoil with a plain flap at 3 flap angles, against wind tunnel tests |
+| Electromagnetics | [team7-eddy-current](validation/reports/team7-eddy-current.md) | The eddy currents at 50 Hz in an aluminium plate with a hole under a coil, against measurements |
+| Acoustics | [acoustics-pulsating-sphere](validation/reports/acoustics-pulsating-sphere.md) | The sound that a pulsating sphere radiates into air at 500 Hz, against the analytical solution |
+| Fluid-structure interaction | [turek-hron-fsi1](validation/reports/turek-hron-fsi1.md) | The steady shape of a soft flag behind a cylinder in a channel flow, against the Turek-Hron benchmark |
+| Topology optimization | [topology-mbb-beam](validation/reports/topology-mbb-beam.md) | The minimum compliance of the half MBB beam with 50 % of the volume, against a published SIMP code |
+| Shape and parameter optimization | [shape-hole-biaxial](validation/reports/shape-hole-biaxial.md) | The hole of minimum stress concentration in a plate under biaxial stress, against the exact optimum |
+| Random vibration | [random-vibration-cantilever](validation/reports/random-vibration-cantilever.md) | The RMS tip acceleration of a cantilever on a shaker, against the modal sum of the beam theory |
+| Multibody dynamics | [slider-crank](validation/reports/slider-crank.md) | The motion of a slider-crank with a motor, against the closed-form solution |
+| Particles (SPH, DEM) | [dam-break-martin-moyce](validation/reports/dam-break-martin-moyce.md) | The surge front of a 2D dam break, against the measurements of Martin and Moyce |
+| Explicit dynamics (impact) | [taylor-bar-impact](validation/reports/taylor-bar-impact.md) | The final length and the mushroom radius of a copper bar after an impact on a rigid wall, against a published benchmark |
+| Optics and photonics | [optics-mie-cylinder](validation/reports/optics-mie-cylinder.md) | The scatter of a plane wave of light on a dielectric cylinder, against the analytical series solution |
+| Antennas | [dipole-king-middleton](validation/reports/dipole-king-middleton.md) | The input impedance and the far field of a centre-fed dipole, against the theory of King and Middleton |
+
+Other structures cases check buckling, plasticity, rubber, cracks, composite laminates, shells, natural frequencies, a sudden load, heat transfer and measured warpage.
+Other CFD cases check natural convection, conjugate heat transfer, a free surface and a supersonic shock.
+
+`validation/reports/index.md` links the report of each case: the checks, the derivation and the plots of the runs.
+Each report is 1 Markdown file, with each plot as an SVG file.
+`scripts/validation-reports.py` makes the reports again.
+In the root of the clone, `fh validate` runs all the cases.
+
+The table in section 6 of `DESIGN.md` gives the solver and the input of each analysis type.
+
+## Your own model
+
+Give `fh run` a CalculiX `.inp` file or the case folder of another analysis type.
+`fh run` starts the solver itself and needs no daemon.
+The page of `fh serve` shows the model and the results of each run.
+Its page `/reports` lists the reports of the runs and opens each one.
+In a terminal, for example over SSH, `fh runs` prints the solver, the status, the time and the key result of each run.
+`fh mesh` makes the mesh and the sets from a STEP file.
+`fh report` writes 1 HTML file with a text, the viewer, the results of runs and plots of curves (CSV files of x-y values).
+The file opens with a double-click.
+`fh fit` fits a model to a curve, for example the constants of a rubber for CalculiX.
+`fh --help` lists the commands.
+
+## Install
+
+`scripts/install.sh` needs bash, git, tar, and curl or wget.
+On macOS, it also needs the Xcode command line tools (`xcode-select --install`).
+It installs no system package, and it does not install Claude Code.
+
+- The script builds `fh` and the browser viewer from this clone.
+  It installs gmsh and the solver of each analysis type from conda-forge or from the release files of the solver.
+  It builds some solvers from source.
+  The head of the script names each source.
+  The script checks each download with its SHA-256.
+- All of it goes to `~/.local/share/femahoy` (`$XDG_DATA_HOME/femahoy`), except the OpenFOAM adapter of preCICE on macOS, which goes to the user folder of OpenFOAM (`~/OpenFOAM`).
+  In the test runs, the folder used 11 to 14 GB.
+  The log of each solver is in the folder `logs` there.
+- `~/.local/bin`, or the folder of `--prefix DIR`, gets `fh`, the viewer, `fh-python` (the Python of the CAD scripts, with build123d) and `solvers.env`.
+  `solvers.env` has 1 line `FH_NAME=PATH` for each solver that the script installed.
+  `fh` reads this file at start.
+- To update, run `git pull` and `scripts/install.sh` again.
+  A second run builds `fh` again and keeps each solver that has the same version.
+- Each [GitHub release](https://github.com/yujieteo/femahoy/releases) has `fh` and the viewer for Linux, with no solver.
+  `CHANGELOG.md` gives the changes of each release.
+  To install a release with the solvers, run `git checkout vX.Y.Z` and then `scripts/install.sh`.
+  `fh --version` prints the version.
+- At the end, the script names each solver that it did not install, with the analysis types that it disables.
+  On Linux ARM64, OpenFOAM and GetDP have no build, so CFD, fluid-structure interaction, electromagnetics and acoustics are not available there.
+
+To use your own solver, for example from Nix, set its variable (see "Environment variables") before you run the script.
+The script then does not install that solver, and `fh` uses the variable, because a variable of the environment has priority over `solvers.env`.
+`scripts/ccx-precice.nix` builds `ccx_preCICE` with Nix. preCICE also needs its OpenFOAM adapter, which the script builds only for the OpenFOAM that it installs.
+
+## Environment variables
+
+A solver variable has priority over its line in `solvers.env`.
+With neither, `fh` uses the program of the list below on PATH, or `python3` for a Python solver.
+
+- `FH_GMSH`: the gmsh program of `fh mesh`, and of `fh run` and `fh validate` for a GetDP case.
+- `FH_CCX`: the `ccx` program of `fh run` and `fh validate`.
+- `FH_OPENFOAM`: the `openfoam` program of `fh run` and `fh validate`.
+  It runs each program of OpenFOAM as `$FH_OPENFOAM PROGRAM ARGS`.
+- `FH_GETDP`: the `getdp` program of `fh run` and `fh validate`.
+- `FH_PYCHRONO`: the Python with PyChrono of `fh run` and `fh validate`.
+- `FH_MEEP`: the Python with Meep of `fh run` and `fh validate`.
+- `FH_CCX_PRECICE`: the `ccx_preCICE` program (CalculiX with the preCICE adapter) of `fh run` and `fh validate`.
+- `FH_LAMMPS`: the `lmp` program of `fh run` and `fh validate`.
+- `FH_OPENEMS`: the Python with openEMS of `fh run` and `fh validate`.
+- `FH_SKEIN`: the `skein` program of `fh run`.
+  The default is `skein` on `PATH`.
+- `FH_STATE`: the state folder of `fh run`, `fh report` and `fh serve`.
+- `FH_VIEWER`: the folder of the wasm viewer of `fh report` and `fh serve`.
+- `FH_PORT`: the port of `fh serve` on 127.0.0.1.
+  The default is 8790.
+- `FH_NO_OPEN`: with a value that is not empty and not `0`, `fh serve` does not open the browser.
+
+## Documents
+
+- `DESIGN.md`: the current rules of the product, each with its reason.
+- `AGENTS.md`: rules for the agents that build femahoy.
+- [Input keywords and element types](docs/reference/inp.md): the input of the preview and the element types of the page.
+- [Check file fields](docs/reference/check-toml.md): measurements and tolerances of a validation case.
+- [Validation cases as 1 HTML file](docs/reference/quine.md): 5 cases that run offline in a browser, with their check.
+
+femahoy is under the MIT License, see `LICENSE`.
+==> fmt/sentences.md <==
+# Sentence breaks
+
+Use a tool, e.g. goosemarklint.
+Then run it.
+The value is 1.5 mm.
+Version 0.31.2 is the spec.
+See https://example.org/a.b for the file.
+Mr. Smith wrote it, etc. and more.
+Is it on?
+Yes!
+A code span `a. B` stays on its line.
+The end.
+==> goosestrike/README.md <==
+# goosestrike
+
+A bird strike simulation on a stiffened fuselage panel: an explicit dynamics finite element solver that runs in the browser.
+Live page: https://teoyujie.org/play/goosestrike/
+
+A 4 lb bird hits a stiffened aluminium fuselage panel at V<sub>C</sub>, the load case of 14 CFR 25.571(e)(1).
+The solver is explicit dynamics, written in [Goose](https://github.com/aardappel/goose), compiled through C to WebAssembly.
+If the browser has WebGPU, the same solver runs on the GPU: WGSL compute shaders do each time step, and Goose makes the set-up and controls the GPU.
+The GPU solver runs finer meshes in seconds, and the page lets you change the bird speed and the skin thickness.
+It runs in a browser page that shows the bird as a cartoon goose, shows the Goose code that runs, and exports the strike as an animated GIF.
+
+![The goose hits the panel](docs/strike.png)
+
+Run it:
+
+```sh
+python3 -m http.server -d web 8000
+# then open http://localhost:8000/
+```
+
+A local server has no `/shared/kowalski.css`, so the page shows without the fonts, colours, button look and focus ring of the site.
+The buttons show as plain browser buttons.
+The repository has the built `web/strike.wasm` and `web/strike-gpu.wasm`, so the page needs no build step.
+The page uses the GPU solver if the browser has WebGPU and the GPU solver starts, else the CPU solver.
+Add `?solver=cpu` to the URL to use the CPU solver.
+This is not a certification analysis.
+The page and this README say where the model is coarse.
+
+## The load case
+
+14 CFR 25.571(e)(1), as amended to Amendment 25-148 ([text at law.cornell.edu](https://www.law.cornell.edu/cfr/text/14/25.571)):
+
+> (e) Damage-tolerance (discrete source) evaluation.
+> The airplane must be capable of successfully completing a flight during which likely structural damage occurs as a result of— (1) Impact with a 4-pound bird when the velocity of the airplane relative to the bird along the airplane's flight path is equal to V<sub>C</sub> at sea level or 0.85V<sub>C</sub> at 8,000 feet, whichever is more critical;
+
+| Quantity | Value | Source |
+| --- | --- | --- |
+| Bird mass | 4 lb = 1.81436948 kg | the rule, and 1 lb = 0.45359237 kg |
+| V<sub>C</sub> | 350 KCAS | 14 CFR 25.1505: V<sub>MO</sub> must not be greater than V<sub>C</sub>. The A320 has V<sub>MO</sub> = 350 kt ([EASA TCDS EASA.A.064](https://www.easa.europa.eu/en/document-library/type-certificates/aircraft-cs-25-cs-22-cs-23-cs-vla-cs-lsa/easaa064-airbus-a318-a319-a320), Issue 62, Section 1 A320). Thus 350 KCAS is the lowest V<sub>C</sub> that the rule allows for this aeroplane. |
+| Impact speed | 180.06 m/s | 350 KCAS = 350 KTAS at sea level ISA. 1 kt = 1852/3600 m/s. |
+| Altitude | sea level | 0.85 V<sub>C</sub> at 8000 ft is about 0.96 V<sub>C</sub> true airspeed, so the sea-level case is more critical. |
+| Direction | normal to the skin, at the middle of the panel | an idealized worst case |
+
+## The bird: physics and costume
+
+The physics bird is the standard substitute bird of bird strike analysis.
+The cartoon goose is only paint on it.
+
+| Physics | Value | Source |
+| --- | --- | --- |
+| Shape | cylinder with hemispherical ends, length/diameter = 2 | Heimbs 2011, Perdikoulis et al. 2021 |
+| Size | diameter 113.1 mm, length 226.2 mm | from the mass and the density |
+| Material | gelatin with 10 % porosity, 950 kg/m³ | Perdikoulis et al. 2021, after Barber et al. |
+| Equation of state | Tait for water: p = (ρ<sub>0</sub>c<sub>0</sub>²/γ)((ρ/ρ<sub>0</sub>)<sup>γ</sup> − 1), c<sub>0</sub> = 1480 m/s, γ = 7, no tension (p ≥ 0) | Heimbs 2011 |
+
+The costume (white feathers, eyes, beak, wings, feet, head tuft and blush) follows the particles, but it has no mass and no effect on the result.
+The flight before contact is a cartoon.
+The simulation starts with the nose 2 mm plus half a particle spacing from the skin.
+
+## The panel
+
+The geometry is a representative assumption, not a drawing of a real aeroplane.
+
+| Part | Value |
+| --- | --- |
+| Fuselage radius | 1.975 m (A320 class) |
+| Panel | 1.0668 m along the fuselage (two 533 mm frame bays) × 0.760 m around it (four 190 mm stringer bays) |
+| Edges | clamped, on the next frames and stringers |
+| Skin | 2024-T3, 1.6 mm (the page can set 0.8 mm to 3.2 mm) |
+| Stringers | 4 Z sections, 7075-T6, web 25.4 mm, flange 15 mm, 1.6 mm |
+| Frames | 2 Z sections, 7075-T6, web 76.2 mm, flange 25 mm, 1.6 mm |
+
+Material data, from ASM Aerospace Specification Metals (data sheets for 2024-T3 and 7075-T6 sheet, as published on MatWeb):
+
+| | ρ (kg/m³) | E (GPa) | ν | yield (MPa) | ultimate (MPa) | elongation |
+| --- | --- | --- | --- | --- | --- | --- |
+| 2024-T3 | 2780 | 73.1 | 0.33 | 345 | 483 | 18 % |
+| 7075-T6 | 2810 | 71.7 | 0.33 | 503 | 572 | 11 % |
+
+The plasticity is bilinear: a straight line from yield to the ultimate stress at the elongation.
+An element erodes when its plastic strain reaches the elongation less the elastic strain at the ultimate stress: 17.3 % for 2024-T3 and 10.2 % for 7075-T6.
+
+## The method
+
+All of it is in `sim/strike.goose`.
+Units are SI.
+
+- Bird: smoothed particle hydrodynamics (SPH).
+  Cubic spline kernel, h = 1.2 × particle spacing, continuity equation for the density, Monaghan artificial viscosity (α = 1, β = 2).
+- Panel: Belytschko-Lin-Tsay 4-node shells with 5 Gauss points through the thickness.
+  J2 plasticity with linear hardening and the plane-stress return of Simo and Taylor.
+  Stiffness hourglass control.
+  Lumped masses.
+- Contact: penalty.
+  Each particle pushes on its nearest shell element, with a stiffness of 0.1 × reduced mass / dt².
+- Time: central differences.
+  The stable time step comes from the smallest shell element and from the SPH sound speed (CFL 0.25 for SPH, 0.9 for the shells).
+- Memory: all state is fixed-size global arrays in static data.
+  The time loop allocates nothing.
+
+The energy balance closes: bird kinetic energy + bird internal energy + panel kinetic energy + panel internal work stays within 0.4 % of the initial kinetic energy in all runs below.
+
+## Accuracy: the rigid wall check
+
+Wilbeck (1978) gives two pressures at the centre of a soft body that hits a rigid wall:
+
+- the Hugoniot shock pressure at first contact, P<sub>H</sub> = ρ<sub>0</sub> U<sub>s</sub> v.
+  Here U<sub>s</sub> comes from the jump conditions with the same Tait equation of state.
+- the stagnation pressure of the steady flow after the shock, P<sub>s</sub> = ½ ρ<sub>0</sub> v².
+
+At 180.06 m/s, P<sub>H</sub> = 314.4 MPa (U<sub>s</sub> = 1838 m/s) and P<sub>s</sub> = 15.40 MPa.
+The solver measures the force on a disc of radius D/8 (14.2 mm) at the impact centre.
+"Peak" is the maximum.
+"Plateau" is the mean from 0.25 to 0.75 of the squash-up time L/v = 1260 µs.
+
+| Bird spacing | Particles | Peak (MPa) | Peak vs P<sub>H</sub> | Plateau (MPa) | Plateau vs P<sub>s</sub> | Impulse / m v | Energy balance |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 9 mm | 2560 | 180.5 | −42.6 % | 19.37 | +25.8 % | 1.0079 | 0.9997 |
+| 6 mm | 8760 | 317.4 | +0.9 % | 19.67 | +27.7 % | 0.9955 | 1.0006 |
+| 4.5 mm | 20902 | 322.9 | +2.7 % | 17.42 | +13.1 % | 0.9935 | 1.0000 |
+| 3.5 mm | 44412 | 350.1 | +11.3 % | 15.90 | +3.2 % | 0.9921 | 1.0000 |
+
+The impulse is m v within 1 %, and the energy balance closes within 0.1 %.
+The plateau converges to P<sub>s</sub> as the spacing decreases, to +3.2 % at 3.5 mm.
+The peak converges less well.
+At 9 mm, the smoothing length (10.9 mm) smears the shock, and the peak is 43 % low.
+At 6 mm and 4.5 mm the peak is within 3 %, and at 3.5 mm it is 11 % high.
+The peak is the maximum of one time step on a 14 mm disc, so it is noisy.
+Use it as an order-of-magnitude check, and the plateau as the convergence check.
+These numbers come from `validate`, the native build of the same solver (see below).
+The page runs the same check in the browser with the "Run the wall check" button.
+
+## The panel result
+
+Impact at 180.06 m/s, run to 3 ms. Bird kinetic energy at the start: 29.41 kJ.
+
+| Bird spacing | Skin cells along the fuselage | Shells | Peak contact force | Max deflection | Eroded skin shells | Eroded stiffener shells | Panel work | Hourglass part | Worst energy balance error |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 9 mm | 56 | 3088 | 240.1 kN | 150.8 mm | 0 | 36 | 18.53 kJ | 0.34 kJ | 0.32 % |
+| 6 mm | 88 | 7712 | 229.3 kN | 152.1 mm | 8 | 62 | 18.92 kJ | 0.25 kJ | 0.20 % |
+| 4.5 mm | 112 | 12960 | 209.1 kN | 152.9 mm | 25 | 152 | 19.29 kJ | 0.27 kJ | 0.11 % |
+| 3.5 mm | 144 | 20560 | 203.7 kN | 228.1 mm | 249 | 191 | 18.47 kJ | 0.38 kJ | 0.08 % |
+
+The shell size is about 2.1 bird spacings.
+The panel mass is 5.05 kg.
+
+From 9 mm to 4.5 mm, the deflection changes by less than 2 %.
+The skin damage does not converge: at 9 mm, no skin element reaches the failure strain, but at 6 mm and 4.5 mm some do.
+At 3.5 mm, 249 skin elements erode, a hole opens in the skin, and the deflection is 50 % larger.
+Element erosion depends on the element size, so a tear prediction needs a failure model calibrated to the mesh.
+This model has none.
+Thus the 3.5 mm result does not show that the real skin tears.
+It shows that the erosion model is the coarse part of this model.
+The stringers and frames fail locally at all four meshes.
+The 3.5 mm row comes from the native build.
+The GPU solver gives 227.9 mm to 228.3 mm, 248 to 260 eroded skin shells and 185 to 189 eroded stiffener shells in 5 runs.
+The rule accepts damage.
+It asks that the aeroplane completes the flight with it, and that needs a residual strength analysis, which this project does not do.
+
+## The browser trade
+
+The GPU solver is 18 to 128 times faster than the CPU solver, and the speed-up increases with the mesh size.
+The page offers three meshes on the CPU and four meshes on the GPU.
+The solver time per step grows with the particle count, and the stable time step decreases with the element size.
+
+| Page preset | Bird spacing | Skin cells | Bird particles | Shell elements | Steps to 3 ms |
+| --- | --- | --- | --- | --- | --- |
+| Potato goose | 9 mm | 56 | 2560 | 3088 | 1774 |
+| Good goose | 6 mm | 88 | 8760 | 7712 | 2679 |
+| Very good goose | 4.5 mm | 112 | 20902 | 12960 | 3594 |
+| Excellent goose (GPU only) | 3.5 mm | 144 | 44412 | 20560 | 4652 |
+
+The table below gives the solver time per step in Node 24 on an Apple M5.
+The CPU column is the wasm on one core.
+The GPU column is the same solver in WebGPU (Dawn on Metal, the `webgpu` package).
+The benchmark ran 300 steps on each mesh, the CPU first and then the GPU.
+The machine had a load average of 25 from other work, thus the CPU times are higher than on an idle machine.
+
+| Bird spacing | CPU time per step | GPU time per step | Speed-up |
+| --- | --- | --- | --- |
+| 9 mm | 18.2 ms | 0.99 ms | 18 |
+| 6 mm | 76.7 ms | 1.51 ms | 51 |
+| 4.5 mm | 146 ms | 1.64 ms | 89 |
+| 3.5 mm | 288 ms | 2.25 ms | 128 |
+
+On an idle machine, the CPU times were 5.7 ms, 13.1 ms and 31.3 ms per step for the first three meshes.
+The native build is about 1.6 times faster than the wasm.
+
+The table below gives the time of the full panel run on the page, in Chrome 156 on the same machine, with a high load from other work.
+The two GPU columns are two different runs.
+On the CPU, the page also does the steps one phase at a time for the code view.
+
+| Page preset | CPU | GPU, run 1 | GPU, run 2 |
+| --- | --- | --- | --- |
+| Potato goose | 65 s | 0.9 s | 2.0 s |
+| Good goose | 301 s | 3.6 s | 5.6 s |
+| Very good goose | 1085 s | 9.7 s | 12.3 s |
+| Excellent goose | not available | 20.9 s | 56.7 s |
+
+On the GPU, the 2D canvas renderer limits the page at fine meshes.
+At 3.5 mm, the page shows 7 to 15 frames per second, and the solver waits for the frames.
+
+Only Chrome 156 on macOS (Metal) was tested, in headless mode.
+Other browsers with WebGPU possibly work, but they were not tested.
+Without WebGPU, the page uses the CPU solver.
+
+The 9 mm mesh is the fast default on the CPU.
+The trade: its peak pressure is 43 % low, its plateau is 26 % high, and it shows no skin erosion.
+But its deflection is within 1.5 % of the 4.5 mm result, and its peak force is 15 % higher.
+
+## The page
+
+- The code view shows `web/strike.goose`, the copy of `sim/strike.goose` that `build.sh` writes.
+  The page runs each time step in five phases, one call of the wasm export `step_phase` each: time step, SPH bird, shells (with plasticity and erosion), contact and integration.
+  `run_phase` in the source has the five phases.
+  The lit lines are the phase that ran last, as `step_phase` returns it.
+  The source scrolls to that phase, at most once a second.
+  A test checks that the phases one at a time give the same result as whole steps.
+  On the GPU, the kernels of `web/strike.wgsl` do the five phases, and the code view says so.
+  No line is lit.
+- The skin thickness control sets the skin of the next run, from 0.8 mm to 3.2 mm.
+  The stringers and frames keep their 1.6 mm.
+  The preset values on the page are for the 1.6 mm skin only.
+- The telemetry shows the solver (GPU or CPU), the solver time per step and the frame rate.
+- "Export GIF" saves the last run as an animated GIF, 480 px wide: about ten frames a second of the approach, then one frame each 25 µs of simulated time.
+  Each frame has a caption with the time and the colour bar.
+  The encoder is `web/gif.mjs` (median cut palette, LZW), with no dependency.
+- The colour maps are continuous ramps, interpolated in OKLab: plastic strain on a square-root scale from the bare metal (0 %) to 18 %, so that the first yield shows, and bird pressure on a log scale from 0.1 MPa to 400 MPa.
+- Each shell element has a thin outline, and the panel edges, the free flanges and the lines where a stringer or a frame meets the skin have a heavier outline.
+  Thus the shape of the panel shows over the strain colours.
+- The look (fonts, palette, interaction rules) is that of [teoyujie.org](https://teoyujie.org): the page links the site's shared stylesheet `/shared/kowalski.css`.
+  `web/style.css` has only the rules of this tool.
+
+## Goose on WebAssembly
+
+Goose has no wasm port yet (its `docs/design/wasm.md` is a proposal).
+The C that Goose writes compiles with Emscripten, with one risk: Goose reserves a large address range (2 GiB by default) for each data stack, with a guard gap behind it that stops a stack overflow.
+WebAssembly linear memory has no reservation and no guard pages.
+Emscripten's `mmap` allocates the full size, and `mprotect` does nothing.
+
+The handling:
+
+1. The solver keeps all state in static global arrays.
+   The generated C of the time loop (`step_once`, `step_phase` and the functions they call) has no data-stack use.
+   You can check this: in the code of the program, `gen/strike.c` uses `->top` only in `gs_init_globals`.
+2. `gs_init_globals` builds each zeroed global array in a data-stack temporary and copies it.
+   The largest temporary is `esig`, 24000 × 15 × 8 B = 2.88 MB, and each temporary is released before the next one.
+3. Thus `build.sh` sets `GS_STACK_RESERVE` to 4 MiB and the guard gap to 64 KiB.
+   If a later change makes a larger global array, raise the reserve.
+
+The same is true for `gen/gpu.c`: it uses `->top` only in `gs_init_globals`, and its largest global array is also `esig`.
+
+## Goose on WebGPU
+
+The GPU solver has three parts:
+
+| File | Language | What it does |
+| --- | --- | --- |
+| `sim/gpu.goose` | Goose | The host. It calls `setup` of `strike.goose`, copies the bird and the panel to GPU buffers, makes a bind group for each kernel, records the time steps and reads back the results. It imports `strike.goose`, so the getters of the CPU solver give the GPU results. |
+| `sim/gpu.c` | C | The WebGPU calls, through `webgpu.h`. Goose cannot make the `webgpu.h` descriptors (they hold pointers) or give a callback, so `sim/gpu.goose` calls these C functions as `extern fn`. This file has no solver logic. |
+| `web/strike.wgsl` | WGSL | 11 compute kernels. One time step is 10 kernels in sequence: the five phases of `run_phase` in `strike.goose`, and a reduction that sums the energies and the forces, advances the time and computes the next time step. |
+
+The WebGPU implementation is Emscripten's own port, `--use-port=emdawnwebgpu` (from the Dawn releases).
+The page gives the GPU device to the wasm module, so no C code waits for a promise.
+
+The GPU solver is a port of the CPU solver, with these differences:
+
+- It uses f32, because WGSL has no f64.
+  The CPU solver uses f64.
+  The plasticity return stops at a tolerance of 1e-6, not 1e-12.
+- The SPH forces are a gather: each particle sums the forces from its neighbours, so each pair is computed two times.
+  The CPU solver computes each pair one time.
+- The shell and contact forces on the nodes are sums with atomic operations, so the sequence of the additions changes from run to run.
+  Thus the GPU results are not bit-for-bit repeatable.
+- The page keeps two batches of steps on the GPU.
+  Thus the GPU does the next batch while the page reads the results of the last one.
+
+`test/gpu.test.mjs` runs the 9 mm panel to 3 ms on the GPU and on the CPU, and compares them.
+The tolerances are about 10 times the differences on Metal:
+
+| Value | Tolerance | Difference on Metal |
+| --- | --- | --- |
+| Max deflection, at each step | 0.1 mm | 0.013 mm |
+| Peak contact force | 1 % | less than 0.001 % |
+| Max deflection, max plastic strain, panel work | 0.1 mm, 1 %, 1 % | 0.0001 mm, 0.03 %, 0.003 % |
+| Eroded shells (all, and skin) | 2 elements | 0 |
+| Steps to 3 ms | 1 % | 0 |
+
+The test also compares what the page draws: the plastic strain of each element within 0.01, and the node positions within 5 mm.
+Both checks skip the eroded elements and their nodes, because these nodes move differently from run to run on the GPU.
+The test also runs the rigid wall on the GPU: the impulse is m v within 2 %, and the energy balance closes within 1 %.
+
+The GPU and the CPU agree less well on the plateau of the rigid wall check.
+The centre sensor force changes by about 20 % from step to step, so small differences change its mean.
+
+| Bird spacing | Peak vs P<sub>H</sub>, CPU / GPU | Plateau vs P<sub>s</sub>, CPU / GPU | Impulse / m v, CPU / GPU |
+| --- | --- | --- | --- |
+| 9 mm | −42.6 % / −42.6 % | +25.8 % / +25.8 % | 1.0079 / 1.0079 |
+| 6 mm | +0.9 % / +0.9 % | +27.7 % / +25.8 % to +26.5 % | 0.9955 / 0.9957 |
+| 4.5 mm | +2.7 % / +2.7 % | +13.1 % / −0.7 % | 0.9935 / 0.9936 |
+| 3.5 mm | +11.3 % / +11.3 % | +3.2 % / −0.2 % to 0.0 % | 0.9921 / 0.9920 |
+
+The peak and the impulse agree.
+The plateau agrees at 9 mm and 6 mm, but at 4.5 mm and 3.5 mm the GPU plateau is lower.
+The cause is not known.
+Thus the page shows the plateau of the native CPU solver for each preset.
+
+## Build
+
+The build needs the Goose compiler and Emscripten.
+On NixOS, these commands work (no compiler needs to be on the PATH):
+
+```sh
+# 1. the Goose compiler, at the commit that this repository uses
+git clone https://github.com/aardappel/goose ../goose
+git -C ../goose checkout a108677d300cb0e8bbb842c35a353abe67a20c6c
+( cd ../goose && nix shell nixpkgs#cmake nixpkgs#clang nixpkgs#lld nixpkgs#gnumake --command \
+    bash -c 'cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ && cmake --build build -j16' )
+
+# 2. the C (gen/), the wasm (web/strike.mjs, web/strike.wasm, web/strike-gpu.mjs, web/strike-gpu.wasm)
+#    and web/strike.goose, with Emscripten 6.0.9. Emscripten downloads its emdawnwebgpu port.
+nix shell nixpkgs#emscripten --command env GOOSE=$PWD/../goose/build/goose ./build.sh
+
+# 3. the native validation program
+( cd sim && nix shell nixpkgs#clang --command ../../goose/build/goose build -o ../build/validate validate.goose )
+build/validate 9000 6000 4500 3500       # rigid wall, bird spacings in µm
+build/validate --panel 9000 6000 4500    # the panel
+```
+
+Add `--csv` to `validate` to print the time history.
+
+`gen/strike.c` and `gen/strike.h` are the C that the Goose compiler generates from `sim/strike.goose`.
+They are C, not C++, and nobody edits them by hand.
+They are in the repository so that you can read the code that Emscripten compiles to `web/strike.wasm`.
+`gen/gpu.c` and `gen/gpu.h` are the same for `sim/gpu.goose`.
+`build.sh` writes them, and writes `gen/sha256sums` with the SHA-256 of the Goose sources, `sim/gpu.c`, the C and the two wasm files.
+
+## Tests
+
+```sh
+nix shell nixpkgs#nodejs --command npm ci
+nix shell nixpkgs#nodejs --command npm test
+```
+
+The tests (`test/strike.test.mjs`) load the committed `web/strike.wasm` in Node and check:
+
+- that the C in `gen/` and the two wasm files come from the current sources (the sums in `gen/sha256sums`), and that `web/strike.goose` is the same as `sim/strike.goose`,
+- the load case constants and the Wilbeck reference pressures,
+- the rigid wall impulse (m v within 2 %) and energy balance (within 1 %),
+- the panel energy balance (within 1 %), the panel mass, and that a new set-up gives the same result,
+- that the phases one at a time (`step_phase`) give the same result as whole steps (`advance`).
+
+`test/gpu.test.mjs` compares the GPU solver with the CPU solver (see "Goose on WebGPU").
+It gets WebGPU in Node from the `webgpu` package (Dawn), a development dependency.
+If there is no GPU adapter, these tests skip, but with `GOOSESTRIKE_GPU=1` they fail.
+
+`test/gif.test.mjs` checks that the GIF palette keeps a colour ramp next to a large light background.
+
+CI runs the same tests on each push.
+CI installs lavapipe, a Vulkan driver that runs on the CPU, and sets `GOOSESTRIKE_GPU=1`.
+Thus CI also runs the GPU tests.
+
+## Sources
+
+- 14 CFR 25.571(e)(1) and 25.1505.
+  Electronic Code of Federal Regulations, through Amendment 25-148.
+- EASA Type-Certificate Data Sheet EASA.A.064 (Airbus A318, A319, A320, A321), Issue 62.
+- R.
+  L.
+  Wilbeck, *Impact behavior of low strength projectiles*, AFML-TR-77-134, 1978 (DTIC ADA060423).
+- S.
+  Heimbs, Computational methods for bird strike simulations: a review, *Computers & Structures* 89 (2011) 2093–2112, doi:10.1016/j.compstruc.2011.08.007.
+- C.
+  Perdikoulis, E.
+  Theotokoglou, G.
+  Giannopoulos, Bird strike virtual testing simulations and results, for preliminary airframe design structural optimization, WCCM-ECCOMAS 2020 (2021).
+- ASM Aerospace Specification Metals, data sheets for aluminium 2024-T3 and 7075-T6.
+
+## Licence
+
+MIT (see `LICENSE`), for the code of this repository.
+Goose is Apache-2.0.
+This repository does not include Goose source, but the generated `gen/strike.c` and `web/strike.wasm` contain the Goose runtime that the compiler puts in its output.
+Thus `web/GOOSE-LICENSE.txt` has the Goose licence.
+`web/strike-gpu.mjs` and `web/strike-gpu.wasm` contain code of Emscripten's emdawnwebgpu port.
+`web/WEBGPU-LICENSE.txt` has its BSD licences.
+==> marklove-web/README.md <==
+# marklove-web
+
+Marklove for the web.
+You write one Markdown file, and Marklove makes slides, an article, an EPUB book, subtitles, narration text and packages from it.
+
+This is a port of the Marklove app for iPhone, iPad and Mac.
+The core is in [Goose](https://aardappel.github.io/), compiled to C and then to WebAssembly.
+The core does the parse, the checks, the render to HTML and MathML, the plots, the themes, find and replace, sam and Vim, the ZIP files and the Git history.
+The core also lays out the PDF pages, the slide images and the video frames as SVG, traces the SVG slides, makes the video timeline and writes the MP4 file.
+JavaScript does only the page, the browser storage and the browser APIs: canvas, WebCodecs, MediaRecorder and the speech model.
+
+<img src="docs/figures/architecture.svg" width="400" alt="Block diagram. A Markdown file of at most 512 KB goes into the core, which is Goose compiled to C and then to WebAssembly. The core does the parse and checks, HTML and MathML, plots and themes, Find, sam and Vim, the Git history, the page and frame SVG, the ZIP entries and the MP4 header. JavaScript calls the core through the ml_* functions: it sends text and text widths, and gets HTML, SVG and bytes back. JavaScript does the page and editor, IndexedDB, text measurement, canvas, print to PDF, the Kokoro voice, WebCodecs and MediaRecorder. Photos, videos and audio stay in JavaScript as Blobs. The outputs are web pages, EPUB, PDF, PNG and SVG, MP4 and WebM, and the ZIP with .git.">
+
+*The core makes each output.
+JavaScript gives it the browser APIs and adds the media bytes, which never go into the core.*
+
+All features are free.
+The web version has no subscription, no purchase and no Pro features.
+
+## Use
+
+The `web/` folder is a static site.
+It needs no server code and no network after it loads.
+The Kokoro voice is the exception: Settings downloads it (about 90 MB), and the browser keeps it.
+Narration also needs the network to get kokoro-js from jsDelivr.
+Copy the folder to any path on a web server, for example `/play/marklove/`, and open `index.html`.
+The app chrome needs the shared stylesheet `/shared/kowalski.css` at the root of the same server.
+On teoyujie.org it is there.
+
+To try it on your computer:
+
+```sh
+python3 -m http.server --directory web 8000
+```
+
+Then open <http://localhost:8000/>.
+This server has no `/shared/kowalski.css`.
+For local work, serve the `public/` folder of the site repository with this app in it, or accept chrome with no styles.
+Projects stay in the storage of your browser (IndexedDB).
+To move a project to another browser, export the project ZIP and import it there.
+
+## Build
+
+The repository contains the built files `web/marklove.mjs` and `web/marklove.wasm`.
+Build them again after you change a file in `core/`.
+
+You need:
+
+- The Goose compiler.
+- Emscripten (`emcc`).
+
+Run:
+
+```sh
+GOOSE=/path/to/goose EMCC=/path/to/emcc ./build.sh
+```
+
+The script does 2 steps:
+
+1. Goose writes `build/marklove.c` and `build/marklove.h` from `core/marklove.goose`.
+2. `emcc` compiles the C to `web/marklove.mjs` and `web/marklove.wasm`.
+   It exports each `ml_*` function in the header.
+
+## Test
+
+```sh
+node --import ./tests/app_stubs/register.mjs --test tests/*.test.mjs
+```
+
+The tests use the built core through `web/core.js`.
+The project ZIP test also runs `git fsck` on the exported history when Git is installed.
+
+## Files
+
+| Path | Contents |
+| --- | --- |
+| `core/marklove.goose` | The functions that JavaScript calls (`ml_*`). |
+| `core/parse.goose` | The Markdown parser and the document model. |
+| `core/render.goose` | The slides page, the article page and the EPUB book. |
+| `core/deck.goose`, `core/sentence.goose` | The Normal and Takahashi slides, sentences and words. |
+| `core/narr.goose` | The narration script, the transcript and the subtitles. |
+| `core/texmath.goose`, `core/mathtable.goose` | LaTeX to MathML. |
+| `core/plot.goose` | Plots as SVG. |
+| `core/lint.goose` | The source checks. |
+| `core/highlight.goose`, `core/theme.goose` | Source and code colors, and the themes. |
+| `core/edit.goose`, `core/vim.goose` | Find and replace, sam commands, the line difference, commit messages, and Vim mode. |
+| `core/pack.goose`, `core/gitexport.goose` | ZIP files, the project import, and the Git history. |
+| `core/extras.goose` | The equation at the cursor, spoken math, the tour, the prompts and the listener text. |
+| `core/layout.goose`, `core/pagesvg.goose` | The page layout of the slides, the video, the article, the handout and the poster, and each page as SVG. |
+| `core/trace.goose` | Raster pixels to SVG shapes, for the SVG slide export. |
+| `core/video.goose` | The video timeline, the podcast timing and the MP4 file. |
+| `core/io.h` | The input buffers, the memory for the Goose data stacks, and the text and math measurement in the browser. |
+| `web/core.js` | The JavaScript interface to the core. |
+| `web/index.html`, `web/app.js`, `web/app.css` | The app page, its start and its styles. |
+| `web/store.js`, `web/ui.js`, `web/editor.js`, `web/find.js`, `web/preview.js`, `web/export.js`, `web/panels.js` | The app parts: storage and settings, controls, the editor, Find and Vim, the preview and presentation, export, and the other panels. |
+| `web/pages.js`, `web/video.js`, `web/voice.js` | The PDF pages, the PNG and SVG slides, the video and audio encoders, and the Kokoro voice. |
+| `web/demo-peafowl.png` | The photo of the tour project. |
+| `web/style.css`, `web/runtime.js`, `web/article.css`, `web/article.js` | The parts of the exported pages, based on Marklove. `web/style.css` and `web/article.css` add the shared interaction rules: press scale, a hover fade only on a fine pointer, and no tap highlight. Thus they differ from the native app. |
+| `web/fonts/` | Courier Prime, Courier Prime Sans, Libre Baskerville and KpMath, with their licenses (SIL Open Font License). |
+
+The Kokoro voice uses the web version of [kokoro-js](https://github.com/hexgrad/kokoro/tree/main/kokoro.js) 1.2.1 from jsDelivr.
+It runs the Kokoro-82M ONNX model (`onnx-community/Kokoro-82M-v1.0-ONNX`, q8) from Hugging Face.
+Both are under the Apache License 2.0.
+
+## Limits
+
+- The Markdown file can have a maximum size of 512 KB.
+  Each Goose data stack has a fixed 8 MB in WebAssembly, and WebAssembly has no guard pages.
+  Thus the core refuses a larger source, so that a stack cannot overwrite other data.
+  The same limit applies to each text that goes into the core, and to each result of Find, Replace, sam, Vim substitution and Vim put.
+  Find and sam keep a maximum of 100000 matches.
+  Marklove does not keep a text that is larger than 512 KB as a version.
+  With Vim mode on and a text larger than 512 KB, Vim goes to Insert mode and each key goes to the browser until the text is smaller.
+  A long talk is less than 100 KB.
+- Photos, videos and audio stay in JavaScript as Blobs.
+  They never go into the core.
+  The core writes the ZIP and Git entries for them, and JavaScript adds the bytes.
+  The same applies to the encoded video and audio samples: the core writes the MP4 header, and JavaScript adds the samples.
+- The SVG export traces regions with millions of pixels.
+  The core keeps the arrays for these pixels in the C heap, not in a data stack.
+- Encoders: browsers encode AAC only at 44.1 or 48 kHz, so the 24 kHz voice is encoded at 48 kHz.
+  Without AAC, the audio is Opus in the MP4 file.
+  Without WebCodecs, MediaRecorder records the video or the podcast in real time as WebM.
+
+## Feature parity
+
+| Marklove feature | Web status |
+| --- | --- |
+| Projects: make, rename, duplicate, delete | Yes. The projects are in the browser storage. |
+| Markdown editor with Courier Prime, line count and wrap | Yes. |
+| Source colors in the editor | Yes. |
+| Save each change at once, recovery of text that is not saved | Yes. Each change goes to the browser storage. |
+| Insert menu (Slide, Photo or Video, Equation, Speaker Notes, Pause, Title and Details) | Yes. |
+| Equation preview with spoken text | Yes. |
+| Find and Replace: Sam, Vim and plain text, the sam command line | Yes. |
+| Sam Tutorial | Yes. |
+| Vim mode | Yes. |
+| Source checks with Go to Source | Yes. |
+| Preview in the Normal and the Takahashi style | Yes. The preview is the interactive web page. |
+| Speaker Ready (current and next slide, notes, timer) | Yes, in a second window. |
+| Listener Preview | Yes. |
+| Themes and accent colors | Yes. |
+| Versions: automatic commits with commit messages, changes, restore | Yes. The versions are in the browser storage. The project ZIP holds them as a real `.git` history. |
+| Import a project ZIP | Yes. The `.git` history in the ZIP is not imported: the project starts with a new history. |
+| The tour and the welcome | Yes. |
+| Export: interactive web page, article web page, EPUB | Yes. |
+| Export: article Markdown, revised Markdown, narration script, transcript, subtitles, prompt text | Yes. |
+| Export: presenter ZIP, listener ZIP, project ZIP with `.git` | Yes. |
+| Export: slides PDF, article PDF, handout, poster | Yes. The core lays out the pages as the app does, and the browser print dialog saves them as PDF. The browser measures the text with the same fonts. |
+| Export: slides as PNG images or SVG files | Yes. A canvas draws the PNG images. For SVG, the core traces the text, photos, equations and plots into vector shapes, as the app does. |
+| Export: video, narrated video, math animation video, podcast | Yes. WebCodecs encodes H.264 and AAC, and the core writes the MP4 file. Without WebCodecs, MediaRecorder makes a WebM file. |
+| Narration voice (Kokoro on the device) | Yes. The voice is the kokoro-js web version of Kokoro-82M. It runs in the browser. The web version has 28 English voices. For a voice that it does not have, it uses `af_heart`. |
+| iCloud sync and merge between devices | Not possible on the web. iCloud Drive is available only to apps on Apple platforms. |
+| Command line tool and Shortcuts actions | Not possible on the web. A web page cannot add a command to Terminal or to the Shortcuts app. |
+| VoiceOver rotors, Dynamic Type, Bold Text | Not possible on the web. These are Apple system features. The web page uses the zoom, the screen reader and the reduced motion setting of the browser. |
+| Languages other than English | Not yet. The app text is in Xcode string catalogs, and the web version has only the English text. |
+| Marklove Pro purchase (StoreKit) | Removed. All features are free. |
+==> neurons/README.md <==
+# neurons
+
+Live page: https://teoyujie.org/play/neurons/
+
+A neuron explorer for SmolLM2-135M that runs in the web browser, written in Goose and compiled to WebAssembly.
+The model runs on the GPU with WebGPU when the browser has a WebGPU adapter, and on the CPU in WebAssembly when it does not.
+If the GPU cannot take the weights, the model runs on the CPU.
+The page shows which path runs.
+
+Inspired by [lyramakesmusic/neuron-explorer](https://github.com/lyramakesmusic/neuron-explorer).
+
+The page shows the MLP neurons of [SmolLM2-135M](https://huggingface.co/HuggingFaceTB/SmolLM2-135M).
+A sweep on a local GPU read all 46,080 neurons over 10 million tokens.
+Claude labelled the neurons that stand out most in each layer.
+The page ships that work as a snapshot, and it runs the model live:
+
+- Run your own text, and see the strongest neurons at each token.
+- Open a neuron, and see its top contexts, its label and its steering samples.
+- Steer a neuron: set it to a value, and compare the text that the model writes with and without it.
+- Compute the Jacobian lens of a neuron at a token of your text: the next tokens and the later neurons that it moves most.
+- Swap a neuron between your text and another text, and compare the next-token probabilities.
+- Ask Claude about a neuron with your own OpenRouter key.
+- Share a link to a room, and explore with 1 to 4 other people at the same time.
+
+## Run it
+
+```sh
+python3 -m http.server -d web 8000
+# then open http://localhost:8000/
+```
+
+The repository has the built `web/engine.wasm` and the snapshot, so the page needs no build step.
+
+## What the page downloads
+
+| What | From | Size |
+| --- | --- | --- |
+| `config.json`, `tokenizer.json`, `model.safetensors` | `huggingface.co/HuggingFaceTB/SmolLM2-135M`, revision `93efa2f097d58c2a74874c7e644dbc9b0cee75a2` (`MODEL_URL` in `web/model.mjs`) | 269 MB, and 2 MB for the tokenizer |
+| The page, the wasm and the snapshot | the server of the page | about 3 MB |
+
+The page downloads the model only when you click "Load the model".
+The worker keeps the files in the Cache API, so a second visit does not download them again.
+The weights are bf16 in the file.
+The worker converts them to f32 in WebAssembly memory (538 MB).
+On the GPU path, the worker also copies them to GPU memory (538 MB).
+
+## Ask Claude
+
+This page cannot ask Claude for you, because a static page cannot keep an API key secret.
+Thus each visitor puts an [OpenRouter](https://openrouter.ai/keys) key in the page.
+The browser sends the key only to `openrouter.ai`, and keeps it in `sessionStorage` of that tab.
+The key never goes to the server of the page or into this repository.
+Claude gets the neuron's statistics, its top contexts and steering samples, the visitor's text and the last steering result.
+
+## Rooms
+
+The "Share a link" button makes a room and gives a link to it.
+Each person who opens the link comes into the room, to a maximum of 5.
+In a room, all members see the same view and the same notes:
+
+- The view: the selected neuron, the text that ran, the selected token, and if the lens shows.
+  Each member runs the model in their own tab.
+  A member who did not load the model sees the neuron and the text only.
+- The notes: one note on each neuron, to a maximum of 64 in a room.
+  The page lists them under "Explore together".
+- The members: the name of each member who sent a request in the last 15 seconds.
+
+The rooms have no accounts.
+The link is the key: the id of the room has 128 random bits, after `#room=` in the link.
+The browser does not send the part after `#` in the URL of a request, so the page sends the id in the body of each request.
+A room ends 3 days after it was made.
+The relay keeps the rooms in memory only, and a restart of the relay ends all rooms.
+The OpenRouter key never goes into a room (Ask Claude): the page sends only the fields of the protocol, and it does not send a request that holds the visitor's key or text like an OpenRouter key.
+The relay also refuses a request that holds `sk-or-`.
+
+The relay is `neurons_room`, a Goose daemon in the [server repository](https://github.com/yujieteo/server) (`room/`). httpd on teoyujie.org sends `POST /play/neurons/room` to it with FastCGI.
+Thus `python3 -m http.server` gives the page without rooms.
+
+### Transport
+
+The page polls: one `POST` each second, with one request at a time. httpd in the OpenBSD base system cannot pass a WebSocket to a daemon, and a server-sent event stream or a long poll keeps one connection open for each member.
+A poll is a short FastCGI request, so the relay serves one request at a time, with no thread and no lock.
+A change comes to the other members in 1 to 2 seconds.
+
+### Conflicts
+
+- The view: the last view that comes to the relay wins.
+  A view that the page did not send yet is newer than the view in a reply, so the page keeps its own view until the relay has it.
+- A note: a save sends the version of the note that the member saw (`base`).
+  If the note changed after that version, the relay does not change it, and the reply is 409 with the notes as they are now.
+  The page then shows the other note, and keeps the member's text in the box.
+  A second save replaces the other note.
+- The page does not change a note that its member edits when the note of the room changes or when another neuron is selected.
+
+### Protocol
+
+Each request is `POST room` (next to the page) with a JSON body of at most 8,192 bytes:
+
+| Field | In | Value |
+| --- | --- | --- |
+| `op` | all | `create`, `poll`, `view`, `note` or `leave` |
+| `room` | all | the id of the room: 22 characters of base64url |
+| `member` | all | the id of the member in this tab: 8 to 16 characters of base64url, random |
+| `name` | all | the name of the member: 1 to 32 bytes, no control characters |
+| `since` | all | the `seq` of the last reply that had the view and the notes, or -1 |
+| `view` | `view` | the view as a JSON string of an object, at most 2,048 bytes: `{"layer", "index", "text", "token", "lens"}` |
+| `neuron`, `text`, `base` | `note` | the neuron as `layer.index`, the note (at most 500 bytes, empty to delete it), and the version of the note that the member saw (0 for no note) |
+
+`create` makes the room.
+Each other operation needs a room that exists.
+Each request also marks its member as present.
+The reply (200, and 409 for a note conflict) is the state of the room:
+
+```json
+{"seq": 7, "expires": 1793461540, "members": [{"name": "Ada", "you": true}, {"name": "Ben"}],
+ "view": "{\"layer\":16,\"index\":1275,\"text\":\"The cat\",\"token\":1,\"lens\":false}", "view_by": "Ben",
+ "notes": [{"neuron": "16.1275", "text": "Commas in lists", "by": "Ada", "version": 6}]}
+```
+
+`seq` goes up at each change of the view or a note.
+`view`, `view_by` and `notes` come only when `since` is less than `seq`.
+`expires` is the end of the room, in seconds since 1970.
+The reply names no member id, so a member cannot speak as another.
+An error has `{"error", "message"}`:
+
+| Status | `error` | When |
+| --- | --- | --- |
+| 400 | `bad` | the request is not valid |
+| 400 | `key` | the request holds `sk-or-` |
+| 403 | `full` | the room has 5 members |
+| 403 | `notes` | the room has 64 notes |
+| 404 | `gone` | the room ended, or the id is wrong |
+| 409 | `exists` | `create` for a room that exists |
+| 413 | `big` | the body is more than 8,192 bytes |
+| 429 | `slow` | a rate limit: 600 requests in a minute from one address, 6 new rooms in an hour from one address, 600 requests or 120 views and notes in a minute in one room |
+| 503 | `rooms`, `busy` | the relay has 100 rooms, or counts for 4,096 addresses |
+
+## Lens and swap
+
+Both change one neuron at one token, and run the model again from that token.
+They use the forward call of the engine and its steered neurons, so they run on the CPU path and on the GPU path.
+`web/probes.mjs` has the two.
+
+<img src="docs/figures/lens-swap.svg" width="520" alt="Two diagrams. a: a grid of tokens 1 to t by layers 0 to 29. The lens changes neuron (l, i) at token t to a plus or minus h, and reads the later neurons at t and the logits at t. b: your text has value a at token t, and the other text has value b at its last token. The swap gives b to your text and a to the other text, and compares the next-token probabilities before and after.">
+
+The lens changes one neuron at one token, and reads only that token.
+The swap exchanges the values of one neuron between two texts.
+
+### Jacobian lens
+
+The Jacobian lens of neuron (l, i) at token t of your text is the derivative, with respect to the value of the neuron at t, of:
+
+- the logits at t (the next-token prediction), and
+- the values of the neurons of layers l + 1 and after, at t.
+
+The lens changes the neuron at t only, so its result is one column of the Jacobian of the forward pass at t.
+The engine computes it by central differences: (f(a + h) - f(a - h)) / 2h, with a the neuron's value at t.
+The step h is the neuron's standard deviation in the sweep.
+On SmolLM2-135M, 5 neurons in layers 3 to 29 gave the same lens within 3e-3 of its largest value, for steps from 0.3 to 3 standard deviations.
+Smaller steps gave larger errors, because of the f32 rounding of the logits.
+The page shows the 8 tokens that the neuron raises most, the 8 that it lowers most, and the 10 later neurons that it moves most.
+
+The idea comes from these sources:
+
+- The logit lens reads the residual stream as next-token logits ([nostalgebraist, 2020](https://www.lesswrong.com/posts/AcKRB8wDpdaN6v6ru/interpreting-gpt-the-logit-lens)).
+- An MLP neuron adds its output vector to the residual stream, and that vector promotes some tokens of the vocabulary ([Geva et al., 2022](https://arxiv.org/abs/2203.14680)).
+  That is the direct effect only.
+  The lens also includes the effect through the later layers.
+- A gradient gives a linear estimate of the effect of a change of an activation ([Nanda, 2023, attribution patching](https://www.neelnanda.io/mechanistic-interpretability/attribution-patching)).
+
+### Neuron swap
+
+The neuron swap of neuron (l, i) between token t of your text and the last token of another text:
+
+1. Runs each text, and reads the value of the neuron at its token: a in your text, b in the other text.
+2. Runs your text again with the neuron set to b at t only, and the other text with the neuron set to a at its last token only.
+3. Shows the next-token probabilities of each text before and after the swap.
+
+This is an interchange intervention on one neuron ([Geiger et al., 2021](https://arxiv.org/abs/2106.02997)), the same as activation patching ([Vig et al., 2020](https://arxiv.org/abs/2004.12265); [Meng et al., 2022](https://arxiv.org/abs/2202.05262)) in the two directions.
+Steering sets a neuron at every token.
+The swap sets it at one token only, to a value that the model gave on real text.
+
+The definitions in this section come from the sources above and from the design of this repository.
+
+## How it works
+
+<img src="docs/figures/dataflow.svg" width="520" alt="Block diagram. a: sweep.py reads 10 M tokens, explore.py picks 20 neurons in each layer and sends packs to Claude for labels, and writes web/snapshot. b: in the browser, the worker gets the weights from huggingface.co and runs the model on the GPU path (WebGPU) if the weights fit, else on the CPU path (WebAssembly). The page gets the wasm and the snapshot from its server, sends text to the worker, asks Claude through openrouter.ai, and polls the room relay.">
+
+The sweep runs once on a local GPU and makes the snapshot.
+In the browser, the worker runs the model, and the page talks to the worker, OpenRouter and the room relay.
+
+A neuron is one element of `silu(gate_proj(x)) * up_proj(x)`, the input of `down_proj`, in each of the 30 layers.
+There are 1,536 neurons in each layer.
+
+| Part | File | What it does |
+| --- | --- | --- |
+| Engine | `engine/llama.goose` | The forward pass of a Llama-family model with tied embeddings: RMS norm, rotary embedding, grouped-query attention with a key-value cache, the SiLU MLP. It records the neuron values and sets steered neurons. |
+| GPU path | `engine/gpu.c`, `engine/kernels.wgsl` | The same forward pass on WebGPU, through the WebGPU port of Emscripten (emdawnwebgpu), with WGSL kernels. The Goose engine checks each call and gives its tokens, steered neurons and buffers to `engine/gpu.c`. |
+| Build | `build.sh` | Goose to C (`gen/llama.c`, `gen/llama.h`), then Emscripten to `web/engine.mjs` and `web/engine.wasm` from that C and `engine/gpu.c`. |
+| Loader | `web/model.mjs` | Streams the safetensors file into WebAssembly memory, copies it to the GPU on the GPU path, and calls the engine. |
+| Tokenizer | `web/tokenizer.mjs` | The byte-level BPE of SmolLM2. |
+| Lens and swap | `web/probes.mjs` | The Jacobian lens and the neuron swap, on the forward call of the engine. |
+| Rooms | `web/room.mjs` | The client of the room relay: the bodies of the requests, the key check, the polls, and the order of views and notes. |
+| Worker | `web/worker.mjs` | Runs the model off the main thread. It takes the GPU path when `navigator.gpu` gives an adapter that takes the weights, else the CPU path. |
+| Page | `web/index.html`, `web/app.js`, `web/art.mjs`, `web/style.css` | The look of [teoyujie.org](https://teoyujie.org): its shared stylesheet `https://teoyujie.org/shared/kowalski.css` and its art of random walks beside the normal density. |
+| Sweep | `sweep/sweep.py`, `sweep/explore.py` | The local sweep, the choice of neurons, the label packs for Claude and the snapshot. |
+| Snapshot | `web/snapshot/explored.json`, `web/snapshot/neurons.bin` | The explored neurons, and the statistics of all neurons. |
+
+### Memory
+
+WebAssembly has no address-space reservation, so Emscripten allocates each Goose data stack in full.
+Thus the engine keeps its state in fixed-size globals, and the page keeps the weights in memory from `malloc`.
+The page gives the weights to `forward` as a slice.
+The only data-stack use is the zeroed temporary that `goose_init` builds for each global array.
+The largest global array is `rec` (23.6 MB), so `build.sh` sets the stack to 32 MiB.
+
+### Limits
+
+- 128 tokens for each forward call, and 256 positions in the key-value cache.
+- The page runs the first 128 tokens of your text, and makes 32 tokens when you steer.
+- The capacities in `engine/llama.goose` fit SmolLM2-135M.
+  Keep the engine to this model family: it has no upstream.
+
+## Build
+
+The build needs the Goose compiler at commit `a108677d300cb0e8bbb842c35a353abe67a20c6c`, with its standard library, and Emscripten.
+On NixOS:
+
+```sh
+git clone https://github.com/aardappel/goose ../goose
+git -C ../goose checkout a108677d300cb0e8bbb842c35a353abe67a20c6c
+( cd ../goose && nix shell nixpkgs#cmake nixpkgs#clang nixpkgs#lld nixpkgs#gnumake --command \
+    bash -c 'cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ && cmake --build build -j16' )
+GOOSE_STDLIB=$PWD/../goose/stdlib nix shell nixpkgs#emscripten --command env GOOSE=$PWD/../goose/build/goose ./build.sh
+```
+
+The build used Emscripten 5.0.6.
+On the first build, Emscripten downloads its WebGPU port (emdawnwebgpu).
+`build.sh` writes `gen/sha256sums`, and the tests check the sums, so a stale C or wasm fails the tests.
+
+## Tests
+
+```sh
+nix shell nixpkgs#nodejs --command npm test
+nix shell nixpkgs#deno --command deno test --allow-read --allow-env test/engine.test.mjs
+```
+
+- `test/engine.test.mjs` runs a tiny random Llama model in the wasm engine and compares it with transformers in f32: the logits, the neuron values, the key-value cache, a steered neuron, the swap, and the Jacobian lens against the Jacobian from autograd (1e-3 of its largest value).
+  `test/make_fixture.py` makes the model.
+  Node has no WebGPU, so `npm test` runs the CPU path only.
+  Deno has WebGPU, so `deno test` runs the CPU path and the GPU path.
+  It also compares the two paths on the prompts of the fixture, unsteered and steered, and on the lens and the swap.
+  With WebGPU but no adapter, the GPU tests fail.
+  The tolerance between the two paths: for each compared tensor (the logits of a forward call, and its neuron values), max |gpu - cpu| <= 1e-5 x max |cpu|.
+  The swap gives the logits of forward calls, so the same tolerance applies to them.
+  The lens is a difference of two forward calls over 2h, so its tolerance is 1e-5 x max |cpu value| / h, with the logits or the neuron values without the change as the values.
+  When `NEURONS_MODEL_DIR` names a directory with `config.json`, `tokenizer.json` and `model.safetensors` of SmolLM2-135M at the revision of `MODEL_URL` (`web/model.mjs`), `deno test` also compares the two paths on SmolLM2-135M: 6 prompts, each unsteered and with 2 steering cases.
+  Without it, that test is skipped.
+  In Deno, wgpu on an NVIDIA T1000 refuses a buffer of 64 MiB or more, so the SmolLM2-135M test ran on lavapipe (`VK_ICD_FILENAMES` set to the lavapipe ICD).
+  Deno needs `libvulkan.so.1` on its library path to find a Vulkan adapter (on NixOS, from `nixpkgs#vulkan-loader`).
+- `test/room.test.mjs` runs the room client against a fake relay: the fields of each body, the key check, the order of a view and a reply, and a note conflict.
+  The tests of the relay itself are in the server repository.
+- `test/tokenizer.test.mjs` compares the tokenizer with the Hugging Face tokenizer on 9 texts (`test/make_tokens.py`).
+  It downloads `tokenizer.json` from Hugging Face.
+
+CI runs `npm test`, and `deno test` on lavapipe (Mesa's Vulkan on the CPU), because the runner has no GPU.
+Thus CI checks the WGSL kernels on one Vulkan implementation.
+It does not run a real GPU, a browser or SmolLM2-135M.
+
+On SmolLM2-135M, the largest difference from transformers was 3e-5 in the logits and 7e-5 in the neuron values.
+In Node, one new token took 52 ms. At the tenth token of a text, the lens took 0.3 s and the swap 0.8 s.
+
+The GPU path against the CPU path on SmolLM2-135M, in Chromium 156 on an NVIDIA T1000, over 6 prompts of up to 128 tokens with 3 steering cases each:
+
+- The largest difference was 7e-5 in the logits (the largest logit was 29, so 2.4e-6 relative) and 6e-3 in the neuron values (the largest value was 2,626, so 2.3e-6 relative).
+  Both are in the tolerance of 1e-5 relative.
+- The greedy tokens were the same: 288 of 288, 16 after each prompt.
+- One new token took 9 ms on the GPU path and 35 ms on the CPU path.
+  A prompt with the neuron values recorded took 77 ms and 755 ms.
+
+## Sweep
+
+The sweep runs on a local GPU with PyTorch and transformers.
+The model weights and the full sweep output stay out of the repository.
+
+```sh
+python sweep/sweep.py MODEL_DIR OUT 10000000 fineweb.parquet:0.7 cosmo.parquet:0.3
+python sweep/explore.py pack MODEL_DIR OUT
+# Claude labels the neurons of OUT/packs/*.txt into OUT/labels/*.json
+python sweep/explore.py snapshot MODEL_DIR OUT web/snapshot
+```
+
+1. `sweep.py` runs the model over 128-token windows of the corpus.
+   For each neuron, it keeps the mean, the standard deviation and the 32 largest values with their positions.
+   It leaves out the first 4 positions of each window.
+2. `explore.py pack` picks 20 neurons in each layer by how far their largest value stands above their mean, in units of their standard deviation.
+   Of the 20, 5 are neurons whose top contexts share one or two tokens.
+   Then it computes 8 top contexts for each neuron again, and the steering samples.
+   It writes the label packs.
+3. Claude reads each pack and writes a label and a description for each neuron.
+4. `explore.py snapshot` writes the snapshot.
+
+The corpus was the first shard of `fineweb-edu-dedup` (70 %) and of `cosmopedia-v2` (30 %) from [HuggingFaceTB/smollm-corpus](https://huggingface.co/datasets/HuggingFaceTB/smollm-corpus).
+
+## Licence
+
+MIT (see `LICENSE`), for the code of this repository.
+SmolLM2-135M is Apache-2.0.
+The repository does not include the weights.
+Goose is Apache-2.0.
+The generated `gen/llama.c` and `web/engine.wasm` contain the Goose runtime, so `web/GOOSE-LICENSE.txt` has the Goose licence.
+The contexts in the snapshot are short extracts of FineWeb-Edu (ODC-By) and Cosmopedia (Apache-2.0).
+==> ps-profile/README.md <==
+# ps-profile
+
+[![License: MIT](https://img.shields.io/github/license/yujieteo/ps-profile)](LICENSE) [![PowerShell 5.1](https://img.shields.io/badge/PowerShell-5.1-5391FE?logo=powershell&logoColor=white)](https://learn.microsoft.com/powershell/scripting/windows-powershell/install/windows-powershell-system-requirements) [![Latest release](https://img.shields.io/github/v/release/yujieteo/ps-profile)](https://github.com/yujieteo/ps-profile/releases/latest)
+
+A PowerShell profile for Windows PowerShell 5.1 on computers that use ConstrainedLanguage mode.
+It adds commands to find files, search content, show files and move between folders.
+It uses only cmdlets and core types.
+
+## What it does
+
+The profile adds these commands:
+
+| Command | Purpose |
+| --- | --- |
+| `fd` | Find files by name. Use `-Ext`, `-Changed` (for example `30d`) and `-Size` (for example `+1MB`) to filter. Uses the file index for folders under `ShareRoots`. |
+| `recent` | Show the 20 most recently changed files of the last 7 days under the current folder. Use `-Days` and `-Count` to change the limits. |
+| `rg` (alias `grep`) | Search file content. Use `-Office` to search `.docx`, `.xlsx` and `.pptx` files. |
+| `rgi` | Search file content and pick a match in the picker. The preview shows the lines around the match. The pick opens the file. |
+| `fzf` | Pick an item from a list. Type text to filter the list. Type `#2` to pick item 2. |
+| `br` | Browse a folder in the picker. The picker shows 2 levels. A folder pick enters the folder. A file pick opens the file. |
+| `bat` | Show a file with line numbers. Office files show as text. Use `-Range 100-200` to show some lines and `-Pattern` to highlight text. |
+| `du` | Show folder sizes as a tree, largest first. Use `-Depth` to change the number of levels. |
+| `tldr` | Show examples for the profile commands. Run `tldr` with no argument to list the commands. |
+| `z`, `zi` | Jump to a folder you used before. `zi` shows a picker. |
+| `cd` | Change folder. Records the visit for `z`. |
+| `delta` | Show the differences between two files. Office files are compared as text. |
+| `ls`, `ll` | List files. Colors show the file type. |
+| `cpath`, `unc`, `cb`, `pb` | Copy paths or text to the clipboard, or get the clipboard text. |
+| `wc`, `head`, `tail`, `which`, `touch` | Small versions of common Unix commands. |
+| `mkcd`, `up`, `..`, `...` | Create and enter a folder, or go to a parent folder. |
+| `open` | Open a file with its default program. |
+| `ep`, `reload` | Open the profile in Notepad. Load the profile again. |
+
+## Picker and preview
+
+The picker (`fzf`, `zi`, `rgi`, `br`, Ctrl+R and Ctrl+T) shows a preview at the side of the list.
+The preview shows item 1 of the list:
+
+- For a file, the preview shows the first lines with line numbers, as `bat` shows them.
+  Office files show as text.
+- For a folder, the preview shows the items in the folder.
+- For an `rg` match, the preview shows the lines around the match.
+  The match line is yellow.
+
+The preview needs a window width of 60 characters or more.
+The preview does not read files over 20 MB.
+
+## Keys
+
+| Key | Purpose |
+| --- | --- |
+| Ctrl+R | Pick a command from the full PSReadLine history. The command goes to the clipboard. |
+| Ctrl+T | Pick a file under the current folder. The path goes to the clipboard. |
+
+After the pick, press Ctrl+V to insert the text on the command line.
+ConstrainedLanguage mode blocks the PSReadLine methods that put text on the command line.
+Thus the keys use the clipboard.
+
+## Prompt
+
+The prompt shows the current folder.
+It also shows the time of commands that take more than 2 seconds.
+
+## Install
+
+1. Open Windows PowerShell and run `$PROFILE`.
+   The output is the path of the profile file.
+2. If the file does not exist, create it at that path.
+3. Copy `Microsoft.PowerShell_profile.ps1` to that path.
+   Replace the file if it exists.
+4. Open a new Windows PowerShell window.
+
+If PowerShell does not load the profile, run `Get-ExecutionPolicy` to check the execution policy.
+
+## Share roots
+
+The `fd` command uses a file index for network shares and mapped drives.
+Set the folders to index in `$global:ShareRoots`, near the top of the profile:
+
+```powershell
+$global:ShareRoots = @('S:\Finance', '\\fileserver\public')
+```
+
+- Mapped drive letters are allowed.
+  The profile converts them to the UNC path that Windows shows for the drive.
+- Run `Update-Index` to build or refresh the index for all share roots.
+- Run `Update-Index 'S:\Finance\2026'` to refresh one folder under a share root.
+- At startup, the profile starts a background index job when the index is older than 24 hours.
+  The prompt shows `[index building]` or `[index old]` when this applies.
+- `fd` in a folder that is not under `ShareRoots` uses a recursive search instead.
+- The index keeps the size and the change time of each file.
+  Thus `fd -Changed`, `fd -Size` and `recent` are fast on share roots.
+- The index builder lists a folder again only when the time of the folder changes.
+  If a program changes a file but not its folder, the index keeps the old size and time of that file.
+- Version 1.1.0 uses a new index format.
+  After the upgrade, the profile builds the index of each share root again one time.
+  The profile does not read an index of version 1.0.0, and it deletes the old files.
+
+## Where the profile writes data
+
+The profile writes its data to `$env:LOCALAPPDATA\ps-profile`.
+The profile creates this folder at startup.
+The folder contains:
+
+- `idx2_*.idx` and `idx2_*.state`: the file index for each share root.
+- `index.lock`: exists only while an index build runs.
+- `idx2_*.partial`: exists while an index build is not finished.
+  The index is `old` until the build ends.
+- `z.txt`: the folder history for `z`.
+
+When `rg -Office`, `bat`, `delta` or the preview reads an Office file, it unpacks the file in a temporary folder under `$env:TEMP`.
+The profile deletes this folder after the search.
+
+## ConstrainedLanguage limits
+
+The profile does not use `Add-Type`, COM objects, or `Invoke-Expression`.
+Because of these limits:
+
+- The commands are PowerShell code.
+  They do not call external programs such as `rg.exe` or `fzf.exe`.
+- `ep` starts `notepad.exe`.
+- `rg -Office`, `bat`, `delta` and the preview read Office files by unpacking the file and reading its XML.
+  Legacy `.doc`, `.xls` and `.ppt` files are not read.
+- `rg` skips binary files and files over 20 MB by default.
+  Use `-MaxSizeMB` to change the limit.
+- `rg` and `rgi` refuse a content search of a whole share.
+  Give a folder instead.
+- The picker uses `Read-Host`.
+  Type text and press Enter to filter, or type `#` and the item number, for example `#12`, and press Enter to pick.
+  A plain number filters the list.
+  It does not filter on each key.
+- Ctrl+R and Ctrl+T put the pick on the clipboard, not on the command line.
+  See [Keys](#keys).
+
+## Release
+
+The current version is 1.2.0.
+See [CHANGELOG.md](CHANGELOG.md).
+
+After the change merges to the default branch:
+
+1. Run `git tag v1.1.0` on the merged commit.
+2. Run `git push origin v1.1.0`.
+3. Create a GitHub release for the tag `v1.1.0`.
+4. Attach `Microsoft.PowerShell_profile.ps1` to the release.
+
+## License
+
+This project is licensed under the MIT License.
+See [LICENSE](LICENSE).
+==> server/README.md <==
+# teoyujie.org server
+
+The config of the teoyujie.org server: OpenBSD 8.0 base system only, no packages.
+It serves the site and the app pages, runs the pond save and read services and the room relay of the neuron explorer, forwards mail, and is a VPN with an ad blocker.
+
+This repo is public and has no secret.
+The server makes its own secrets (TLS key, ACME account key, SRS key, WireGuard key), and they never leave it.
+`local.conf` (Git ignores it) has the private values.
+No value in it gives access to the server.
+
+## Files
+
+| File | Use |
+| --- | --- |
+| `install.sh` | Runs on the server as root. Makes a fresh OpenBSD 8.0 server into teoyujie.org. Safe to run again. |
+| `test.sh` | Runs on the server as root after `install.sh`. Tests all services. |
+| `apply` | Runs on the Mac. Copies this repo and `local.conf` to the server, then runs `install.sh`. |
+| `private-setup` | Runs on the Mac. The one-time setup of the private names of Lavish, femahoy and the fleet view (below). |
+| `mail-alias` | Runs on the Mac. `./mail-alias add NAME` or `./mail-alias del NAME`. |
+| `share` | Runs on the Mac. `./share FILE` prints a link to FILE that works for 30 days. |
+| `local.conf.example` | The private values, with test values. CI uses it. |
+| `etc/` | The configs: httpd, relayd, acme-client, smtpd, pf, sshd, unbound, doas, sysctl, crontab, and `rc.d/neurons_room`. |
+| `bin/` | The jobs: health-check, ssh-alert, blocklist-update, site-update (below), private-cert (below), deploy-only (the forced command of the deploy user), tunnel-wait (the login shell of the tunnel user), and fleet-upload (the forced command of the fleet user, below). |
+| `fleet/index.html` | The page of the fleet view (below). It shows the pages of the Mac and the desktop. |
+| `www/` | Files on the web: security.txt, the GPG key with WKD, the MTA-STS policy, and `errdocs/err.html`, the error page (403, 404 and the others) in the look of the site. |
+| `pond/` | The pond save and read services (below). `pond_save.c`, `pond_verify.h`, `pond_lock.h`, `pond_read.c` and `pond_read.h` are copies of `server/` in the [pond repo](https://github.com/yujieteo/pond) at commit `cb6bbac6ffcb050347d1fab6852e4302184d1362`. Do not change them here. `main.c` adds pledge and unveil to `pond_save`. `pond_read` does its own unveil (read only) and pledge (`stdio rpath`). |
+| `room/` | The room relay of the neuron explorer (below). `room.c` is the C that Goose makes from `room.goose`. |
+| `.githooks/pre-commit`, `.gitleaks.toml` | gitleaks stops a commit that has a secret in it. Turn on the hook once in each clone: `git config core.hooksPath .githooks`. |
+| `.github/workflows/ci.yml` | gitleaks, and `install.sh` plus `test.sh` on a fresh OpenBSD 8.0 VM. |
+
+## Rebuild from zero
+
+1. At Vultr, deploy "OpenBSD 8.0" (plan vc2-1c-1gb, Singapore) with the SSH key of the Mac and the hostname `teoyujie.org`.
+   Set the reverse DNS of the IPv4 and the IPv6 address to `teoyujie.org`.
+2. On the Mac: `cp local.conf.example local.conf`, then put in the real values.
+   Before the first apply, make the tunnels of the Mac and the iPhone in the WireGuard app (below) and put their public keys in `WG_PEERS`.
+   After the first apply, SSH works only through the VPN.
+3. `./apply root@NEW_IPV4`.
+   It asks for the doas password of the admin and prints the WireGuard public key of the server.
+   After this run, root cannot log in with SSH.
+4. Put that key in the WireGuard configs of the Mac and the iPhone (below).
+   Turn on the tunnel, then test: `ssh ADMIN_USER@10.8.0.1`.
+   ADMIN_USER is the value in `local.conf`.
+   The admin keys and the deploy key work only through the VPN.
+   If the VPN breaks, log in as ADMIN_USER with the doas password in the Vultr web console.
+5. In Gandi LiveDNS, set the records of the next section.
+6. When `dig +short teoyujie.org` shows the new address: `ssh -t ADMIN_USER@10.8.0.1 'doas acme-client -v teoyujie.org && doas rcctl reload httpd && doas rcctl restart smtpd'`
+7. `install.sh` deploys the site from the main branch of its repo (below).
+   The site repo also has the app pages.
+8. Test on the server: `ssh -t ADMIN_USER@10.8.0.1 doas sh server/test.sh`.
+   Test from outside that the server is not an open relay.
+   Expect 550: `python3 -c 'import smtplib; s=smtplib.SMTP("teoyujie.org"); s.ehlo(); s.mail("a@example.org"); print(s.rcpt("a@example.net"))'`
+
+After a change to this repo: `./apply ADMIN_USER@10.8.0.1`.
+
+## DNS records
+
+| Name | Type | Value |
+| --- | --- | --- |
+| `@` | A | the IPv4 address of the server |
+| `@` | AAAA | the IPv6 address of the server |
+| `@` | MX | `10 teoyujie.org.` |
+| `@` | TXT | `"v=spf1 mx -all"` |
+| `_dmarc` | TXT | `"v=DMARC1; p=reject"` |
+| `www` | CNAME | `teoyujie.org.` |
+| `mta-sts` | CNAME | `teoyujie.org.` |
+| `_mta-sts` | TXT | `"v=STSv1; id=20261101"` |
+| `_smtp._tls` | TXT | `"v=TLSRPTv1; rua=mailto:contact@teoyujie.org"` |
+| `@` | CAA | `0 issue "letsencrypt.org"` |
+| `@` | CAA | `0 issuewild ";"` |
+| `@` | CAA | `0 iodef "mailto:contact@teoyujie.org"` |
+| `mac.lavish` | A | the IPv4 address of the server |
+| `desk.lavish` | A | the IPv4 address of the server |
+| `fh` | A | the IPv4 address of the server |
+| `fleet` | A | the IPv4 address of the server |
+
+Make no other record.
+A wildcard record stops GnuPG from finding the key with WKD.
+If you change `www/.well-known/mta-sts.txt`, also change the `id` of `_mta-sts`.
+
+## WireGuard clients
+
+In the WireGuard app, add an empty tunnel.
+The app makes the private key and shows the public key.
+Put the public key in `WG_PEERS` in `local.conf`.
+For the first apply, that is all (step 2 above).
+To add a new device later, run `./apply ADMIN_USER@10.8.0.1` from a device that is already on the VPN.
+If no device is on the VPN, log in to the Vultr web console.
+Add the key to `local.conf` in the `server` folder of the last apply, then run its `install.sh` as root.
+
+```
+[Interface]
+PrivateKey = (the app makes it)
+Address = 10.8.0.2/32
+DNS = 10.8.0.1
+
+[Peer]
+PublicKey = (the server key that install.sh prints)
+Endpoint = teoyujie.org:51820
+AllowedIPs = 10.8.0.0/24
+PersistentKeepalive = 25
+```
+
+The iPhone uses `Address = 10.8.0.3/32`.
+Only traffic to 10.8.0.0/24 goes through the VPN.
+All DNS goes to the server, which blocks ads and trackers.
+Turn on "On Demand" on both devices.
+The iPhone reaches the Mac at 10.8.0.2 (Remote Login or Screen Sharing in macOS Settings).
+
+## Site deploys
+
+Each minute, the cron job `bin/site-update` (as the user deploy) reads the commit of the main branch of [yujieteo/site](https://github.com/yujieteo/site).
+When it changes, the job gets the tarball of that commit from GitHub and gives its `public/` to deploy-only.
+Then it gets `/` and each URL in `fixed-urls.txt` of that commit from httpd.
+If one does not give 200, it puts the previous site back and mails root.
+Thus a push to main deploys the site, with no key and no Mac.
+`/home/deploy/site-commit` holds the last commit, so a failed commit is not deployed again.
+The next commit on main deploys again.
+If GitHub does not answer, the job tries again the next minute and mails nothing.
+
+`scripts/deploy.sh` of the site repo also deploys from the Mac.
+The next change on main replaces that deploy.
+
+## Pond save and read services
+
+`POST https://teoyujie.org/pond/entry` takes 1 signed change to 1 pond entry.
+The pond repo has the protocol in `docs/protocol.md`. httpd sends `/pond/*` (but not `/pond/entries.json`) to `/var/www/cgi-bin/pond_save` through slowcgi.
+The data is in `/var/www/pond`: `keys/` has the public keys of the devices, and `entries/` has the entries.
+A deploy and `install.sh` do not change them.
+The server has no private key.
+
+To enrol a device, put the base64 of its public key (SubjectPublicKeyInfo DER) in `keys/NAME.pub`.
+NAME is the `key` of its requests.
+From the Mac:
+
+```
+scp NAME.pub ADMIN_USER@10.8.0.1:
+ssh -t ADMIN_USER@10.8.0.1 doas install -m 644 NAME.pub /var/www/pond/keys/
+```
+
+To revoke the device, delete its file.
+
+`GET /pond/entries.json`, `/log/` and `/log/feed.xml` show the entries, newest first. httpd sends them to `/var/www/cgi-bin/pond_read` through slowcgi.
+`/log/` is the site file `log/template.html` with the entries in place of its line `<!-- pond:entries -->`.
+Without that file, `/log/` is a plain page. pond_read can only read the entries and the template.
+
+To use a new pond version, copy the 5 files from `server/` of the pond repo to `pond/`, change the commit in the table above, then apply.
+
+## Room relay of the neuron explorer
+
+`POST https://teoyujie.org/play/neurons/room` is the relay of the rooms of the [neuron explorer](https://github.com/yujieteo/neurons).
+A share link opens a room, and 2 to 5 people see the same view and the same notes.
+The README of the neurons repo has the protocol (Rooms). httpd sends the requests to `neurons_room`, a Goose daemon on 127.0.0.1 port 8790, with FastCGI.
+`etc/rc.d/neurons_room` starts it as the user `_neuronsroom`.
+It pledges `stdio inet`, so it cannot open a file.
+
+- The page polls the relay once each second. httpd in the base system cannot pass a WebSocket to a daemon, and a server-sent event stream or a long poll keeps one connection open for each member.
+  A poll is a short request, so the daemon serves one request at a time, with no thread and no lock.
+- The daemon keeps the rooms in memory only.
+  It writes no file and logs no room and no address.
+  A room ends 3 days after it was made, and a restart of the daemon ends all rooms.
+- The limits: 100 rooms, 5 members and 64 notes in a room, 8,192 bytes in a request, 2 s to send a request.
+  In each minute, 600 requests from 1 address, and 600 requests or 120 views and notes in 1 room.
+  In each hour, 6 new rooms from 1 address.
+  For these limits, all of an IPv6 /64 is 1 address.
+- Known limit: a room stays for 3 days, also with no members.
+  Thus about 17 addresses can make all 100 rooms in 1 hour, and then nobody can make a room for up to 3 days.
+- The daemon refuses a request that holds an OpenRouter key (`sk-or-v1-` and 64 hex digits) in a string of its JSON, so a key cannot go into a room.
+
+To change the relay, change `room.goose`, then make `room.c` again with Goose at commit `a108677d300cb0e8bbb842c35a353abe67a20c6c` (its build is in the README of the neurons repo):
+
+```
+cd room && GOOSE_STDLIB=../../goose/stdlib ../../goose/build/goose --standalone --include room_net.h -o room.c room.goose
+```
+
+`install.sh` builds the daemon from `room.c`.
+`test.sh` tests it through httpd, and the limits on 2 more daemons.
+
+## Private names of Lavish and femahoy
+
+On a device on the VPN (Mac, iPhone, desktop), these names open the apps.
+No token is necessary.
+
+| Name | App | Tunnel port on 10.8.0.1 |
+| --- | --- | --- |
+| `https://mac.lavish.teoyujie.org` | Lavish on the Mac (127.0.0.1:4387) | 4387 |
+| `https://desk.lavish.teoyujie.org` | Lavish on the desktop (127.0.0.1:4387) | 4388 |
+| `https://fh.teoyujie.org` | femahoy `fh serve` on the desktop (127.0.0.1:8790) | 8790 |
+
+Lavish uses paths from the root of the site (`/api/...`, `/events/...`), so each Lavish has its own name, not a path such as `/mac`.
+Nobody without a WireGuard key gets to them.
+
+<img src="docs/figures/private-names.svg" width="360" alt="The path of a request to a private name. A VPN device asks unbound, which gives the name as 10.8.0.1. The device sends HTTPS to relayd on 10.8.0.1 port 443, which gives 403 to a cross-site Origin. relayd sends mac.lavish to port 4387, desk.lavish to port 4388, fh to port 8790 and fleet to httpd port 8092. Reverse SSH tunnels take ports 4387, 4388 and 8790 to Lavish on the Mac, Lavish on the desktop and femahoy on the desktop. From the internet, the public httpd answers only the Let's Encrypt check for these names.">
+
+*Only a VPN device reaches relayd. relayd sends each name to its tunnel port or to the fleet view.*
+
+- The Mac and the desktop open a reverse SSH tunnel to the server, as the user `tunnel`.
+  The tunnel ports listen only on 10.8.0.1, the VPN address of the server.
+  The room relay also uses port 8790, but on 127.0.0.1, so the two do not collide.
+- The user `tunnel` can only open these 3 tunnels (`Match User tunnel` in `etc/sshd_config`).
+  It cannot run a command, get a terminal, or connect from the server to another address.
+  It logs in with a key only, and only through the VPN.
+- unbound gives the 3 names to the VPN devices as 10.8.0.1. relayd on 10.8.0.1 port 443 (`etc/relayd.conf`) sends each name to its tunnel. relayd gives 403 to a request with an `Origin` other than its own name, or with `Sec-Fetch-Site: cross-site`, so a web page cannot use the apps.
+  The 403 page has the look of the site error page.
+  Then relayd sets `Host` and `Origin` to the local address of the app.
+  For femahoy, relayd also sends the token of `fh serve` (`FH_TOKEN` in `local.conf`). httpd on 10.8.0.1 port 80 sends the names to HTTPS.
+- pf lets the internet in only to the public addresses.
+  On the public addresses, httpd answers only the Let's Encrypt challenge for the 3 names.
+  `bin/private-cert` gets their certificate.
+
+To set it up:
+
+1. In Gandi LiveDNS, add the records `mac.lavish`, `desk.lavish` and `fh` of the table in [DNS records](#dns-records).
+   This is the only step by hand.
+   Let's Encrypt needs them to check the names.
+   The records give the public address, which answers only the check.
+2. On the Mac (also from Termius over SSH), with the VPN on: `./private-setup ADMIN_USER@10.8.0.1`.
+   It makes the key `~/.ssh/tunnel_ed25519` on the Mac and on the desktop (the private keys stay there).
+   It puts the public keys (`TUNNEL_KEY`) and the femahoy token (`FH_TOKEN`) in `local.conf`, runs `apply` (it asks for the doas password), and runs `rebuild` on the Mac and on the desktop.
+   The dotfiles make the tunnel services.
+   If a step fails, the command says which step and how to try again.
+   It is safe to run again, for example after a new femahoy token.
+
+`test.sh` tests the tunnel user, the listen addresses, the pf rules, the headers that relayd sends to each app, and that the public addresses do not answer for the 3 names.
+
+## Fleet view
+
+`https://fleet.teoyujie.org` shows the workers on the Mac and on the desktop: each worker, its task, its last event, and each PR that waits for a word from the captain.
+It is read only, and only for the VPN devices.
+The Mac and the desktop make their pages (the dotfiles do that, not this repo) and upload them:
+
+```
+ssh -i ~/.ssh/tunnel_ed25519 fleet@10.8.0.1 mac < mac.html        # on the Mac
+ssh -i ~/.ssh/tunnel_ed25519 fleet@10.8.0.1 desk < desk.html      # on the desktop
+```
+
+- The user `fleet` logs in with the tunnel keys (`TUNNEL_KEY` in `local.conf`), only through the VPN.
+  It can only run `bin/fleet-upload`: no shell, no terminal, no forwarding.
+  Root owns its home.
+- `fleet-upload` accepts only the name `mac` or `desk`, and a page of 1 MiB or less.
+  It writes the page to a temp file in `/var/www/fleet`, then renames it to `mac.html` or `desk.html`.
+  Thus httpd always serves a complete page, and a failed upload keeps the old page.
+- `fleet/index.html` shows the 2 pages and the time of each upload (the `Last-Modified` of the page).
+  It says OLD when an upload is more than 10 minutes ago.
+  It loads the pages again each 30 seconds.
+  The pages show in a sandbox, so they cannot run a script.
+  Use HTML and CSS only.
+- unbound gives `fleet.teoyujie.org` to the VPN devices as 10.8.0.1. relayd on 10.8.0.1 port 443 sends it to httpd on 127.0.0.1 port 8092, with the same `Origin` and `Sec-Fetch-Site` rule as the other private names.
+  The public addresses answer only the Let's Encrypt challenge for it, as for the other private names.
+  To set it up, add the DNS record `fleet` (in [DNS records](#dns-records)), then `./apply ADMIN_USER@10.8.0.1`.
+  Until the public DNS has that record, `bin/private-cert` renews no private name.
+  If the tunnel keys are not set up yet, run `./private-setup` (below) in place of `./apply`.
+
+`test.sh` tests the names, the size limit, the replace in 1 step, and that the public addresses do not answer.
+
+## Upgrade to the next OpenBSD release (each 6 months)
+
+```
+ssh -t ADMIN_USER@10.8.0.1 doas sysupgrade      # downloads, reboots, upgrades: about 10 minutes
+./apply ADMIN_USER@10.8.0.1                     # writes the configs of this repo again
+ssh -t ADMIN_USER@10.8.0.1 doas sh server/test.sh
+```
+
+After the upgrade, sysmerge mails root a list of the configs that it did not change.
+`apply` writes the repo version of each of them, so you do not need to merge them by hand.
+
+Change `8.0` in this file and in `.github/workflows/ci.yml` to the new release.
+==> site/AGENTS.md <==
+# Agents
+
+1. Read REQUIREMENTS.md.
+   Keep the site to what it says.
+   Prefer deleting to adding.
+2. Edit pages in `public/` by hand.
+   No generator, no framework, no build step.
+   The beam page and the wallpaper module (`scripts/build-wallpaper.sh`) are the exceptions.
+3. Never edit `public/play/beamdiag/index.html`.
+   Change the beam in `beamdiag/`, then run `scripts/build-beam.sh` and commit the page with the source.
+4. Never change or remove a URL in `fixed-urls.txt`: the App Store links to them.
+5. Commit to `main`.
+   Turn on the VPN, then run `scripts/deploy.sh`.
+   It runs the check, deploys and tests the URLs.
+==> site/README.md <==
+# site
+
+This is the personal website of Teo Yu Jie, at https://teoyujie.org/.
+It holds a home page of selected explorations, the beam diagram tool, the privacy and support pages of Lullapixie and Marklove, the OpenPGP key of contact@teoyujie.org, and the template of the log at `/log`.
+`REQUIREMENTS.md` says what the site must do.
+
+| Path | Holds |
+| --- | --- |
+| `public/` | Everything the server serves, as it is served. |
+| `beamdiag/` | The beam diagram creator, a Goose program that builds to WebAssembly. `beamdiag/REQUIREMENTS.md` is its contract. |
+| `wallpaper/` | The wallpaper maker, a Goose program (`wallpaper.goose`) with a C host (`host.c`) that builds to WebAssembly. `wasm.sha256` is the hash of its sources. |
+| `public/fonts/` | The site fonts, Inter (Google Fonts v20, variable) and IBM Plex Mono (weight 400), with their OFL licences. |
+| `public/shared/kowalski.css` | The tokens and interaction rules of the site look. `public/style.css` imports it. |
+| `public/play/beamdiag/` | The built beam page. `index.html` and `beamdiag.wasm.gz` come from `scripts/build-beam.sh`. Never edit them by hand. |
+| `public/play/wallpaper/` | The wallpaper page. `wallpaper.wasm.gz` comes from `scripts/build-wallpaper.sh`. Never edit it by hand. |
+| `media-plan.md` | The master copy of the media plan. The pond app edits it. |
+| `scripts/build-beam.sh [folder]` | Builds the beam page into `public/play/beamdiag/` or into the folder. |
+| `scripts/build-wallpaper.sh` | Builds the wallpaper module with `goose` and `emcc` and writes `wallpaper/wasm.sha256`. |
+| `scripts/check.sh [--replay [--accept]]` | Installs from `bun.lock`, then runs `tsc --noEmit` (strict) and `knip` over the TypeScript, then `scripts/check-site.ts`: pages and WKD key files exist, links resolve, the home page keeps its links and each selected exploration has a kind, a title and a link, the log template has one entries slot, each essay figure has a caption and alt text, the home page and beam page first loads are inside their gzipped budgets (100 KB and 590 KB), TypeScript has no comment without an `https://` source and no `any`, non-null assertion, cast or type argument on a DOM query. It also checks that `scripts/*.sh`, `wallpaper/` and the `beamdiag/` sources have no comments (source credits excepted), that `beamdiag/` builds the committed beam page, that the wallpaper module matches its sources, and that `bun test` and `beamdiag/test.goose` (built with ASan and UBSan) pass. It needs `bun`, `node`, `cc` and the beam build tools. It stops if `beamdiag/c/test.sha256` does not match the test inputs: then set `GOOSE` to make `beamdiag/c/test.c` again. With `--replay` it also captures the inputs of `bun test` and replays them on `main` and on `HEAD` (`scripts/replay.ts`); it fails on any output difference unless `--accept` is given. |
+| `scripts/deploy.sh` | Runs the check, sends `public/` as a tar archive to deploy@10.8.0.1 over the VPN, then tests the URLs. |
+
+The beam build needs `emcc`, `cc` and `gzip`, and `bun` 1.4.4 when `GOOSE` is set.
+It uses the Goose C committed in `beamdiag/c/`.
+It stops if `beamdiag/c.sha256` does not match the Goose inputs: then set `GOOSE` to make the C again.
+
+The wallpaper build needs `goose` and `emcc`.
+Set `GOOSE` and `EMCC` to use other binaries.
+
+The site before 2026-10-18 (notebooks, stories, Play tools, the engine) is at the tag `old-site`.
+==> skein/README.md <==
+# Skein
+
+Skein is a typed, units-checked language for numerical simulation.
+It compiles to [Goose](https://aardappel.github.io/goose/), which generates C for native executables.
+`skein build --target wasm` writes a page that meshes and solves a model in the browser, with C from Goose compiled by `emcc`.
+
+```skein
+model cantilever: 3d, mm_N_MPa_s
+
+scales 40 mm, 2.5 MPa
+
+let beam: Solid = box((0, 0, 0) mm, (200, 20, 40) mm)
+let root: Surface = boundary(beam, x == 0 mm)
+let tip: Surface = boundary(beam, x == 200 mm)
+
+material steel {
+    E: Pressure = 210 GPa
+    nu: Real = 0.3
+}
+
+mesh m on beam {
+    size: 5 mm
+}
+
+physics solid on beam solves u: Vector<Length> {
+    material steel
+    assume small_strain, isotropic
+    let sigma: Tensor2<Pressure> = hooke(E, nu, strain(u))
+    eq div(sigma) = 0
+}
+
+step load: static {
+    bc root: u = 0
+    bc tip: sigma*n = (0, 0, -2.5) MPa
+    output u, von_mises(sigma)
+}
+```
+
+**Status:** the compiler has a front end and native solvers for a limited set of models.
+`skein check` parses and type-checks a model.
+`skein lint` checks it and reports lint diagnostics.
+With `--mesh`, it also applies the rules that need a mesh.
+`skein verify` creates the mesh and checks its quality.
+`skein verify convergence` solves an `fv` or `dg` model on finer meshes and checks the order of convergence of each `expect` of two fields.
+`skein md` writes a model as a Markdown document.
+`skein fmt` rewrites a file in the standard layout.
+`skein export` writes the surface of a shape as STL or as tessellated STEP AP242.
+`skein run --study` runs each case of a `grid`, `zip` or `sample` study on parallel workers, and prints the table of the cases.
+`skein
+report` writes one HTML file with the source, the solver tables and a WebGL viewer of the results of each case.
+`skein build --target wasm` writes one HTML page with a control for each `param` with a range: the page meshes and solves the model again in the browser for each value.
+The [command reference](docs/command_line.md) states the current limits.
+The [roadmap](docs/roadmap.md) gives the planned phases.
+
+## Building
+
+The compiler is written in [Goose](https://aardappel.github.io/goose/).
+Put `goose` on `PATH`, or set `GOOSE` to its path.
+If `goose` cannot find its standard library, set `GOOSE_STDLIB` to the `stdlib` directory of a Goose source tree at the same commit as the compiler.
+
+```
+./build.sh          # writes build/skein
+./build.sh test     # builds, then runs each src/<part>/test.goose and checks the generated C
+```
+
+The C that Goose generates from each model that `skein run` can run is in the repository next to the model, for audit.
+For example, `examples/femahoy/grid_cantilever.c` is the C of `examples/femahoy/grid_cantilever.skn`.
+`./build.sh test` runs each of these models and fails if the C differs.
+It needs the Goose version in `goose_version` in `scripts/generated_c.sh`.
+After a change to the code generator, the runtime or Goose, write the C again:
+
+```
+./build.sh && scripts/generated_c.sh write
+```
+
+The list of these models is in `scripts/generated_c.sh`.
+
+The test of `src/md/` compares the documents of two models with the golden files in `tests/md/`.
+After a change to `skein md`, write the golden files again and read the diff:
+
+```
+./build.sh
+./build/skein md samples/01_cantilever.skn > tests/md/01_cantilever.md
+./build/skein md examples/femahoy/heat_fin.skn > tests/md/heat_fin.md
+```
+
+| Path | Purpose |
+| --- | --- |
+| `src/skein.goose` | command dispatch |
+| `src/syntax/` | syntax tree, lexer, parser and library files |
+| `src/check/` | type and unit checks, lint rules and parameter dependencies |
+| `src/fmt/` | source layout |
+| `src/cli/` | language card for `skein help --llm` |
+| `src/md/` | model documents |
+| `src/codegen/` | native code generation and study execution |
+| `src/runtime/` | hexahedron meshes, solid elements, solvers and VTU output |
+| `src/solvers/` | sparse matrices, ILU(0), GMRES, a banded LU solve and Newton |
+| `src/elements/` | triangle and tetrahedron elements for elasticity, heat and the complex wave equation of `harmonic` steps, and the Nédélec and Raviart-Thomas elements |
+| `src/mesher/` | geometry meshes, mesh checks, and STL and STEP export |
+| `src/shells/` | shell, beam and laminate solver routines, plus code generation for cylindrical shells |
+| `src/transient/` | transient heat solver routines |
+| `src/flow/` | stabilized Stokes and Navier-Stokes solver routines with temperature coupling, plus code generation for 2D flow |
+| `src/cons/` | `fv` systems of conservation laws on triangles (the Euler equations), with a MUSCL limiter, a Rusanov flux and `ssprk3` |
+| `src/meshless/` | point clouds, `rkpm` and `gfd` for one scalar unknown and 2D elasticity, and their direct solve |
+| `src/optim/` | a Q4 grid of 2D elasticity with a band Cholesky solve, the adjoint of a point objective, the `topology` loop (SIMP, the sensitivity filter and the optimality criteria update), and the gradients of `minimize` |
+
+## Why Skein
+
+Abaqus, APDL and NASTRAN decks are hard to write and hard to check.
+Their units are a convention that the user must remember.
+Their physics is a fixed element library.
+Their errors appear late, in the solver.
+
+The [command reference](docs/command_line.md) states which tools exist now.
+The language design has these goals:
+
+- **Physics in strong form.**
+  You write `div(sigma) = 0` and the constitutive law, as in a textbook.
+  The compiler derives the weak form, the finite-volume balance or the meshless equations.
+  A standard library of physics templates, in Skein source, covers the common physics.
+- **Named modelling assumptions.**
+  `assume small_strain, plane_stress(2 mm)` has an exact meaning.
+  The checker rejects assumptions that conflict.
+- **Units in the type system.**
+  `E: Pressure = 210 GPa`.
+  The checker rejects `E + rho` before any solve.
+- **One language for the whole model.**
+  Geometry, mesh, physics, method, steps and checks are in one file.
+  Skein does not import meshes.
+  Its mesher runs in the browser too.
+- **Many methods, one physics.**
+  Continuous and discontinuous Galerkin, finite volume, and meshless methods (RKPM, generalized finite differences).
+- **Advanced analysis from the start.**
+  Element birth and death, submodels, CFD stabilization, coupled physics, modal and buckling steps.
+- **Verification by default.**
+  Each run checks the rigid-body modes, the mesh quality, the residual, the equilibrium, the energy balance and the conservation of mass, and prints the result.
+- **Written for LLMs, reviewed by people.**
+  Rust-like declarations, every type explicit, types only at declarations, compact TOON tables and output, and stable diagnostic ids with a fix.
+  One item on each line and no column alignment, so a small change gives a small diff.
+- **Dimensions done right.**
+  Each model has a `scales` line, and the solver works in scaled variables.
+  The planned `skein check --groups` command prints `Re`, `Pr` and the other groups of the model.
+  A `param` and a `study` sweep a model, with the cases on parallel workers.
+
+Simulation is the core.
+Parametric parts and export come later, and the [tradeoffs](docs/tradeoffs.md) rank all the goals.
+
+## Documentation
+
+- [Documentation index](docs/index.md)
+- [Tutorial](docs/tutorial.md)
+- [Language reference](docs/reference.md)
+- [Specification](docs/skein_spec.md)
+- [Command line](docs/command_line.md)
+- [Checks](docs/checks.md)
+- [Samples](samples/README.md)
+- [Roadmap](docs/roadmap.md)
+- [Design decisions](docs/decisions.md)
+- [Tradeoffs](docs/tradeoffs.md)
+- [Grilling questions and answers](docs/grilling.md)
+- [The LLM test](docs/llm_test.md)
+
+## License
+
+Apache 2.0.
+See [LICENSE](LICENSE).
+==> skills/concept-ui/README.md <==
+# concept-ui
+
+See [SKILL.md](SKILL.md) for the method.
+
+## Credit
+
+Parts of the method use rules from Emil Kowalski's [emilkowalski/skills](https://github.com/emilkowalski/skills) and from his sites [emilkowal.ski](https://emilkowal.ski/) and [aiforui.dev](https://aiforui.dev/).
+The skill states these rules in its own words.
+It does not copy his files.
+His repositories [sonner](https://github.com/emilkowalski/sonner) and [vaul](https://github.com/emilkowalski/vaul) are MIT licensed, Copyright (c) 2023 Emil Kowalski.
+The skill copies no code from them.
+
+### Evidence
+
+- Rule 4, undo timer pause: `emilkowalski/sonner src/index.tsx` line 234, `src/hooks.tsx` lines 4–11.
+- Rule 6, durations of 500 ms or less and the sheet curve: `emilkowalski/vaul src/constants.ts`, `src/style.css` line 4, `emilkowalski/sonner src/styles.css` line 89.
+- Rule 6, dismiss thresholds: `emilkowalski/sonner src/index.tsx` lines 40 and 348, `emilkowalski/vaul src/constants.ts`.
+- Rule 6, damped drag: `emilkowalski/vaul src/helpers.ts` line 90, `emilkowalski/sonner src/index.tsx` line 387.
+- Rule 6, pointer capture: `emilkowalski/sonner src/index.tsx` line 321, `emilkowalski/vaul src/index.tsx` line 276.
+
+### Licence of emilkowalski/skills
+
+His skills repository has this licence:
+
+```text
+MIT License
+
+Copyright (c) 2026 Emil Kowalski
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+==> skills/concept-ui/references/design-audit.md <==
+# Website Design Audit Standard
+
+30 Oct 2026 · Teo Yu Jie
+
+Each rule has an ID, a pass test, and a source.
+Audit one page at a time.
+Mark each rule Pass, Fail, or N/A.
+A rule marked Fail needs a fix or a written reason.
+
+## 1. Motion
+
+| ID | Rule | Pass test | Source |
+| --- | --- | --- | --- |
+| M1 | Each animation has a purpose: explain a feature, give feedback, keep spatial sense, or (seldom seen) give delight. | Write the purpose for each animation. Remove an animation with no purpose. | Emil: You Don't Need Animations |
+| M2 | Do not animate actions that users do tens or hundreds of times each day (command menu open, list hover). Never animate keyboard actions. | Arrow-key highlight in a list has transition-duration 0. A daily menu opens with no animation. | Emil: You Don't Need Animations |
+| M3 | UI animation takes less than 300 ms. Micro-interaction: 100-150 ms. Tooltip, dropdown: 150-250 ms. Modal, drawer: 200-300 ms. Exit is about 20% faster than entrance. A larger element is slower than a small one. | List every duration in the CSS. Each value is in range. Allowed exceptions: marketing pages, a bottom sheet at 500 ms, and page-load or page-transition motion up to 600 ms. Observed: paco.me enter animation 0.6 s; shud.in page transition 0.4 s and 0.6 s. | Emil: Agents with Taste; Building a Drawer |
+| M4 | Easing: element enters or leaves the screen = ease-out. Element moves on screen = ease-in-out. Hover change = ease. Constant motion = linear. Default = ease-out. | No ease-in on any UI transition. Observed: hover and color changes on emilkowal.ski and shud.in use cubic-bezier(0.4, 0, 0.2, 1) at 0.15 s (Tailwind default). This is allowed. | Emil: 7 Practical Tips; Agents with Taste |
+| M5 | Use custom curves, not the built-in ones, for important motion. Reference curves: sheet = cubic-bezier(0.32, 0.72, 0, 1). Reveal = cubic-bezier(0.77, 0, 0.175, 1). | Curves are named tokens in one file. | Emil: Drawer; Clip Path |
+| M6 | A pressed button scales down to a value from 0.94 to 0.97. | Each button has transform: scale(0.94) to scale(0.97) on :active. Observed: emilkowal.ski uses 0.94 and 0.96. | Emil: 7 Practical Tips |
+| M7 | An element that appears starts at scale 0.9 or more (0.93-0.95 in the examples). Never start at scale(0). | No scale(0) in any enter animation. | Emil: 7 Practical Tips |
+| M8 | A popover scales from its trigger. | transform-origin is set from the trigger (Radix: --radix-dropdown-menu-content-transform-origin; Base UI: --transform-origin). It is not center. | Emil: 7 Practical Tips |
+| M9 | First tooltip waits before it opens. The next tooltip opens at once, with no delay and no animation. Tooltip transition: 0.125 s ease-out on opacity and transform, from scale 0.97. | Move between two tooltips: the second has transition-duration 0ms. | Emil: 7 Practical Tips |
+| M10 | Use CSS transitions, not keyframes, for state that can change while it moves (stacks, toggles). Use @starting-style for enter. | A fast second trigger does not make an element jump. | Emil: Toast |
+| M11 | If a crossfade still looks wrong after you tune easing and duration, add filter: blur() under 20 px (2 px in the example). Use this last. | Each blur value is under 20 px and has a note that says why. | Emil: 7 Practical Tips; Agents with Taste |
+| M12 | Animate transform, opacity, clip-path, and small blur only. Do not animate width, height, or margin. Shaky motion: add will-change: transform. Hover flicker: animate the child, not the parent. Do not use translateZ(0) as a hack. | Search the CSS for transitions on layout properties. None found. | Emil: Clip Path; Agents with Taste. bendc: Guidelines |
+| M13 | During a drag, set transform on the element itself. Do not change a CSS variable on a parent with many children. | Drag a 20+ item drawer. No dropped frames. | Emil: Drawer |
+| M14 | A reveal on scroll runs one time and starts when 100 px or more of the element is in view. Use IntersectionObserver or a hook with the same behavior. Reveal: clip-path inset(0 0 100% 0) to inset(0), 1 s. | Scroll to the element. It animates once. No layout shift. | Emil: Clip Path |
+| M15 | Page-load animation and view transitions run only when the user has not asked for reduced motion. | Set prefers-reduced-motion: reduce. No enter animation and no view transition runs. | Observed: paco.me (no-preference gate), shud.in (not reduce gate), emilkowal.ski (motion-reduce classes) |
+
+## 2. Components
+
+| ID | Rule | Pass test | Source |
+| --- | --- | --- | --- |
+| K1 | Toast: it closes after 4 s. The timer stops on hover and when the browser tab is hidden (document.hidden). | Hover a toast, then switch tab. The toast stays. | Emil: Toast |
+| K2 | Toast stack: each toast is offset by gap x index, and scaled by 1 - 0.05 x index. In stacked mode, all toasts have the height of the front toast. Hover expands the stack. | Add 3 toasts with different heights. The edges line up. | Emil: Toast |
+| K3 | Fill the gaps between stacked items with an :after pseudo-element, so hover does not break. | Move the pointer slowly across a gap. The stack stays open. | Emil: Toast |
+| K4 | Swipe to dismiss uses speed, not only distance. Speed = distance / time. Dismiss when distance passes the limit or speed is above 0.11 (value from Sonner, found by trial). | A short fast flick closes the toast. | Emil: Toast |
+| K5 | A drag that goes the wrong way gets friction: it slows and stops. It does not stop at once. The element keeps pointer capture while it drags. | Drag outside the element. The drag continues. | Emil: Toast; Drawer |
+| K6 | Sheet or drawer motion: transform 0.5 s cubic-bezier(0.32, 0.72, 0, 1). | The CSS has this exact transition. | Emil: Drawer |
+| K7 | A drawer starts a drag only when its content is scrolled to the top. After a scroll reaches the top, block dragging for 100 ms. Ignore a second finger until the first one lifts. | Fast scroll to the top does not close the drawer. | Emil: Drawer |
+| K8 | Drawer snap points are a fraction of the viewport or a fixed px value. On release, go to the nearest point. A hard flick can skip points. | Release at 3 positions. Each one snaps to the right point. | Emil: Drawer |
+| K9 | When the keyboard opens, use the Visual Viewport API to set drawer height and bottom position. | Focus an input on a phone. The input and drawer content stay visible. | Emil: Drawer |
+| K10 | Build overlays on an accessible primitive (Radix Dialog, Popover, Tabs). It handles focus and ARIA. | The overlay traps focus and closes with Escape. | Emil: Drawer; Clip Path. Paco: cmdk |
+| K11 | Command menu: the page does not listen for the open key by default. Add the Cmd+K and Ctrl+K listener yourself. Escape, or Backspace on an empty field, goes back one level. | Keyboard-only use works for open, search, select, go back. | Paco: cmdk |
+| K12 | Command list: height follows content with transition: height 100ms ease (--cmdk-list-height). Set scroll-padding-block to 8px at the start and end. | The list does not jump when results change. | Paco: cmdk |
+| K13 | Command menu has a visible empty state and a loading state. It has no virtualization, so keep it under about 2,000-3,000 items. | Search for a string with no match. A message shows. | Paco: cmdk |
+| K14 | Tab highlight: copy the tab list, style the copy as active, and clip it with clip-path: inset(0 R% 0 L% round 17px). Animate the clip to the new tab. The copy has aria-hidden and tabindex -1. | The highlight moves with no color-fade lag. | Emil: Clip Path (technique from Paco) |
+
+## 3. Type
+
+| ID | Rule | Pass test | Source |
+| --- | --- | --- | --- |
+| T1 | Load Inter with a preconnect and the stylesheet. Set :root font-family: Inter, sans-serif and font-feature-settings: 'liga' 1, 'calt' 1. Inside @supports (font-variation-settings: normal), use InterVariable, sans-serif. | The computed font of body text is Inter or InterVariable. @font-face has font-display: swap. Observed: rsms.me. | rsms: Inter |
+| T2 | Numbers in tables, prices, and counters use tabular figures (tnum, or font-variant-numeric: tabular-nums). | Digits in a column have equal width. | rsms: Inter; Emil: Agents with Taste |
+| T3 | Use the slashed zero (zero) or the disambiguation set (ss02) only where 0/O or I/l can be confused, for example codes and IDs. | Each use is in an ID or code context. | rsms: Inter |
+| T4 | The prose column is 692 px wide at most. | max-width on prose is 692 px or less. Observed: paco.me 640 px, shud.in 672 px, emilkowal.ski 692 px. The 65ch value is in Emil's skill, but his own site is wider. | Emil: Agents with Taste |
+| T5 | Headings use text-wrap: balance. No heading ends with one word on its last line. | Resize from 320 px to 1440 px. No orphan word in any heading. Observed: shud.in h1 has text-wrap: balance. | Shu: react-wrap-balancer |
+| T6 | Use the single character …, not three dots. | Search the markup for "...". None in UI text. | Emil: Agents with Taste |
+| T7 | Uppercase labels have wider letter-spacing. | Each uppercase label has letter-spacing above 0. | Emil: Agents with Taste |
+| T8 | The fallback font stack has x-height and weight close to the main font. | Block the font file. The layout shift is small. | Emil: Agents with Taste |
+| T9 | Underline is for links only. Use weight or color for other emphasis. Use bold for UI emphasis. Use italic only for citations and stress in prose. | No underlined text that is not a link. | Emil: Agents with Taste |
+| T10 | Line height is unitless (1.5 to 1.7 for body text; observed 1.5 on emilkowal.ski and rsms.me, 1.71 on shud.in). Relative sizes use rem. | No px line-height. No em font-size. | bendc: Guidelines |
+| T11 | Set one fixed group of stylistic font features on body, for example cv01 and ss03. | The computed font-feature-settings of body lists the group. Observed: emilkowal.ski (cv01, ss03), shud.in (calt, cv01, cv03, cv04, liga, ss03). | Observed: emilkowal.ski, shud.in |
+
+## 4. Layout and code
+
+| ID | Rule | Pass test | Source |
+| --- | --- | --- | --- |
+| L1 | Use semantic HTML: main, article, header, time with datetime. Use a real a or button for each link and button. | No div or span with a click handler and a button look. | bendc: Guidelines |
+| L2 | Alt text on each image. A label on each form control. Do not use color alone to give information. | Run an accessibility check. Zero missing alt or label errors. | bendc: Guidelines |
+| L3 | The html tag has lang. The document declares UTF-8 (meta charset). | Both are in the page source. | bendc: Guidelines |
+| L4 | Scripts do not block the first render. Put them after the content. | No render-blocking script in the head. | bendc: Guidelines |
+| L5 | One global box-sizing: border-box. Do not change the box model on single elements. | One box-sizing rule in the CSS. | bendc: Guidelines |
+| L6 | Keep elements in normal flow. Use flex or grid. Use position: absolute only for stacked or layered components (for example a toast stack). | Each position: absolute has a written reason. | bendc: Guidelines; Emil: Toast |
+| L7 | A selector has at most 3 structural parts. No id selectors. No !important. Do not override a style when a better selector avoids it. | Run a CSS linter with these limits. | bendc: Guidelines |
+| L8 | A small control has a hit area of at least 44 px. Make it larger with a pseudo-element. | Measure each icon button. 44 px or more in both directions. | Emil: Agents with Taste |
+| L9 | Give feedback at once for each user action: a loading state on submit, a success state on copy. | Click each action. A visible state change shows at once. | Emil: 7 Practical Tips |
+| L10 | Test worst-case data: long names, empty lists, large counts. | Each list and card holds an empty case and a long-text case. | Emil: skill list (break-ui) |
+
+## 5. Theme
+
+| ID | Rule | Pass test | Source |
+| --- | --- | --- | --- |
+| C1 | The default theme is the system setting (prefers-color-scheme). The user can also pick light or dark. | Change the OS theme. The page follows. A site with one theme says so with `<meta name="color-scheme" content="only light">` (observed: shud.in). A site can follow the system with no toggle (observed: paco.me). | Paco: next-themes |
+| C2 | No flash on load. A small script sets the theme attribute on the html tag before first paint. | Hard reload in dark mode with a production build. No light frame shows. | Paco: next-themes |
+| C3 | Set color-scheme so built-in controls (inputs, buttons, scrollbars) match the theme. | A native input is dark in dark mode. | Paco: next-themes |
+| C4 | Colors are CSS variables on :root. The dark values are under [data-theme='dark'] on the html tag. | No hard-coded color in a component. | Paco: next-themes |
+| C5 | Switch the theme with all transitions off for one moment, then turn them on again. | During a switch, all elements change at the same time. | Paco: next-themes |
+| C6 | A theme change in one tab changes all open tabs. | Open 2 tabs. Switch in one. The other follows. | Paco: next-themes |
+| C7 | The toggle shows "System" when the system setting is active. It renders only after mount, with a placeholder of the same size. | No hydration warning. No layout shift. | Paco: next-themes |
+| C8 | An image that depends on the theme: render both images and hide one with CSS, or use an empty placeholder until the theme is known. | No wrong-theme image flash. | Paco: next-themes |
+| C9 | The browser theme bar (theme-color meta) uses an opaque color. It does not support transitions or transparent colors. Mix the overlay with the background to get the opaque color. | The bar color matches the page in each theme. Use one theme-color meta for each scheme, with a media attribute. Observed: paco.me (#1c1c1c dark, #ffffff light). | Emil: Drawer |
+
+## Sources
+
+Pages that I opened on 2026-10-30.
+
+- Emil Kowalski: You Don't Need Animations
+- Emil Kowalski: 7 Practical Animation Tips
+- Emil Kowalski: Building a Toast Component
+- Emil Kowalski: Building a Drawer Component
+- Emil Kowalski: The Magic of Clip Path
+- Emil Kowalski: Agents with Taste
+- Emil Kowalski: Developing Taste
+- Emil Kowalski: skill list
+- Rasmus Andersson: Inter
+- Benjamin De Cock: frontend-guidelines
+- Paco Coursey: next-themes
+- Paco Coursey: cmdk
+- Shu Ding: react-wrap-balancer Live sites measured with computed CSS on 2026-10-30: emilkowal.ski, rsms.me, paco.me, shud.in.
+==> skills/concept-ui/SKILL.md <==
+---
+name: concept-ui
+description: Redesign the interface of an app or a screen from its conceptual model. First write the concepts and the object-action matrix, then map them to a layered, direct-manipulation, mobile-first interface, with checks that a reviewer can measure. For explicit use only, when the user invokes /concept-ui.
+disable-model-invocation: true
+---
+
+# Concept UI
+
+Design the model first and the screen second.
+Do the three phases in sequence.
+Do not start a phase before the previous phase is complete.
+The target is the app or screen that the user names.
+If the user names no target, ask for one.
+
+## Phase 1: Conceptual model
+
+Write `docs/concepts.md` (or the location that the project uses for design documents).
+In this phase, do not write about layout, widgets, colours or screens.
+
+1. Read the code and use the app.
+   Make a list of the things that users see, make, change or delete.
+2. For each concept (Jackson), write:
+   - **Name**: one noun.
+   - **Purpose**: one sentence.
+     One concept has one purpose.
+     If you find two purposes, make two concepts.
+   - **State**: the data that the concept keeps.
+   - **Actions**: the operations that change the state, as verbs.
+   - **Operational principle**: one short scenario that shows how the concept fulfils its purpose ("after you do X, Y occurs").
+3. For each object (ORCA), write:
+   - **Objects**: the things that users manipulate.
+   - **Relationships**: how each object connects to other objects, with cardinality.
+   - **Calls-to-action**: the actions that a user can do on the object.
+     For each action, write its frequency: many times a day, some times a day, or rarely.
+   - **Attributes**: the data that a user sees or changes on the object.
+4. Write how the concepts interact (synchronisations): when an action in one concept causes an action in another concept.
+5. Use the same name for each concept and object in the code, the document and the interface.
+
+## Phase 2: Object-action matrix
+
+Make a table (Rosenberg).
+Put the objects in the rows and the actions in the columns.
+In each cell, write the interface location of that action on that object, or leave the cell empty.
+
+Count the faults.
+A fault is one of these:
+
+- **Expected empty cell**: a user expects the action on the object, but the interface does not give it.
+  Example: you can rename a project but not a file.
+- **Displaced action**: the action is in the interface, but not on its object.
+  Example: delete is in a global menu, not on the item.
+- **Inconsistent action**: one action has different names, gestures or locations on different objects.
+
+A cell that is empty because the action has no meaning for that object is not a fault.
+Write "n/a" in it.
+Record the fault count before the change.
+Fix the faults in the model or the interface until the count is 0, or until the user accepts each remaining fault.
+
+## Phase 3: Map the model to the interface
+
+Each object in the model becomes a visible thing on the screen.
+Each call-to-action becomes a control on, or next to, its object.
+Then apply the rules below.
+Each rule is a check.
+Record pass or fail for each check, with the evidence.
+
+1. **Posture and chrome budget** (Cooper).
+   Decide if the app is sovereign (used for long periods, full screen) or transient (used for a short task, then closed).
+   Check: write the posture in `docs/concepts.md`.
+   For a transient app, chrome (bars, panels, menus) uses no more than 15% of the viewport height at 375 px width.
+   For a sovereign app, the content area is the largest area on each screen.
+2. **Content layer and floating control layer** (Liquid Glass).
+   Content fills the screen.
+   Controls and navigation float above the content in a separate layer.
+   Check: content scrolls below the controls, and no control takes a fixed band of layout from the content.
+3. **One z-position for each object** (Material 1).
+   Define a small set of z-layers, for example: content 0, raised item 1, floating controls 2, sheet 3, dialog 4.
+   Use shadow or blur to show height.
+   Check: each object kind has one z-layer in a single table in the code (tokens or constants).
+   No object changes layer, except during a lift or drag gesture.
+4. **Direct manipulation** (Shneiderman).
+   Users act on the visible object: drag, swipe, tap, edit in place.
+   Each action shows its result at once.
+   Each action is reversible.
+   Check: no destructive action uses a confirm dialog.
+   Each destructive action shows an undo control for at least 5 seconds, and the undo restores the previous state.
+   The undo timer pauses while the page is hidden or while the user interacts with the undo control.
+   Check: each pressable control changes on press (`:active` or `pointerdown`), not on release.
+   It scales to 0.95–0.98 in 100–160 ms.
+5. **A visible signifier for each action** (Norman).
+   An affordance is what the user can do.
+   A signifier shows the user that they can do it.
+   Check: each cell of the matrix that is not empty has a visible signifier (icon, handle, label or hint).
+   A gesture alone is not a signifier.
+   A hover state alone is not a signifier, because touch screens have no hover.
+6. **Fluid motion** (Apple, Designing Fluid Interfaces; Kowalski).
+   Motion follows the finger, and the user can interrupt and redirect it at any time.
+   Each animation has a purpose (M1).
+   Use the action frequency from Phase 1.
+   Check:
+   - No animation for an action that users do many times a day, or that starts from the keyboard (M2).
+     Press feedback (rule 4), and motion that a gesture drives and its release, are not part of this check.
+   - Each other UI animation changes only `transform`, `opacity`, `clip-path` and a small `blur` (M12).
+     It lasts 300 ms or less.
+     Toasts, sheets, drawers and modals last 500 ms or less.
+   - Elements that enter or exit use an ease-out curve, for example `cubic-bezier(0.23, 1, 0.32, 1)`.
+     No UI animation uses `ease-in` (M4).
+     For the sheet and drawer curve, see M5.
+   - An element enters from the start scale in M7, with `opacity: 0`.
+   - A popover scales from its trigger (M8).
+     A modal scales from the centre.
+   - During an animation, a new touch stops the animation and gives control to the finger.
+     State that can change during an animation uses a CSS transition or a spring, not keyframes (M10).
+   - A released drag continues with the finger velocity.
+     It dismisses when it passes a distance threshold or a velocity threshold (K4).
+     Thus a fast flick dismisses at any distance.
+     Examples: a toast at 45 px or 0.11 px/ms, a drawer at 25% of its height or 0.4 px/ms.
+   - Drag friction and pointer capture follow K5 (`setPointerCapture`).
+   - With `prefers-reduced-motion: reduce`, movement is replaced by a fade or no animation.
+7. **Mobile first**.
+   Check at 375 px width:
+   - The page has no horizontal scroll.
+   - Each tap target passes L8.
+   - Content and controls respect the safe-area insets (`env(safe-area-inset-*)`), and the viewport meta tag has `viewport-fit=cover`.
+   - The primary controls are in the bottom half of the screen, in thumb reach.
+   - Each input has a font size of 16 px or more.
+     The viewport meta tag has no `user-scalable=no` and no `maximum-scale`.
+   - A full-height app shell uses `100dvh`, not `100vh`.
+   - Each `:hover` rule is inside `@media (hover: hover) and (pointer: fine)`.
+     Then check that the layout also works at desktop width (1280 px or more).
+     Emulation does not show hover, safe-area, input-zoom or gesture faults.
+     Record which checks need a real phone.
+8. **Type and colour restraint** (Kowalski).
+   Make the hierarchy with weight, colour and space first, and with size last.
+   Check:
+   - The body text column is 692 px wide or less (`max-width: 692px`) (T4).
+   - Headings of 24 px or more have a letter-spacing from -0.04em to -0.02em.
+   - Numbers that change in place use `font-variant-numeric: tabular-nums` (T2).
+   - Content text uses no more than 3 colours: primary, secondary and one accent.
+9. **Worst-case content** (Kowalski).
+   Demo data makes a design look good.
+   Real data breaks it (L10).
+   Check: render each object with 0, 1 and many items, with missing optional fields, and with the longest value that the schema accepts.
+   If the schema has no limit, use a long real name.
+   No text overflows or clips.
+   Counts use the correct plural ("1 member", with `Intl.PluralRules`).
+
+When the target is a web page, audit it against `references/design-audit.md`.
+Audit one page at a time.
+Mark each rule Pass, Fail or N/A.
+A Fail needs a fix or a written reason.
+
+## Output
+
+Give the user these items, in this sequence:
+
+1. `docs/concepts.md`: concepts, ORCA objects, synchronisations and posture.
+2. The object-action matrix before the change and after the change, each with its fault count.
+3. The list of changes, each with the concept, object or rule that it serves.
+4. The pass or fail result for each check in Phase 3, with the evidence.
+5. Screenshots of each changed screen at 375 px and at 1280 px width, before and after the change.
+
+If the project has a pull request flow, put items 2 to 5 in the pull request description.
+
+## Worked example
+
+The snowmobile redesign used this method: https://github.com/yujieteo/snowmobile/pull/3.
+It wrote the conceptual model in `docs/concepts.md` first, decreased the matrix faults from 10 to 0, and then added a floating control layer, z-layers, direct manipulation with undo, signifiers and a mobile-first layout.
+
+## Sources
+
+| Work | What it gives |
+| --- | --- |
+| Daniel Jackson, *The Essence of Software* | Concepts, each with one purpose, state, actions and an operational principle |
+| Daniel Rosenberg, *UX Magic* | Semantic interaction design: the conceptual model ("grammar") first, and the object-action matrix |
+| Johnson & Henderson, *Conceptual Models* (2nd ed., 2024) | The model holds objects, attributes and operations, and no layout or widgets |
+| Sophia Prater, OOUX / ORCA | Objects, relationships, calls-to-action, attributes |
+| Material Design 1, Environment | A 3D space with light and shadow, and one z-position for each object |
+| Apple, *Designing Fluid Interfaces* (WWDC18) | Motion that is responsive, interruptible and redirectable |
+| Apple, Liquid Glass (WWDC25) | A control layer that floats above the content layer |
+| Ben Shneiderman, direct manipulation | Visible objects, physical actions and rapid reversible actions |
+| Don Norman, *The Design of Everyday Things* (revised ed.) | Affordances versus signifiers |
+| Alan Cooper, application posture | Sovereign versus transient applications, which sets the chrome budget |
+| Emil Kowalski, [emilkowalski/skills](https://github.com/emilkowalski/skills) (MIT), Sonner, Vaul, [emilkowal.ski](https://emilkowal.ski/), [aiforui.dev](https://aiforui.dev/) | Motion by action frequency, easing and duration limits, press feedback, mobile web fixes, type restraint and worst-case data |
+==> skills/guardrails/SKILL.md <==
+---
+name: guardrails
+description: Find the parts that a project has (a fixed bug, comments, types, states, hot paths, web pages, a simulation, tuned parameters, pure functions, parsers, printed output, a deterministic transform, dead code, C code, an app) and add the related lint rule, type, test, budget check, state model, replay, property test, fuzz target, expect test, output replay, dead-code check, sanitizer build or verification rule in the tools of that project. For explicit use only, when the user invokes /guardrails.
+disable-model-invocation: true
+---
+
+# Guardrails
+
+Make the tools stop a fault, so that no person must remember a rule.
+The target is the project or the bug that the user names.
+If the user names no target, ask for one.
+Do the steps in sequence.
+Each step starts with "Applies when".
+If the project does not have that part, do not change the project for that step.
+Use the language, linter, test runner and build of the project.
+Add a new tool only when the project has none for that job.
+Before you keep a new check that runs (for example a lint rule, a type, a test, a budget, a model, a dead-code build failure, a sanitizer build or a fuzz target), break the code that it guards.
+See the check fail, then remove the break.
+A rule in the agent instructions has no break.
+A raised budget or a new excluded file needs the approval of the owner and a reason in the change.
+Never disable a check: fix the code, or delete the check with the approval of the owner.
+
+## Step 0: Find the parts
+
+Read the build files, the linter config, the tests and the main loop.
+Write one table:
+
+| Part | Found | Evidence (`file:line`) | Step |
+| --- | --- | --- | --- |
+
+Give one row to each deterministic transform: a part whose output depends only on its input (for example a compiler, a code generator, a renderer, a serializer, a build step or app logic with an output that a test can capture).
+Write "no" for each part that the project does not have.
+Do not add a part to make a step apply.
+
+## Step 1: A bug becomes a rule
+
+Applies when: the user names a bug, or a step below finds one.
+
+1. Write a lint rule that catches the pattern of the bug.
+   When no lint rule can catch it, write a failing test.
+2. Run it on the code before the fix and see it fail for the right reason.
+   Then run it on the fix and see it pass.
+3. Name the bug in the rule name or the test name.
+
+Reason: a fixed bug comes back when the next change does not know about it.
+A rule or a test stops it on each run.
+
+## Step 2: No comments
+
+Applies when: the project has source code.
+Tool directives (for example a lint disable, a shebang or a type pragma) and licence headers are not comments for this rule, but item 7 applies to a lint disable.
+
+1. Choose the excluded files.
+   Exclude a file that a tool writes (generated code, a lock file, build output) or that comes from another project (vendored or copied code).
+   Start from the paths that the ignore files, the package manager and the build already name.
+   Add a copied file only when its source and licence are known.
+   Write the list once, in the lint config.
+2. Add a lint rule that bans comments in all other files.
+   Keep only a comment that links to an outside source: an issue, an RFC, a paper or a credit to an author.
+   Find comments with a parser or a lexer of the language: the comment rule of the project linter, a tree-sitter query, or the tokenizer of the language.
+3. Do not find comments with a text pattern (for example grep for `#` or `//`).
+   A text pattern also matches a colour value such as `#fff`, a URL and a string.
+4. Change each comment that the rule finds.
+   When a comment explains code, give the code a better name.
+   When a comment states a behavior, write a test with that behavior as its name.
+5. When a fact fits no name and no test (for example a build tool version or a hash file), put it in code that runs.
+   Use a named constant, a type, an assertion in the build script, or an error message that prints when the fact is broken.
+6. Never move a fact into a README or another prose file.
+   Delete a comment only when its fact is in code that runs, from before or from item 4 or 5.
+7. Do not keep a lint disable of a rule that catches real bugs (for example a type error or an unused result).
+   Fix the code, then remove the disable.
+
+Reason: a comment does not run, so it becomes wrong when the code changes, and a README becomes wrong in the same way.
+A name, a test or a check stays true or fails.
+A parser reads comments as the compiler reads them, so it does not match strings or colour values.
+
+## Step 3: Types
+
+Applies when: the project has a static type checker (for example TypeScript, Rust, OCaml, or Python with mypy), and a value can hold an illegal state.
+
+1. Turn on the strictest mode of the type checker that the build can pass.
+   Make the build fail on a type error.
+2. Find each value that can hold an illegal state: flags that exclude each other, optional fields that are always set together, and plain strings or numbers for ids and units.
+3. Change each one to a type that cannot hold the illegal state: a tagged union for exclusive states, one record for fields that are set together, and a distinct type for each id and unit.
+4. Parse outside data (JSON, a config file, environment variables or a request) into a type at the boundary.
+   Inside the boundary, use only the parsed type.
+5. Derive each type from the schema that owns the shape (for example a database schema, an OpenAPI file or a protobuf file).
+   Do not write the same shape again by hand.
+6. Each illegal state that the code can reach is a bug: it goes to step 1.
+
+Reason: the type checker gives feedback on each build, and it checks a rule in all of the code at once.
+A test checks only the cases that it runs.
+
+## Step 4: States
+
+Applies when: a major system keeps a state that changes on events (for example a session, an upload, a connection or a turn).
+
+1. Run `/state-machine` on each major system.
+   Make one machine file for each system.
+2. Each bug that it proves goes to step 1.
+3. When an invariant is critical (for example money, data loss or access control) and the state table is too large to check by hand, use a model checker.
+4. When pstack is installed, run `/create-formal-verification-skill` for that invariant.
+   Else, write the model (for example in TLA+) from the machine file.
+5. In the model checker config or a check script, record the files that the model covers and a hash of these files.
+   Make the project test or build check fail when a covered file changes after the record.
+   To pass, run the model checker again and update the hash.
+   Do not use a comment or a prose note for the record.
+
+Reason: state bugs live in combinations of flags that no test tries.
+The state table finds them, and a model checker tries all combinations.
+Formal methods were expensive, but an agent makes a model cheap to write.
+
+## Step 5: Hot paths
+
+Applies when: code runs each frame, each tick or each sample (for example a render loop, a game loop or an audio callback).
+
+1. Put `.hot` in the name of each file with such code, before the extension (for example `physics.hot.ts`).
+   Move cold code out of these files.
+2. Add a lint rule that applies only to `*.hot.*` files and bans allocation: object literals, array literals, closures and `new`.
+3. Change each allocation that the rule finds: reuse a buffer, a pool or a value from the setup code.
+
+Reason: an allocation in a loop that runs each frame causes garbage collection pauses.
+The file name tells the reader and the linter which code is hot.
+
+## Step 6: Web page budget
+
+Applies when: the project ships a web page.
+
+1. List each route or page template (for example the home page, the article template and the tool template).
+   Do not list each article.
+2. Add a build step that finds each page in the build output itself.
+   The step gives each page the budget of its route or template.
+   A page that the list does not name gets the default budget.
+   The step never skips a page.
+3. For each page, the step measures the gzipped size of each file that the first load of that page downloads.
+   Count the shared files in the total of each page.
+   The step fails when the total of a page is larger than its budget.
+4. Use the budget of the owner for each route or template and for the default.
+   When the owner gives no budget, use the largest current total of the pages of that route or template, rounded up to the next 10 KB.
+   For the default, use the largest current total of all pages, rounded up in the same way.
+   Report the budget of each route or template and of the default.
+
+Reason: a user can arrive on any page from a link, and the first download sets the load time on a slow network.
+Each change adds a few kilobytes, and no review sees the total.
+
+## Step 7: Deterministic simulation
+
+Applies when: the project has a simulation (code that changes its state from inputs over many steps, for example a game, a physics model or a scheduler).
+
+1. Make each step a function of the state and the inputs only.
+   Use a fixed time step and a seeded random number generator.
+2. Add a lint rule that bans the wall clock and unseeded random numbers in simulation files.
+3. Record the seed and the inputs of a run.
+   Add a test that replays a recorded run and compares a hash of the final state.
+4. Add a test that runs the simulation with many seeds and checks the invariants of the state after each step.
+   Record each seed that fails as a run for item 3, and give the bug to step 1.
+5. When a server accepts a result of a run (for example a score), make the server replay the inputs and compare the result.
+
+Reason: a run that does not replay cannot be debugged from a report.
+A posted result that the server does not replay can be false.
+
+## Step 8: Tuned parameters
+
+Applies when: a parameter has a target value that a run can measure (for example a survival rate for each difficulty).
+Step 7 must apply first.
+
+1. Write a headless bot that runs the simulation without the interface.
+2. Add a test that runs the bot many times for each parameter set and fails when the measured value is outside the target range.
+3. Report each parameter set that fails, with its measured value.
+   Do not change the parameter without the owner.
+
+Reason: a person tunes by feel and by a small number of runs.
+A bot measures the target on each change.
+
+## Step 9: Property tests and fuzz targets
+
+Applies when: the project has a pure function with a rule that holds for all inputs (for example decode after encode gives the input), or a parser of outside input.
+
+1. Use the property test library of the language (for example fast-check, Hypothesis, proptest or QuickCheck).
+   Write one property test for each rule.
+2. For each parser of outside input, add a fuzz target for the fuzzer of the language (for example cargo-fuzz, Go fuzzing or Atheris).
+   Make the target fail on a crash or a hang.
+3. Keep each input that fails in the library or the fuzzer as a fixed test case.
+   Give the bug to step 1.
+
+Reason: a person writes the test inputs that the person expects.
+A generator tries inputs that nobody expects, and it makes each failure small.
+
+## Step 10: Expect tests
+
+Applies when: code makes output that a person reads to check it (for example compiler or parser output, a report, a rendered table or a state trace), or a test asserts many fields one by one.
+
+1. Use the snapshot or expect test tool of the test runner (for example Vitest snapshots, insta, ppx_expect or syrupy).
+2. Write a test that prints the output as readable text and keeps the printed text in the test or in a fixture file next to it.
+   Print only what a user of the code can see, not internal state.
+3. Make the test fail on each difference and show the diff.
+   Update the kept text only with a command, so that the change shows in the review.
+
+Reason: the printed text shows the behavior in one place, as the fixture tests of a compiler do.
+The reviewer reads one diff of text, not each assertion.
+
+## Step 11: Output replay
+
+Applies when: step 0 found a deterministic transform.
+Use step 10 for a small output that a person reads.
+Use this step for a large generated output (for example a whole C file or a GPU kernel).
+Step 7 stays for a simulation.
+Source of the idea: https://github.com/tinygrad/tinygrad/blob/master/test/external/process_replay/README.md
+
+1. Add a capture switch (for example an environment variable).
+   When the existing tests run with it, the transform writes each input to a local cache outside the repository.
+2. Add a replay command.
+   It runs the base commit and the branch, each in an isolated copy (for example a git worktree).
+   It gives each captured input to the transform of each commit and diffs the outputs.
+3. Treat each commit as a refactor: the command fails on each diff.
+   Nothing in the commit (for example a title tag or a trailer) can turn the check off.
+4. When a change must change the output, the command prints the diff.
+   It passes only when the person who runs it accepts that diff on that run (for example with an `--accept` flag).
+5. When more than 20% of the outputs differ, the command stops early and reports a large change.
+   Without an accept, this is a failure.
+6. Run the command locally before a review.
+   Do not add it to CI.
+
+Reason: a refactor of a transform can change one output in a thousand, and no test asserts that output.
+The inputs of the existing tests find it.
+An accept on each run makes a person read the diff, and a commit cannot skip the check.
+The early stop saves time when the diff is too large to read.
+
+## Step 12: Dead code
+
+Applies when: the project has source code.
+
+1. Use the dead-code rule of the project linter, or add a dead-code tool of the language (for example knip, cargo-udeps, or the unused warnings of the compiler as errors).
+   Make the build fail on each unreferenced file, export, function or dependency.
+2. Use the excluded files of step 2.
+   Give each public entry point to the tool as a root.
+3. Delete each unreferenced symbol that the tool finds.
+   Ask the owner before you delete a public API.
+4. Write this rule in the agent instructions of the project: before you end a change, find the references of each symbol that the change replaced.
+   Use the language server or the compiler.
+   At zero references, delete the symbol.
+
+Reason: an agent adds new code next to old code, because a deletion needs proof.
+The reference query gives the proof, and the build fails until the old code goes.
+
+## Step 13: C sanitizers
+
+Applies when: the project ships C or C++ code, also C that a compiler generates (for example from Goose).
+
+1. Add a test build that compiles with `-fsanitize=undefined,address` and `-fno-sanitize-recover=all`.
+2. Run all tests on that build in CI.
+   A sanitizer report fails the test.
+3. Each fault that a sanitizer reports goes to step 1.
+   For generated C, fix the generator, not the generated file.
+
+Reason: undefined behavior and memory faults often give the correct result in a test, then fail on another compiler or input.
+A sanitizer stops the test at the fault.
+
+## Step 14: Verify
+
+Applies when: the project has an app that a person or a program starts (for example a web site, a server, a command or a game).
+
+1. Find the verification skill or command of the project (for example a `verify-*` skill).
+   It starts the app and proves a change on the path of a user.
+2. When the project has one, write this rule in the agent instructions of the project: before you say that a change is done, run it and show its output.
+3. When the project has none, do not write one.
+   Name `/create-verification-skill` in Done as an open question.
+
+Reason: tests show that the parts work, but only a start of the app shows that a change works for a user.
+The agent then gives proof, not a guess.
+
+## Done
+
+- The part table of step 0.
+- For each step that applies: the rule, type, test or check, its path and its first run output.
+- For each check that runs (for example a lint rule, a type, a test, a budget, a model, a dead-code build failure, a sanitizer build or a fuzz target): the break that it caught.
+- For step 6: for each route or template and for the default, the largest current page total and the budget.
+- For each step that does not apply: one line that names the missing part.
+- The open questions for the owner: the budget of each route or template and of the default, the target values, the excluded files of step 2, the bugs that the new rules found, and `/create-verification-skill` when step 14 found no verification skill.
+==> skills/README.md <==
+# skills.md
+
+Agent skills for Claude Code that you invoke by name.
+
+## Skills
+
+- [concept-ui](concept-ui/SKILL.md): UI redesign.
+  Redesign an app or a screen from its conceptual model, then map the model to a layered, direct-manipulation, mobile-first interface.
+- [guardrails](guardrails/SKILL.md): project rules.
+  Find the parts that a project has, then add the lint rule, type, test, page budget, state model, replay, property test, fuzz target, expect test, output replay, dead-code check, sanitizer build or verification rule that stops the related fault, in the tools of that project.
+- [schematic-emil](schematic-emil/SKILL.md): figures.
+  Draw a scientific schematic or a patent drawing sheet in the look of [emilkowal.ski](https://emilkowal.ski), for the web, papers, slides and patents.
+  It is a style for the [schematic-figure](https://github.com/lgwrightlab/schematic-figure) and patent-drawing skills by Jinchen Zhao and Logan Wright (LGW Lab, Yale University).
+  Read their [blog post](https://lgwrightlab.github.io/schematic-figure/).
+  Install those two skills from commit `09d8b6e`.
+- [state-machine](state-machine/SKILL.md): requirement and code review.
+  Model code or a requirement as one state table, delete the rows and requirements that are not necessary, show a simpler design, prove each bug with a failing test, and review it on an HTML board.
+  The CLI is `state-machine/bin/sm-axi.ts` (Bun, no dependencies).
+  Example: [femahoy chat](state-machine/examples/femahoy-chat/).
+
+## Install for Claude Code
+
+Copy or symlink the skill folder into `~/.claude/skills/`:
+
+```sh
+git clone https://github.com/yujieteo/skills.md
+ln -s "$PWD/skills.md/concept-ui" ~/.claude/skills/concept-ui
+ln -s "$PWD/skills.md/guardrails" ~/.claude/skills/guardrails
+ln -s "$PWD/skills.md/schematic-emil" ~/.claude/skills/schematic-emil
+ln -s "$PWD/skills.md/state-machine" ~/.claude/skills/state-machine
+ln -s "$PWD/skills.md/state-machine/bin/sm-axi.ts" ~/.local/bin/sm-axi
+```
+
+`schematic-emil` needs the upstream skills at the pinned commit:
+
+```sh
+git clone https://github.com/lgwrightlab/schematic-figure
+git -C schematic-figure checkout 09d8b6e98d04b91de6e8b6632b3356b9fc237417
+ln -s "$PWD/schematic-figure/.claude/skills/schematic-figure" ~/.claude/skills/schematic-figure
+ln -s "$PWD/schematic-figure/.claude/skills/patent-drawing" ~/.claude/skills/patent-drawing
+```
+
+To install for one project only, use `.claude/skills/` in that project.
+
+## Invoke
+
+`concept-ui`, `guardrails` and `state-machine` set `disable-model-invocation: true`, so the agent does not start them automatically.
+An agent can start `schematic-emil` when the user names it in a task.
+Type the skill name and the target:
+
+```text
+/concept-ui the settings screen
+/guardrails the game in ~/src/game
+/schematic-emil a figure of the cache flow for the blog post
+/state-machine the upload flow in src/upload.ts
+```
+
+## Develop
+
+The tools run on [Bun](https://bun.sh) with strict TypeScript.
+
+```sh
+bun install
+bun run check
+```
+
+`bun run check` runs `tsc --noEmit`, the lint of `scripts/lint.ts` (no comment without a link, no `any`, no type assertion, no non-null assertion, no `JSON.parse` result that is not `unknown`), `knip` (dead code) and `bun test`.
+
+To update an expected output, run `bun test -u` and read the diff.
+
+## Process replay
+
+A change to a transform (`sm-axi check`, `sm-axi render`, `useEmil`, `emilTheme`, `patentFigure`) must not change its outputs, unless you accept the difference.
+
+```sh
+bun run capture
+bun run replay
+bun run replay --accept
+```
+
+`capture` runs the tests and keeps each input of a transform in `~/.cache/skills-md-replay`.
+`replay` runs each input on the merge base with `origin/main` and on `HEAD` (each in a copy of the commit), and fails on each difference.
+`--accept` accepts the differences on that run.
+`--base <commit>` changes the base.
+When more than 20% of the inputs differ, `replay` stops and reports a large change.
+Commit before you run `replay`.
+Do not add `replay` to CI.
+==> skills/schematic-emil/SKILL.md <==
+---
+name: schematic-emil
+description: Draw a scientific schematic figure or a patent drawing sheet in the look of Emil Kowalski (emilkowal.ski) for a blog post, a paper, a slide or a patent. It runs the upstream schematic-figure or patent-drawing skill with this style. Use when the user asks for schematic-emil by name.
+---
+
+# Schematic figure in the Emil Kowalski style
+
+This skill is a style for two upstream skills.
+It does not copy or change them.
+
+- Upstream: [lgwrightlab/schematic-figure](https://github.com/lgwrightlab/schematic-figure) by Jinchen Zhao and Logan Wright (LGW Lab, Yale University), MIT licence.
+  Blog post: [Schematic figure](https://lgwrightlab.github.io/schematic-figure/).
+- Pinned commit: `09d8b6e98d04b91de6e8b6632b3356b9fc237417` (2026-10-14).
+  Install its `schematic-figure` and `patent-drawing` skills unchanged.
+- Style values: copied from the CSS that [emilkowal.ski](https://emilkowal.ski) serves, and from Radix Colors 3.0.0 (the family of the site gray).
+- Font: Inter 4.1 (`fonts/InterVariable.woff2`), SIL Open Font License 1.1 (`fonts/LICENSE.txt`).
+
+## Invoke
+
+```text
+/schematic-emil <request> [venue: web | journal | slide | poster | patent] [animate]
+```
+
+If the request names no venue, infer it: a blog post is `web`, a paper is `journal`, a talk is `slide`, a patent is `patent`.
+
+## Process
+
+1. Run the upstream `schematic-figure` skill with `style=schematic-emil`.
+   For a patent sheet, run the upstream `patent-drawing` skill.
+   Keep all upstream steps, options and defaults (also depth `full`).
+2. Build `style.ts` from this folder into `figure/emil.js` with `bun build <skill-folder>/style.ts --outfile figure/emil.js`.
+   Copy `fonts/` to `figure/fonts/`.
+   Run the upstream tools with `--root <project>`.
+3. In `figure/figure.js`, call `E.useEmil(F, L, venue)` first in `draw()`.
+   It sets the font, the gray and colour tokens, the text sizes and the line weights for the venue.
+   It returns `{s, r, line, text}`: the scale, the corner radii in pt, and the sizes.
+4. Draw with the tokens in `tokens.ts` (`style.ts` exports them).
+   Do not write a hex value that is not a token.
+5. Run the upstream gate, `node tools/check.mjs --root <project> --fig figure/figure.js`.
+   A FAIL stops delivery.
+
+## Style rules
+
+- **Font.**
+  Inter for all text.
+  `useEmil` loads it and sets the site font features `"cv01", "ss03"`.
+  Use weight 500 (`E.weight.name`) for the name of a part, 400 for other text, and 600 for a title.
+- **Gray first.**
+  Draw most marks in the 12-step gray (`E.gray[100]` to `E.gray[1200]`).
+  Background 100, text 1200, secondary text 1100, lines and outlines 700 to 900.
+- **Colour.**
+  Add a colour only where a part must look different from the other parts.
+  Use as many hues as the figure needs, from `E.hue` (blue, sky, grass, amber, orange, tomato, violet).
+  Step 3 is an area tint, step 7 an outline, step 9 a solid mark, step 11 a line or a label.
+  Text on a step 9 solid mark uses `E.onSolid[hue]` (white on blue, grass, orange, tomato and violet, gray 1200 light on sky and amber).
+  It has the same value in light and dark mode, as step 9 does.
+- **Cards.**
+  A box is a card: fill gray 100, a 1 px ring in gray 400, and 12 px corners (`E.card(r.card)`).
+  A small tag has 6 px corners (`r.chip`).
+  Fill a card with a step 3 tint and outline it with step 7 only when it must stand out.
+- **Lines.**
+  Borders are 1 px (`line.thin`).
+  A main stroke is 2 px (`line.bold`).
+  Use no shadows, gradients or glows.
+  An upstream part that has a gradient (for example `L.laser` or `L.camera`) does not have the site look: draw a card in its place.
+- **Text.**
+  Labels are 14 px and secondary text is 12 px.
+  The site makes a heading with weight, not with size.
+  Do not make a label larger to show that it is important.
+- **Space.**
+  Keep the site's open layout: 16 px padding in a card and 24 px between groups.
+- **Venue rules win.**
+  The size, minimum text size, line weight and resolution come from the upstream format table (`reference/style.md`).
+  `useEmil` scales the site px to each venue, so that the 14 px label is 7 pt in a journal, 18 pt on a slide and 28 pt on a poster.
+  A web figure uses the journal scale: draw it 120 mm wide and show it at 100% of a 640-700 px column.
+
+## Web output
+
+- Call `E.emilTheme(F)` last in `draw()`.
+  Each colour becomes `var(--color-<token>, <light value>)`.
+  The gray names are the names that the site uses (`--color-gray-1200`).
+- **Dark mode.**
+  Put the SVG inline in the page.
+  It then takes the colour tokens of the page, and it switches under a `.dark` class.
+  A standalone SVG switches with `prefers-color-scheme`.
+  A standalone SVG in an `<img>` cannot load Inter, so it shows the system font.
+- **Static by default.**
+  The option `animate` calls `E.emilTheme(F, { animate: true })`.
+  The panels then come in one after the other with opacity and a 4 px move, in 300 ms with a 60 ms stagger, with the `emil-design-eng` ease-out `cubic-bezier(0.23, 1, 0.32, 1)`.
+  Read the installed `emil-design-eng` skill before you add or change a motion.
+  No motion occurs under `prefers-reduced-motion: reduce`.
+  The PNG and the PDF show the end state.
+- Papers, slides and patents stay light.
+
+## Patent sheets
+
+Make two versions of each sheet from one figure file.
+Use a query on the figure path to select the version:
+
+```js
+import * as E from './emil.js';
+const COLOUR = /[?&]v=colour/.test(import.meta.url);
+export const figure = E.patentFigure({ sheet: 'letter', sheetId: '1/1', name: 'fig1' }, COLOUR);
+export default function draw(F, L) {
+  E.useEmil(F, L, COLOUR ? 'patent-colour' : 'patent');
+  // draw into F.drawing, as patent-drawing step 4 says
+}
+```
+
+- **Version 1, colour** (`--fig "figure/figure.js?v=colour"`): this style at the patent sizes, for the user's own use.
+  Give each part a step 3 fill.
+  The gate checks it with the slide rules (text 14 pt or more).
+- **Version 2, filing** (`--fig figure/figure.js`): black and white with no gray fill, under 37 CFR 1.84.
+  The upstream patent profile and the patent gate apply.
+  Only the font changes to Inter.
+- Reason: 37 CFR 1.84 accepts colour only after a petition, and the EPO and the PCT do not accept colour.
+
+## Generated images
+
+All vector marks and labels stay in code.
+When a figure needs a raster image (for example an illustrated hero part or a texture), ask Codex with GPT-6.1-Sol to make it:
+
+```sh
+codex exec -m gpt-6.1-sol "<prompt>"
+```
+
+Put the style rules in the prompt: the gray background, the hues from `E.hue`, flat shapes with no shadow.
+Place the image with `L.image` and label it in vector.
+==> skills/state-machine/examples/femahoy-chat/chat.sm.md <==
+# femahoy chat: from request to mesh, solve and report
+
+Source: femahoy at 321483d6, read only.
+`daemon/` is `crates/fh/src/daemon/`.
+Machine `chat` is the agent process in the daemon (`Log` in `daemon/chat.rs`): its state is not a field, but `running()` over the flags `reading`, `turn`, `sent`, `taken` and `input`.
+Machine `job` is what the page shows for one request (`entry()` in `daemon/page.html`).
+It is a parallel region of `chat`.
+
+## Requirements
+
+- R1: A message during the work reaches the agent at its next step.
+  — DESIGN.md:36
+- R2: `Stop agent and commands` ends the work at once.
+  — DESIGN.md:36
+- R3: If no agent is alive, a message starts one first, and the new agent continues the session of the chat.
+  — daemon/chat.rs:238 and daemon/chat.rs:274
+- R4: An `error` entry shows when the agent cannot start, or when it ended before the end of its work.
+  — daemon/chat.rs:36
+- R5: A status shows the current action of the agent and the time.
+  — DESIGN.md:36
+- R6: A missing or signed-out agent tells the person what to do.
+  — DESIGN.md:82
+- R7: The agent writes a CAD script for the part, meshes it with gmsh, writes the solver input and solves it.
+  — README.md:42
+- R8: It solves at least 2 meshes to find the mesh error.
+  — README.md:42
+- R9: At the end, the agent writes 1 HTML report with the results, a hand check and the viewer.
+  — README.md:42
+- R10: The page refuses an empty message.
+  — daemon/chat.rs:242
+
+## Bugs
+
+- B1: After Stop, entries of the stopped agent still show.
+  A late `end` entry hides the Rerun button (daemon/page.html:819).
+  Row `* | stale_line`.
+  — tests/chat_stale_line.rs fails on 321483d6
+
+## Machine chat
+
+initial: none final:
+
+| state | event | guard | next | req | source |
+| --- | --- | --- | --- | --- | --- |
+| none | ask | spawn ok | working | R3 | daemon/chat.rs:247 |
+| none | ask | else | none | R4 R6 | daemon/chat.rs:292 |
+| working | ask | write ok | working | R1 | daemon/chat.rs:270 |
+| working | ask | else | broken | | daemon/chat.rs:264 |
+| resting | ask | write ok | working | R1 R5 | daemon/chat.rs:250 |
+| resting | ask | else | broken | | daemon/chat.rs:264 |
+| broken | ask | spawn ok | working | R3 R4 | daemon/chat.rs:278 |
+| broken | ask | else | none | R4 | daemon/chat.rs:292 |
+| working | turn | | working | R5 | daemon/chat.rs:377 |
+| working | result | sent > taken | working | R1 | daemon/chat.rs:383 |
+| working | result | else | resting | R5 | daemon/chat.rs:383 |
+| working | exit | | none | R4 | daemon/chat.rs:414 |
+| broken | exit | | none | R4 | daemon/chat.rs:414 |
+| resting | exit | | none | R3 | daemon/chat.rs:417 |
+| none | exit | | - | R2 | daemon/chat.rs:397 |
+| * | stop | | none | R2 | daemon/chat.rs:328 |
+| * | empty | | - | R10 | daemon/chat.rs:242 |
+| * | turn | | - | R5 | daemon/chat.rs:376 |
+| * | result | | - | R5 | daemon/chat.rs:376 |
+| * | stale_line | | - | | daemon/chat.rs:386 |
+
+## Proposal chat
+
+initial: none final:
+
+| state | event | guard | next | req | source |
+| --- | --- | --- | --- | --- | --- |
+| none | ask | spawn ok | working | R3 | daemon/chat.rs:247 |
+| none | ask | else | none | R4 R6 | daemon/chat.rs:292 |
+| working | ask | write ok | working | R1 | daemon/chat.rs:270 |
+| resting | ask | write ok | working | R1 R5 | daemon/chat.rs:250 |
+| * | ask | else | none | R4 | proposal: a write failure ends the agent |
+| working | turn | | working | R5 | daemon/chat.rs:377 |
+| working | result | sent > taken | working | R1 | daemon/chat.rs:383 |
+| working | result | else | resting | R5 | daemon/chat.rs:383 |
+| working | exit | | none | R4 | daemon/chat.rs:414 |
+| resting | exit | | none | R3 | daemon/chat.rs:417 |
+| none | exit | | - | R2 | daemon/chat.rs:397 |
+| * | stop | | none | R2 | daemon/chat.rs:328 |
+| * | empty | | - | R10 | daemon/chat.rs:242 |
+| * | turn | | - | R5 | daemon/chat.rs:376 |
+| * | result | | - | R5 | daemon/chat.rs:376 |
+| * | stale_line | | - | R2 | proposal: drop each line of an agent that is not current |
+
+## Machine job
+
+initial: idle final:
+
+| state | event | guard | next | req | source |
+| --- | --- | --- | --- | --- | --- |
+| idle | you | | asked | R1 | daemon/page.html:851 |
+| asked | show | | meshed | R7 | daemon/page.html:802 |
+| asked | open | | solved | R7 | daemon/page.html:782 |
+| meshed | show | | meshed | R7 | daemon/page.html:802 |
+| meshed | open | | solved | R7 | daemon/page.html:782 |
+| solved | open | | solved | R8 | daemon/page.html:782 |
+| solved | report | | reported | R9 | daemon/page.html:795 |
+| reported | end | | idle | R9 | daemon/page.html:818 |
+| solved | end | | idle | | daemon/page.html:818 |
+| asked | end | | idle | | daemon/page.html:818 |
+| meshed | end | | idle | | daemon/page.html:818 |
+| * | error | | idle | R4 | daemon/page.html:777 |
+| * | stopped | | idle | R2 | daemon/page.html:823 |
+| * | you | | - | R1 | DESIGN.md:36 |
+| * | show | | - | R7 | daemon/chat.rs:336 |
+| * | open | | - | R7 | daemon/chat.rs:336 |
+| * | report | | - | R9 | daemon/chat.rs:336 |
+| * | end | | - | R5 | daemon/page.html:818 |
+==> skills/state-machine/examples/femahoy-chat/README.md <==
+# Example: the femahoy chat
+
+The first real run of the skill, on femahoy at `321483d6` (read only: no change to femahoy).
+
+| File | Content |
+| --- | --- |
+| [chat.sm.md](chat.sm.md) | The machines `chat` (the agent process in the daemon) and `job` (the page, from request to mesh, solve and report), the proposal, the requirements and the bug |
+| [check.toon](check.toon) | `sm-axi check chat.sm.md` |
+| [chat.html](chat.html) | `sm-axi render chat.sm.md`: the review page |
+| [tests/](tests/) | Failing tests. The `TARGET` constant of each file names the femahoy path that it targets and shows in the failure message |
+
+## Results
+
+- B1, a bug: after Stop, entries of the stopped agent still show.
+  `tests/chat_stale_line.rs` fails on `321483d6`: the chat shows `end done in 0.0 s` and `note Terminated: 15` after `note stopped the agent`.
+  The `end` entry hides the Rerun button (`daemon/page.html:819`).
+  The cause: `Chat::follow` pushes each entry of each agent (`daemon/chat.rs:386`), and the stderr thread does the same (`daemon/chat.rs:313`).
+- The hidden state `broken`: a message that cannot reach the agent drops the input but keeps the chat `running` (`daemon/chat.rs:264`).
+  `tests/chat_write_failure.rs` fails on `321483d6` with `state=running` after the write failure.
+  It pins the proposal, not a bug: the owner decides.
+- `job` has no state in the code: the page only shows entries.
+  `asked` and `meshed` are equivalent, and `reported` is a pass-through.
+  R8 ("at least 2 meshes") has a row (`solved | open`), but no guard stops a report after 1 mesh: only the instructions of the agent ask for it.
+- 6 rows have no requirement.
+  The owner decides on each one on the board.
+
+## Refactor plan (not done: a separate approved step)
+
+The proposal `chat` has 16 rows, not 20, keeps each requirement, and passes the 7 checks.
+
+1. Replace the flags `reading`, `turn`, `sent`, `taken`, `input` and `agent` of `Log` (`daemon/chat.rs:70`) with one field: `enum Agent { None, Resting { child, input }, Working { child, input, started_ms, unread } }`.
+   `running()` becomes a match.
+2. A write failure in `ask` (`daemon/chat.rs:264`) ends the agent (`Log::end`) and goes to `None`.
+   The state `broken` goes.
+3. `follow` and the stderr thread push an entry only when `log.current(pid)` (`daemon/chat.rs:386` and `daemon/chat.rs:313`).
+   This also fixes B1.
+4. Keep `tests/chat_stop.rs` green.
+   Make `tests/chat_stale_line.rs` and `tests/chat_write_failure.rs` green.
+
+Run the tests in a femahoy checkout:
+
+```sh
+cp state-machine/examples/femahoy-chat/tests/*.rs <femahoy>/crates/fh/tests/
+cargo test -p fh --test chat_stale_line --test chat_write_failure
+```
+==> skills/state-machine/references/format.md <==
+# The machine file (`.sm.md`)
+
+One Markdown file holds the requirements, the bugs and each machine.
+`sm-axi` reads only the parts below.
+Other text is free.
+
+```markdown
+# Upload: from pick to stored            <- title of the review page
+
+Source: app at 1a2b3c, read only.        <- intro text, shown under the title
+
+## Requirements
+
+- R1: A person can cancel an upload at any time. — DESIGN.md:12
+- R2: A failed upload can be tried again. — issue #40
+
+## Bugs
+
+- B1: Cancel during retry leaves the spinner on. — tests/upload_cancel.rs fails on 1a2b3c
+
+## Machine upload
+
+initial: idle
+final: stored
+
+| state | event | guard | next | req | source |
+|---|---|---|---|---|---|
+| idle | pick | | sending | R1 | src/upload.ts:20 |
+| sending | done | ok | stored | R1 | src/upload.ts:41 |
+| sending | done | else | failed | R2 | src/upload.ts:44 |
+| failed | retry | | sending | R2 | src/upload.ts:60 |
+| * | cancel | | idle | R1 | src/upload.ts:70 |
+
+## Proposal upload
+
+(the same form: a simpler design of the machine `upload`)
+```
+
+## Sections
+
+| Section | Content |
+| --- | --- |
+| `# <title>` | The page title. The lines after it, up to the first machine, are the intro. |
+| `## Requirements` | `- <id>: <text> — <source>`. The source is required (` -- ` also works). |
+| `## Bugs` | `- <id>: <text> — <failing test>`. Only bugs with a failing test. |
+| `## Machine <name>` | `initial:`, `final:` (a comma list, can be empty) and the table. |
+| `## Proposal <name>` | A simpler design of the machine `<name>`, in the same form. |
+
+## Columns
+
+| Column | Rule |
+| --- | --- |
+| `state` | A state name, or `*` for each non-final state. |
+| `event` | The event name. Use the same word for the same event in each row. |
+| `guard` | Empty, a condition, or `else`. Write `!x` or `not x` for the opposite of `x`. Write `or` and `and`, not `\|\|`. |
+| `next` | The next state, the same state (a loop with an effect), or `-` (the event is ignored: no effect). |
+| `req` | Requirement ids, separated by spaces or commas. Empty or `-` is no requirement. |
+| `source` | `file:line` of the code, or the requirement id. |
+
+A `*` row applies to each non-final state that has no own row for its event.
+A `*` row with a guard applies to each non-final state that has no own row for its event and that guard.
+
+## Findings
+
+`sm-axi check` prints `machines`, `bugs`, `simplify`, `checks` and `proposals`.
+Each finding has `kind`, `machine`, `at` (`state`, `state/event` or an id), `line` (`L<n>` of the file) and `detail`.
+
+| Kind | Group | Meaning |
+| --- | --- | --- |
+| `unreachable` | check | No path from `initial`. |
+| `dead-end` | check | Not final, and no row goes to another state. |
+| `unhandled` | check | A reachable non-final state has no row for these events. |
+| `two-transitions` | check | 2 or more rows on one state and event, and the guards overlap (the same guard, or one row has no guard). |
+| `guard-gap` | check | Guarded rows with no `else`, and not exactly `x` and `!x`. |
+| `row-no-req` | check | A row with no requirement, or with an id that is not in `## Requirements`. |
+| `req-no-row` | check | A requirement that no row of a machine cites. |
+| `merge-states` | simplify | Equivalent states (minimisation): the same events go to equivalent states, and the same events are ignored. |
+| `pass-through` | simplify | One row in, one row out, no guard, and no requirement of its own. |
+| `global-event` | simplify | One event, guard and next state in 3 or more states. |
+| `flag-guard` | simplify | One guard term in 3 or more rows of 2 or more states. |
+| `flag-states` | simplify | 3 or more state names made only of name parts that other states share (`on_open`, `off_open`). |
+| `function` | simplify | 2 states or fewer, or no branch and no loop. |
+
+`rows_per_req` is the rows of a machine divided by the requirements that it cites.
+
+A proposal has `status` `shown` or `hidden`, with the reason.
+It shows only if it cites each requirement that the machine cites, has fewer rows, and has no check finding.
+
+Exit codes: 0 no check finding, 1 one or more check findings, 2 a usage or parse error.
+==> skills/state-machine/references/review.md <==
+# The review page
+
+`sm-axi render <file>` writes one HTML file with no network files.
+It shows, from the most important item:
+
+1. The verdict: proven bugs, check findings, simplifications, rows per requirement.
+2. The proven bugs with their failing tests.
+3. The findings in the order of the work: question the requirements, simplify, kill bugs.
+   Each finding links to its row.
+4. For each machine: the diagram and the simulator.
+   A shown proposal is side by side with the current machine.
+5. The rows, with Approve, Reject and a comment on each row.
+   Then the requirements, with the same controls.
+
+## The board
+
+- With lavish-axi: `lavish-axi <file>.html`.
+  "Queue the review" queues one tracked batch with each decided id (`<machine>-L<line>` for a row, the id for a requirement).
+  Then the owner sends it.
+  Read it with `lavish-axi poll <file>.html`.
+- Without lavish-axi: open the file in a browser.
+  "Copy the review" puts the decisions on the clipboard as text, one id on each line.
+- A rejected row is deleted with its requirement.
+  A comment needs an answer in the next version.
+- After the changes, run `check` and `render` again, and reply on the board with `lavish-axi reply <file>.html --agent-reply "<what changed>"`.
+
+## Look
+
+The tokens of the owner's site (`https://teoyujie.org/shared/kowalski.css`), light only, as the site: the gray scale, the Inter and IBM Plex Mono stacks, the strong ease-out curve, the `.button` look, 44 px tap areas, and hover only under `(hover: hover) and (pointer: fine)`.
+
+## Motion
+
+Names from animation-vocabulary.
+Each motion has a purpose.
+
+| Motion | Name | Values | Purpose |
+| --- | --- | --- | --- |
+| The current-state marker moves along the transition | Translate, a Tween along the edge path (WAAPI) | `transform` only, 200 ms, `cubic-bezier(0.23, 1, 0.32, 1)` | Spatial consistency: the reviewer sees which edge the event took |
+| A button press | Press / Tap feedback | `scale(0.97)`, 150 ms ease-out | Feedback |
+| A fired row, the current node | none (instant colour) | | A colour change at the arrival does not need motion |
+
+- A keyboard-fired event (`click` with `detail` 0) moves the marker at once: never animate a keyboard action.
+- Reduced motion: the marker moves at once, and the press scale is 1.
+- A second event during a move finishes the first move, then starts the next one.
+
+## review-animations verdict of the template
+
+| Before | After | Why |
+| --- | --- | --- |
+| Marker jumps to the next state | WAAPI `transform` along the edge, 200 ms strong ease-out | Spatial consistency; under 300 ms; ease-out answers the click at once |
+| Every fire animates | No movement for a keyboard fire or reduced motion | Keyboard actions get no animation; reduced motion is honoured |
+| Node colour fades | Instant colour at the arrival | No second motion that competes with the marker |
+
+Approve: `transform` only, no `transition: all`, no `ease-in`, hover gated, reduced motion honoured.
+==> skills/state-machine/SKILL.md <==
+---
+name: state-machine
+description: Model the states of code or of a written requirement as one table, question each requirement, delete what is not necessary, show a simpler design, prove each bug with a failing test, and give the owner an HTML review board with a step-through simulator. For explicit use only, when the user invokes /state-machine.
+disable-model-invocation: true
+---
+
+# State machine
+
+Make a state machine smaller before you make it correct.
+Do the steps in sequence.
+Never fix code before the owner approves the row on the board.
+The target is the code, the requirement, or both, that the user names.
+If the user names no target, ask for one.
+
+The CLI is `bin/sm-axi.ts` in this skill folder (Bun, no dependencies).
+Run it as `bun <skill-folder>/bin/sm-axi.ts`, or link it as `sm-axi` on the PATH.
+It prints compact TOON.
+The `help` lines of each output give the next command.
+
+## Step 0: Write the machine file
+
+Read [references/format.md](references/format.md) before you write the first file.
+
+1. Write `<name>.sm.md` next to the design documents of the project, or in a scratch folder when the project is read-only.
+2. Write the requirements first.
+   Each requirement has an id, its text, and its source: a rule in a design document (`DESIGN.md:36`), an issue, or the exact words of the owner.
+   Do not write a requirement that has no source.
+3. Write one row for each transition: `state | event | guard | next | req | source`.
+   - From code: the source is `file:line` of the code that does the transition.
+   - From a requirement only: the source is the requirement id.
+4. When the code keeps its state in flags (booleans, counters, `Option` fields), name the real states and write each flag test as a guard.
+   Write a state that the flags allow but no name covers (for example, a closed input while the turn runs).
+   These hidden states are where bugs live.
+5. Keep machines flat.
+   A parallel region is a second `## Machine` in the same file.
+
+## Step 1: Question the requirements
+
+Run `sm-axi check <file>`.
+Read the `row-no-req` and `req-no-row` findings.
+
+- A row with no requirement: the code does it, but nobody asked for it.
+  Ask the owner on the board: approve it (then name the requirement and its source), or reject it (then it is deleted).
+- A requirement with no row: nothing does it.
+  Ask whether it is still necessary.
+- Do not invent a requirement to remove a finding.
+  The finding is the question.
+- For each requirement, ask: did a real run show the need?
+  A requirement added "in case" is a candidate to delete.
+
+## Step 2: Delete
+
+After the review, delete each rejected row and its requirement from the file.
+Delete each requirement that the owner rejected, and each row that only it cited.
+Run `sm-axi check` again.
+
+## Step 3: Simplify
+
+Read the `simplify` findings of `sm-axi check`:
+
+| Finding | Question for the design |
+| --- | --- |
+| `merge-states` | The states do the same thing. Can they be one state? |
+| `pass-through` | One way in, one way out, no guard, no own requirement. Delete the state. |
+| `global-event` | Many states do the same on one event. Write one `*` row. |
+| `flag-guard` | One flag in many guards. Is it a hidden state, or a second machine? |
+| `flag-states` | The state names combine flags. Make one machine for each flag. |
+| `function` | No branch and no loop. A plain function is better than a machine. |
+
+Also look at `rows_per_req`.
+A high ratio means that the machine is larger than its requirements.
+
+When a simpler design exists, write it as `## Proposal <machine>` in the same file.
+`sm-axi` shows a proposal only if it keeps each accepted requirement, has fewer rows and passes the 7 checks.
+Else `check` says why it is hidden.
+Do not argue for a hidden proposal.
+
+## Step 4: Kill bugs
+
+The 7 checks run on what remains:
+
+1. `unreachable`: no path from the initial state.
+2. `dead-end`: no exit and not final.
+3. `unhandled`: an event of the machine with no row in a state.
+   Write the row, or write it as ignored (`next` is `-`).
+4. `two-transitions`: two rows on one state and event with overlapping guards.
+5. `guard-gap`: the guards of one state and event do not cover all cases.
+   Add an `else` row.
+6. `row-no-req`: a row with no requirement (step 1).
+7. `req-no-row`: a requirement with no row (step 1).
+
+For each finding that is a fault in the code (not only in the table):
+
+1. Write a failing test in the test style of the target project.
+   Name the row of the machine in the test name.
+2. Run it and see it fail for the right reason.
+   When the project is read-only, run it in a scratch copy.
+3. Add the bug to `## Bugs` with the test path as its proof.
+4. Do not fix it.
+   The owner decides on the board.
+
+## Step 5: Review
+
+Run `sm-axi render <file>`.
+It writes `<name>.html`.
+Read [references/review.md](references/review.md).
+
+- If `lavish-axi` is on the PATH, run `lavish-axi <name>.html`.
+  The owner approves, rejects or comments on each row and each requirement, and queues the review.
+- Else give the owner the file path.
+  The page puts the decisions on the clipboard ("Copy the review").
+- Report the file path and the board first.
+  Then wait for the feedback (`lavish-axi poll <name>.html`).
+- Apply the feedback: delete rejected rows and their requirements, answer each comment, run `check` and `render` again.
+  Account for each submitted id.
+
+## Refactor
+
+When the owner approves a proposal, do not refactor in the same step.
+
+1. Write the plan: the rows that change, the code that changes (`file:line`), and the order.
+2. Write the failing tests that pin the approved behavior of the proposal.
+   Run them and see them fail.
+3. Stop.
+   The refactor is a separate step, which the owner approves.
+
+## Done
+
+- The machine file, the `check` output, the review page, and each failing test with the path that it targets.
+- A short report: the proven bugs, the deleted rows and requirements, the proposal (shown or hidden, and why), and the open questions for the owner.
+==> skills/state-machine/test/faults.sm.md <==
+# sm-axi self-test: one known fault for each finding
+
+## Requirements
+
+- R1: A job can start and stop.
+  — owner, test fixture
+- R2: A job ends when its work is done.
+  — owner, test fixture
+- R3: A started job loads, then runs.
+  — owner, test fixture
+- R4: Any job can be cancelled.
+  — owner, test fixture
+- R9: Nobody uses this.
+  — owner, test fixture
+
+## Machine bugs
+
+initial: a final: done
+
+| state | event | guard | next | req | source |
+| --- | --- | --- | --- | --- | --- |
+| a | go | | b | R1 | t:1 |
+| a | stop | | done | R1 | t:2 |
+| b | go | ok | c | R1 | t:3 |
+| b | stop | | done | R1 | t:4 |
+| c | go | | done | R2 | t:5 |
+| c | go | | a | R2 | t:6 |
+| d | go | | done | R1 | t:7 |
+| d | stop | | done | | t:8 |
+| a | jump | | e | R1 | t:9 |
+| * | jump | | - | R1 | t:10 |
+
+## Machine simp
+
+initial: idle final: done
+
+| state | event | guard | next | req | source |
+| --- | --- | --- | --- | --- | --- |
+| idle | start | | load | R3 | t:11 |
+| load | loaded | | run | R3 | t:12 |
+| run | finish | | done | R2 | t:13 |
+| idle | cancel | | done | R4 | t:14 |
+| load | cancel | | done | R4 | t:15 |
+| run | cancel | | done | R4 | t:16 |
+| idle | poll | busy | idle | R3 | t:17 |
+| idle | poll | !busy | idle | R3 | t:18 |
+| run | poll | busy | run | R3 | t:19 |
+| run | poll | !busy | run | R3 | t:20 |
+| load | poll | | - | R3 | t:21 |
+| * | start | | - | R3 | t:22 |
+| * | loaded | | - | R3 | t:23 |
+| * | finish | | - | R3 | t:24 |
+
+## Machine twins
+
+initial: s final: done
+
+| state | event | guard | next | req | source |
+| --- | --- | --- | --- | --- | --- |
+| s | left | | p | R1 | t:25 |
+| s | right | | q | R1 | t:26 |
+| p | ok | | done | R2 | t:27 |
+| q | ok | | done | R2 | t:28 |
+| p | left | | - | R1 | t:29 |
+| q | left | | - | R1 | t:30 |
+| * | right | | - | R1 | t:31 |
+| * | ok | | - | R1 | t:32 |
+
+## Machine flags
+
+initial: on_open final:
+
+| state | event | guard | next | req | source |
+| --- | --- | --- | --- | --- | --- |
+| on_open | toggle | | off_open | R1 | t:33 |
+| off_open | toggle | | on_open | R1 | t:34 |
+| on_open | close | | on_closed | R1 | t:35 |
+| on_closed | toggle | | off_closed | R1 | t:36 |
+| off_closed | toggle | | on_closed | R1 | t:37 |
+| off_open | close | | off_closed | R1 | t:38 |
+| on_closed | open | | on_open | R1 | t:39 |
+| off_closed | open | | off_open | R1 | t:40 |
+| * | close | | - | R1 | t:41 |
+| * | open | | - | R1 | t:42 |
+
+## Machine pipe
+
+initial: read final: written
+
+| state | event | guard | next | req | source |
+| --- | --- | --- | --- | --- | --- |
+| read | parsed | | check | R2 | t:43 |
+| check | checked | | written | R2 | t:44 |
+| * | parsed | | - | R2 | t:45 |
+| * | checked | | - | R2 | t:46 |
+
+## Proposal twins
+
+initial: s final: done
+
+| state | event | guard | next | req | source |
+| --- | --- | --- | --- | --- | --- |
+| s | left | | side | R1 | t:47 |
+| s | right | | side | R1 | t:48 |
+| side | ok | | done | R2 | t:49 |
+| side | left | | - | R1 | t:50 |
+| * | right | | - | R1 | t:51 |
+| * | ok | | - | R1 | t:52 |
+
+## Proposal bugs
+
+initial: a final: done
+
+| state | event | guard | next | req | source |
+| --- | --- | --- | --- | --- | --- |
+| a | stop | | done | R1 | t:53 |

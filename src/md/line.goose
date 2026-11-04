@@ -92,8 +92,12 @@ fn add_line(d: Doc&, b: LineState&) {
     d.text.append(rest_of_line(d, b, b.offset));
     d.text.push('\n');
     d.nodes[tip].content.len = d.text.len - start;
-    while d.line_cols.len <= b.number { d.line_cols.push(0); }
-    d.line_cols[b.number] = b.offset + 1;
+    note_line_col(d, b.number, b.offset);
+}
+
+fn note_line_col(d: Doc&, number: i64, offset: i64) {
+    while d.line_cols.len <= number { d.line_cols.push(0); }
+    d.line_cols[number] = offset + 1;
 }
 
 fn can_contain(parent: Kind, child: Kind) -> bool {
@@ -175,8 +179,12 @@ fn finalize_fenced(d: Doc&, n: i64) {
     let c = d.nodes[n].content;
     let body = d.text[c.at..c.at + c.len];
     let nl = position(body, '\n');
+    var a = 0;
+    while a < nl && is_ascii_space(body[a]) { a++; }
+    let raw = trim_ascii(body[a..nl]);
+    d.nodes[n].title = Span { at: c.at + a, len: raw.len };
     let info_at = d.text.len;
-    unescape_into(d.text, trim_ascii(body[..nl]));
+    unescape_into(d.text, raw);
     d.nodes[n].info = Span { at: info_at, len: d.text.len - info_at };
     d.nodes[n].content = Span { at: c.at + nl + 1, len: c.len - nl - 1 };
 }

@@ -6,8 +6,9 @@ import md.parse;
 import md.tree;
 import lint.context;
 import lint.check;
+import fmt.run;
 
-let USAGE = "usage: goosemarklint check <path>... | rules | tree <file>...\n";
+let USAGE = "usage: goosemarklint check <path>... | fmt [--check] <path>... | rules | tree <file>...\n";
 
 fn print_file_tree(path: const u8[:]) -> bool {
     var input: u8[>..] = [];
@@ -42,8 +43,11 @@ fn print_rules() -> i64 {
 fn main() {
     let a = args();
     let command = if a.len >= 2 { a[1] } else { "" };
+    let fmt_code = if command == "fmt" { run_fmt(a[2..]) } else { -1 };
     let code = if command == "check" && a.len >= 3 {
         run_check(a[2..])
+    } else if fmt_code >= 0 {
+        fmt_code
     } else if command == "tree" && a.len >= 3 {
         print_trees(a[2..])
     } else if command == "rules" && a.len == 2 {
