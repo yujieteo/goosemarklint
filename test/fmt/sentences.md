@@ -15,3 +15,12 @@ The tool is good. We delve into it.
 
 <!-- goosemarklint-disable-next-line llm-stock: the test needs a stock word -->
 1. The item is good. We delve into it.
+
+- The first item is good.
+ <!-- goosemarklint-disable-next-line llm-stock: the test needs a stock word -->
+- The next item is good. We delve into it.
+
+1. The first step is good.
+
+   <!-- goosemarklint-disable-next-line llm-stock: the test needs a stock word -->
+2. The next step is good. We delve into it.
