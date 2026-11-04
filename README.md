@@ -190,7 +190,7 @@ Each line is one of these:
 - `exclude`, a tab and a path from the current folder.
 - `disable`, a tab and a rule ID.
 
-This command makes a config with 1 line of 4 types:
+This command makes a config with 1 line of each type:
 
 ```sh
 printf 'allow\tHugging\nban\twhitelist\tallow-list\ngenerated\tvalidation/reports/\nexclude\tvendor/\ndisable\tste-ing\n' > .goosemarklint

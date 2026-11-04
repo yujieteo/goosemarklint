@@ -40,7 +40,7 @@ printf 'exclude\t./vendor/\n' >"$abs/.goosemarklint"
 absdir=$(cd "$abs" && pwd -P)
 for p in "$absdir/vendor/bad.md" ./vendor/bad.md; do
   status=0
-  (cd "$abs" && "$bin" check "$p") >"$work/out" 2>&1 || status=$?
+  (cd "$abs" && PWD=/nonexistent "$bin" check "$p") >"$work/out" 2>&1 || status=$?
   if [ "$status" -ne 0 ] || [ -s "$work/out" ]; then
     cat "$work/out"
     echo "config_tests: exclude ./vendor/ with $p exited $status, want 0 with no output"
@@ -55,7 +55,7 @@ cp "$fmtdir/vendor/bad.md" "$fmtdir/doc.md"
 cp "$fmtdir/vendor/bad.md" "$work/original.md"
 printf 'exclude\tvendor/\n' >"$fmtdir/.goosemarklint"
 status=0
-(cd "$fmtdir" && "$bin" fmt .) >"$work/out" 2>&1 || status=$?
+(cd "$fmtdir" && PWD=/nonexistent "$bin" fmt .) >"$work/out" 2>&1 || status=$?
 if [ "$status" -ne 0 ] || cmp -s "$fmtdir/doc.md" "$work/original.md" || ! cmp -s "$fmtdir/vendor/bad.md" "$work/original.md"; then
   cat "$work/out"
   echo "config_tests: fmt with exclude vendor/ exited $status, or did not format doc.md and keep vendor/bad.md"
@@ -67,7 +67,7 @@ lone="$work/lone"
 mkdir -p "$lone/pass"
 printf '# Lone\n\n%s\n' "$sentence" >"$lone/pass/doc.md"
 printf '# Other\n\n%s\n' "$sentence" >"$lone/other.md"
-(cd "$lone" && "$bin" check .) >"$work/out" 2>&1 || true
+(cd "$lone" && PWD=/nonexistent "$bin" check .) >"$work/out" 2>&1 || true
 if ! grep -q 'repeated-fact: warning' "$work/out"; then
   cat "$work/out"
   echo "config_tests: a pass folder with no sibling fail folder gave no repeated-fact warning"
@@ -78,7 +78,7 @@ sibling="$work/sibling"
 mkdir -p "$sibling/pass" "$sibling/fail"
 printf '# Pass\n\n%s\n' "$sentence" >"$sibling/pass/doc.md"
 printf '# Fail\n\n%s\n' "$sentence" >"$sibling/fail/doc.md"
-(cd "$sibling" && "$bin" check .) >"$work/out" 2>&1 || true
+(cd "$sibling" && PWD=/nonexistent "$bin" check .) >"$work/out" 2>&1 || true
 if grep -q 'repeated-fact' "$work/out"; then
   cat "$work/out"
   echo "config_tests: a pass folder with a sibling fail folder gave a repeated-fact finding"
