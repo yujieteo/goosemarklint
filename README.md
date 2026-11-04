@@ -199,7 +199,8 @@ printf 'allow\tHugging\nban\twhitelist\tallow-list\ngenerated\tvalidation/report
 An `allow` word passes each word rule.
 A `ban` word gives a `ste-word` finding.
 `repeated-fact` skips each file whose path is a `generated` path or is in a `generated` folder.
-`check` reads no file under an `exclude` path.
+`check` and `fmt` skip each file under an `exclude` path.
+`fmt` also skips each file under a `generated` path.
 Thus a vendored file or a test fixture gets no finding.
 A `disable` rule gives no finding in the project, and an unknown rule ID is a config error.
 

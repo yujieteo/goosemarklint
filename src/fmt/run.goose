@@ -4,6 +4,7 @@ import dictionary;
 import md.node;
 import md.parse;
 import lint.check;
+import lint.lists;
 import fmt.emit;
 import fmt.walk;
 import fmt.canon;
@@ -82,7 +83,8 @@ fn format_paths(paths: u8[:][:], check: bool) -> i64 {
     var list = split(files, '\n');
     sort(list) { a, b => compare(a, b) < 0 };
     for f in list {
-        guard f.len > 0;
+        let full = full_path(f);
+        guard f.len > 0 && !is_excluded(full) && !is_generated(full);
         code = max(code, format_file(f, check));
     }
     return code;
@@ -92,5 +94,6 @@ fn run_fmt(args: u8[:][:]) -> i64 {
     let check = args.len > 0 && args[0] == "--check";
     let paths = if check { args[1..] } else { args };
     guard paths.len > 0 else { return -1; }
+    guard load_config() else { return 2; }
     return format_paths(paths, check);
 }

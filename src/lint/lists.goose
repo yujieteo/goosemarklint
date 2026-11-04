@@ -125,9 +125,21 @@ fn in_list(cat: i64, word: const u8[:]) -> bool { find_entry(cat, word) >= 0 }
 
 fn is_allowed(word: const u8[:]) -> bool { in_list(ALLOW, word) }
 
+extern fn c_getcwd(buf: u8[4096]&, size: u64) -> u64 = "getcwd";
+
+fn working_dir() -> u8[>..] {
+    var buf: u8[4096] = [0; 4096];
+    if c_getcwd(buf, 4096) == 0 { abort("cannot read the working directory"); }
+    var out: u8[>..] = [];
+    for c in buf {
+        if c == 0 { break; }
+        out.push(c);
+    }
+    return out;
+}
+
 fn full_path(path: const u8[:]) -> u8[>..] {
-    var base: u8[>..] = [];
-    env("PWD", base);
+    let base = working_dir();
     var joined: u8[>..] = [];
     if !starts_with(path, "/") {
         joined.append(base);
