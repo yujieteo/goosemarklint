@@ -1,3 +1,3 @@
 # Rules
 
-1. A test comes first.
+1. A test must come first.

@@ -9,9 +9,11 @@ fn comment_body(t: const u8[:]) -> const u8[:] { trim(t[4..if ends_with(t, "-->"
 
 fn is_directive(t: const u8[:]) -> bool { starts_with(t, "<!--") && starts_with(comment_body(t), "goosemarklint-") }
 
+fn is_marker(t: const u8[:]) -> bool { t.len > 4 && ends_with(t, "-->") && ((t[4] >= 'a' && t[4] <= 'z') || t[4] == '/') }
+
 fn check_comment(L: Lint&, t: const u8[:], line: i64, col: i64) {
     guard is_directive(t) && ends_with(t, "-->") else {
-        report_at(L, line, col, "html-comment", "HTML comment: delete it, or move the fact into code or a test");
+        if !is_marker(t) { report_at(L, line, col, "html-comment", "HTML comment: delete it, or move the fact into code or a test"); }
         return;
     }
     let why = read_directive(L, comment_body(t), line, col, line + count(t) { it == '\n' });

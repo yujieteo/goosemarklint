@@ -143,6 +143,7 @@ fn lint_file(out: u8[>..]&, path: const u8[:], facts: Facts&) -> i64 {
     }
     facts.path = Span { at: facts.text.len, len: path.len };
     facts.text.append(path);
+    facts.skip = is_generated(path);
     return lint_into(out, path, input, facts);
 }
 
@@ -198,7 +199,7 @@ fn load_config() -> bool {
     guard file_exists(CONFIG) && read_file(CONFIG, text) else { return true; }
     let bad = add_lists(text, CONFIG_CATEGORIES);
     guard bad == 0 else {
-        write_stderr(str(CONFIG, ":", bad, ": write allow<TAB>word or ban<TAB>word<TAB>replacement\n"));
+        write_stderr(str(CONFIG, ":", bad, ": write allow<TAB>word, ban<TAB>word<TAB>replacement or generated<TAB>path\n"));
         return false;
     }
     return true;

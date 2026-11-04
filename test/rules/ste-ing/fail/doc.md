@@ -2,12 +2,10 @@
 
 The tool is running.
 
-Use the long-running job.
+Save the file without regenerating it.
 
-Use \*this\* &amp; the running job.
-
-## Running jobs
+Use \*this\* &amp; stop before running the job.
 
 | Name | Note |
 | --- | --- |
-| a \| b | the running job |
+| a \| b | stop the job rather than competing with it |

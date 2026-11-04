@@ -120,6 +120,7 @@ fn check_column_style(L: Lint&, n: i64) {
     var compact: Hit[>..] = [];
     var tight: Hit[>..] = [];
     for ln in node.line..node.end_line + 1 {
+        guard ln != node.line + 1;
         let t = line_text(L, ln);
         if ln > node.line { aligned_hits(L, line_text(L, node.line), ln, t, from, aligned); }
         spaced_hits(ln, t, from, compact, tight);

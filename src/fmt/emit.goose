@@ -11,6 +11,7 @@ struct Fmt {
     levels: Level[>..]&,
     marks: u8[>..]&,
     depth: i64 = 0,
+    pre: i64 = 0,
 }
 
 fn source(f: Fmt&) -> const u8[:] {

@@ -1,5 +1,6 @@
 import std;
 import md.node;
+import md.chars;
 import lint.context;
 import lint.prose;
 import lint.md_base;
@@ -53,7 +54,7 @@ fn check_emphasis_spaces(L: Lint&, p: Prose&, parent: i64) {
         for r in runs {
             guard r.marker == m;
             if open < 0 {
-                open = r.at;
+                if r.at == 0 || !is_alnum(s[r.at - 1]) { open = r.at; }
                 continue;
             }
             let msg = str("space inside the emphasis marker \"", EMPHASIS_MARKERS[m], "\": delete it");

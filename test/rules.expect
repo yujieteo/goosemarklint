@@ -52,13 +52,13 @@
 ./MD058/fail/doc.md:4:1: MD058: table has no blank line above it: add one
 ./MD059/fail/doc.md:3:6: MD059: link text "here" does not say where the link goes: describe the target
 ./MD060/fail/doc.md:5:6: MD060: table pipe is not in line with the header pipe: align the columns
-./MD060/fail/doc.md:9:4: MD060: table pipe does not have 1 space on the left: align the columns or use 1 space
-./MD060/fail/doc.md:9:4: MD060: table pipe does not have 1 space on the right: align the columns or use 1 space
-./agents-imperative/fail/agents/AGENTS.md:4:3: agents-imperative: list item does not start with an imperative verb
-./agents-imperative/fail/claude/CLAUDE.md:3:4: agents-imperative: list item does not start with an imperative verb
+./MD060/fail/doc.md:9:4: MD060: table pipe is not in line with the header pipe: align the columns
+./MD060/fail/doc.md:9:7: MD060: table pipe is not in line with the header pipe: align the columns
+./agents-imperative/fail/agents/AGENTS.md:4:3: agents-imperative: list item gives an instruction with "must": start it with the verb
+./agents-imperative/fail/claude/CLAUDE.md:3:4: agents-imperative: list item gives an instruction with "must": start it with the verb
 ./html-comment/fail/blocks.md:5:1: html-comment: HTML comment: delete it, or move the fact into code or a test
 ./html-comment/fail/blocks.md:9:28: html-comment: HTML comment: delete it, or move the fact into code or a test
-./html-comment/fail/blocks.md:11:72: html-comment: HTML comment: delete it, or move the fact into code or a test
+./html-comment/fail/blocks.md:11:77: html-comment: HTML comment: delete it, or move the fact into code or a test
 ./html-comment/fail/doc.md:3:1: html-comment: HTML comment: delete it, or move the fact into code or a test
 ./html-comment/fail/doc.md:5:19: html-comment: HTML comment: delete it, or move the fact into code or a test
 ./llm-bold-label/fail/doc.md:3:1: llm-bold-label: each list item starts with a bold label: delete the labels or use a table
@@ -83,11 +83,10 @@
 ./skill-front-matter/fail/no-when/SKILL.md:3:1: skill-front-matter: description does not say when to load the skill: add "Use when ..."
 ./ste-contraction/fail/doc.md:3:19: ste-contraction: "doesn't" is a contraction: write "does not"
 ./ste-contraction/fail/doc.md:5:1: ste-contraction: "Don't" is a contraction: write "do not"
-./ste-ing/fail/doc.md:3:13: ste-ing: warning: "running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
-./ste-ing/fail/doc.md:5:14: ste-ing: warning: "running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
-./ste-ing/fail/doc.md:7:24: ste-ing: warning: "running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
-./ste-ing/fail/doc.md:9:4: ste-ing: warning: "Running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
-./ste-ing/fail/doc.md:13:16: ste-ing: warning: "running" is an -ing word. If it is a verb, use another verb form. This rule also flags nouns, adjectives, titles and CSS names: ignore the hit then
+./ste-ing/fail/doc.md:3:13: ste-ing: warning: "running" is an -ing verb form: use another verb form
+./ste-ing/fail/doc.md:5:23: ste-ing: warning: "regenerating" is an -ing verb form: use another verb form
+./ste-ing/fail/doc.md:7:32: ste-ing: warning: "running" is an -ing verb form: use another verb form
+./ste-ing/fail/doc.md:11:37: ste-ing: warning: "competing" is an -ing verb form: use another verb form
 ./ste-passive/fail/doc.md:3:10: ste-passive: "is read" is passive voice: name who does the action
 ./ste-passive/fail/doc.md:5:10: ste-passive: "was not changed" is passive voice: name who does the action
 ./ste-semicolon/fail/doc.md:3:16: ste-semicolon: semicolon: write two sentences
