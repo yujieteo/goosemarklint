@@ -43,7 +43,8 @@ The lines that continue an enclosing block quote or list item, and lazy paragrap
 
 ## Machine leaf
 
-initial: container final: done
+initial: container
+final: done
 
 | state | event | guard | next | req | source |
 | --- | --- | --- | --- | --- | --- |
