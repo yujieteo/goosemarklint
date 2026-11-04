@@ -75,7 +75,6 @@ fn check_tree(L: Lint&, p: Prose&, w: Words&) {
 fn print_findings(out: u8[>..]&, path: const u8[:], L: Lint&) {
     stable_sort(L.found) { a, b => a.line < b.line || (a.line == b.line && (a.col < b.col || (a.col == b.col && a.rule < b.rule))) };
     for f in L.found {
-        guard !is_disabled(RULE_IDS[f.rule]);
         format(out, path, ":", f.line, ":", f.col, ": ", RULE_IDS[f.rule], ": ", if f.warning { "warning: " } else { "" });
         out.append(L.msgs[f.msg.at..f.msg.at + f.msg.len]);
         out.push('\n');
@@ -125,8 +124,9 @@ fn lint_into(out: u8[>..]&, path: const u8[:], input: const u8[:], facts: Facts&
     var L = Lint { d: d, profile: profile_of(path), lines: lines, kinds: kinds, found: found, msgs: msgs, directives: directives, facts: facts };
     run_checks(L);
     apply_suppressions(L);
+    retain(L.found) { !is_disabled(RULE_IDS[it.rule]) };
     print_findings(out, path, L);
-    return count(L.found) { !it.warning && !is_disabled(RULE_IDS[it.rule]) };
+    return count(L.found) { !it.warning };
 }
 
 fn lint_source(out: u8[>..]&, path: const u8[:], input: const u8[:]) -> i64 {
@@ -138,15 +138,14 @@ fn lint_source(out: u8[>..]&, path: const u8[:], input: const u8[:]) -> i64 {
 
 fn lint_file(out: u8[>..]&, path: const u8[:], facts: Facts&) -> i64 {
     var input: u8[>..] = [];
-    let full = full_path(path);
-    guard !is_excluded(full) else { return 0; }
+    guard !is_excluded(path) else { return 0; }
     guard read_file(path, input) else {
         write_stderr(str("goosemarklint: cannot read ", path, "\n"));
         return -1;
     }
     facts.path = Span { at: facts.text.len, len: path.len };
     facts.text.append(path);
-    facts.skip = is_generated(full) || in_pass_fixture(full);
+    facts.skip = is_generated(path) || in_pass_fixture(path);
     return lint_into(out, path, input, facts);
 }
 

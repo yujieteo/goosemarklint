@@ -83,8 +83,7 @@ fn format_paths(paths: u8[:][:], check: bool) -> i64 {
     var list = split(files, '\n');
     sort(list) { a, b => compare(a, b) < 0 };
     for f in list {
-        let full = full_path(f);
-        guard f.len > 0 && !is_excluded(full) && !is_generated(full);
+        guard f.len > 0 && !is_excluded(f) && !is_generated(f);
         code = max(code, format_file(f, check));
     }
     return code;
