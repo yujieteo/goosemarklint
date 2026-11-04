@@ -13,8 +13,8 @@ fn is_tight(d: Doc&, parent: i64) -> bool {
     }
 }
 
-fn put_separator(f: Fmt&, prev: i64, parent: i64) {
-    guard !is_directive_block(f.d, prev) && !is_tight(f.d, parent);
+fn put_separator(f: Fmt&, prev: i64, parent: i64, joined: bool) {
+    guard !(joined && is_directive_block(f.d, prev)) && !is_tight(f.d, parent);
     put_blank(f);
 }
 
@@ -39,7 +39,7 @@ fn put_tail(f: Fmt&, parent: i64, to: i64) -> bool {
     let last = f.d.nodes[parent].last;
     let from = if last >= 0 { f.d.nodes[last].end_line + 1 } else { content_line(f.d, parent) };
     guard has_defs(f, from, to) else { return false; }
-    if last >= 0 { put_separator(f, last, parent); }
+    if last >= 0 { put_separator(f, last, parent, def_line(f, from).len > 0); }
     put_defs(f, from, to);
     return true;
 }
@@ -50,11 +50,11 @@ fn put_before(f: Fmt&, n: i64) {
     let prev = f.d.nodes[n].prev;
     let parent = f.d.nodes[n].parent;
     let from = if prev >= 0 { f.d.nodes[prev].end_line + 1 } else { content_line(f.d, parent) };
-    if prev >= 0 { put_separator(f, prev, parent); }
     let to = first_line(f.d, n) - 1;
+    if prev >= 0 { put_separator(f, prev, parent, from > to || def_line(f, from).len > 0); }
     guard has_defs(f, from, to);
     put_defs(f, from, to);
-    put_separator(f, -1, parent);
+    put_separator(f, -1, parent, false);
 }
 
 fn first_line(d: Doc&, n: i64) -> i64 {

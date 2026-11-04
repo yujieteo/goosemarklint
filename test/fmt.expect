@@ -292,6 +292,12 @@ With neither, `fh` uses the program of the list below on PATH, or `python3` for 
 - [Validation cases as 1 HTML file](docs/reference/quine.md): 5 cases that run offline in a browser, with their check.
 
 femahoy is under the MIT License, see `LICENSE`.
+==> fmt/directive-gap.md <==
+# Directive gap
+
+<!-- goosemarklint-disable-next-line llm-hedge: the test needs a blank line here -->
+
+The value is 1.
 ==> fmt/sentences.md <==
 # Sentence breaks
 
@@ -305,6 +311,9 @@ Is it on?
 Yes!
 A code span `a. B` stays on its line.
 The end.
+
+<!-- goosemarklint-disable-next-line llm-stock: the test needs a stock word -->
+The tool is good. We delve into it.
 ==> goosestrike/README.md <==
 # goosestrike
 

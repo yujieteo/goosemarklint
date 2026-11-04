@@ -8,7 +8,7 @@ import fmt.emit;
 let CLOSERS = ")]\"'*_";
 let OPENERS = "\"'([*_`!";
 
-struct Flow { s: u8[>..]&, map: i64[>..]&, nl: bool[>..]&, safe: Span[>..]&, breaks: i64[>..]&, from: i64 = 0 }
+struct Flow { s: u8[>..]&, map: i64[>..]&, nl: bool[>..]&, safe: Span[>..]&, breaks: i64[>..]&, keep: bool, from: i64 = 0 }
 
 fn is_blank_char(c: u8) -> bool { c == ' ' || c == '\t' }
 
@@ -62,7 +62,7 @@ fn boundary(flow: Flow&, k: i64) -> i64 {
 
 fn put_flow(f: Fmt&, flow: Flow&, suffix: const u8[:]) {
     var start = flow.from;
-    var k = flow.from;
+    var k = if flow.keep { flow.s.len } else { flow.from };
     while k < flow.s.len {
         let w = boundary(flow, k);
         if w >= 0 {
@@ -97,7 +97,7 @@ fn trailing_spaces(s: const u8[:]) -> i64 {
     return n;
 }
 
-fn flow_line(f: Fmt&, flow: Flow&, line: const u8[:], at: i64, lead: bool, last: bool, keep: bool) -> bool {
+fn flow_line(f: Fmt&, flow: Flow&, line: const u8[:], at: i64, lead: bool, last: bool) -> bool {
     var a = 0;
     while lead && a < line.len && is_blank_char(line[a]) { a++; }
     let text_break = !last && position(flow.breaks, at + line.len) >= 0;
@@ -109,7 +109,7 @@ fn flow_line(f: Fmt&, flow: Flow&, line: const u8[:], at: i64, lead: bool, last:
     let spaces = trailing_spaces(line) >= 2;
     let body = trim_space_end(line[a..]);
     add_text(flow, body, at + a);
-    if keep || spaces || odd_backslashes(body) {
+    if flow.keep || spaces || odd_backslashes(body) {
         put_flow(f, flow, if spaces { "  " } else { "" });
     } else {
         flow.s.push(' ');
@@ -125,7 +125,7 @@ fn put_paragraph(f: Fmt&, para: i64, keep: bool) {
     var nl: bool[>..] = [];
     var safe: Span[>..] = [];
     var breaks: i64[>..] = [];
-    var flow = Flow { s: s, map: map, nl: nl, safe: safe, breaks: breaks };
+    var flow = Flow { s: s, map: map, nl: nl, safe: safe, breaks: breaks, keep: keep };
     collect_safe(f.d, flow, para);
     let c = f.d.nodes[para].content;
     let all = f.d.text[c.at..c.at + c.len];
@@ -135,7 +135,7 @@ fn put_paragraph(f: Fmt&, para: i64, keep: bool) {
     while at <= text.len {
         let nl_at = position(text[at..], '\n');
         let end = if nl_at < 0 { text.len } else { at + nl_at };
-        lead = flow_line(f, flow, text[at..end], c.at + at, lead, end == text.len, keep);
+        lead = flow_line(f, flow, text[at..end], c.at + at, lead, end == text.len);
         at = end + 1;
     }
 }

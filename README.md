@@ -6,11 +6,13 @@ The parser reads CommonMark, GitHub Flavored Markdown, YAML front matter and Git
 
 ## Run
 
-Build the tool with the Goose compiler, then check the Markdown files of a repo:
+Build the tool with the Goose compiler, then check the Markdown files of a repo.
+`fmt --check` fails when `fmt` would change a file:
 
 ```sh
 goose build src/main.goose -o goosemarklint
 ./goosemarklint check .
+./goosemarklint fmt --check .
 ```
 
 `check` takes files and folders.
