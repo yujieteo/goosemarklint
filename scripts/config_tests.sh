@@ -87,10 +87,16 @@ outer="$work/outer"
 mkdir -p "$outer/fail" "$outer/pass/repo"
 printf '# A\n\n%s\n' "$sentence" >"$outer/pass/repo/a.md"
 printf '# B\n\n%s\n' "$sentence" >"$outer/pass/repo/b.md"
-(cd "$outer/pass/repo" && "$bin" check .) >"$work/out" 2>&1 || true
+(cd "$outer" && "$bin" check pass/repo) >"$work/out" 2>&1 || true
 if ! grep -q 'repeated-fact: warning' "$work/out"; then
   cat "$work/out"
   echo "config_tests: a repo under a pass folder with a sibling fail folder gave no repeated-fact warning"
+  exit 1
+fi
+(cd "$outer" && "$bin" check pass/repo/a.md pass/repo/b.md) >"$work/out" 2>&1 || true
+if ! grep -q 'repeated-fact: warning' "$work/out"; then
+  cat "$work/out"
+  echo "config_tests: file arguments under a pass folder with a sibling fail folder gave no repeated-fact warning"
   exit 1
 fi
 

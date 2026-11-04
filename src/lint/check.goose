@@ -136,7 +136,7 @@ fn lint_source(out: u8[>..]&, path: const u8[:], input: const u8[:]) -> i64 {
     return lint_into(out, path, input, facts);
 }
 
-fn lint_file(out: u8[>..]&, path: const u8[:], facts: Facts&) -> i64 {
+fn lint_file(out: u8[>..]&, path: const u8[:], facts: Facts&, from: i64) -> i64 {
     var input: u8[>..] = [];
     guard !is_excluded(path) else { return 0; }
     guard read_file(path, input) else {
@@ -145,7 +145,7 @@ fn lint_file(out: u8[>..]&, path: const u8[:], facts: Facts&) -> i64 {
     }
     facts.path = Span { at: facts.text.len, len: path.len };
     facts.text.append(path);
-    facts.skip = is_generated(path) || in_pass_fixture(path);
+    facts.skip = is_generated(path) || in_pass_fixture(path, from);
     return lint_into(out, path, input, facts);
 }
 
@@ -188,9 +188,10 @@ fn lint_dir(out: u8[>..]&, dir: const u8[:], facts: Facts&) -> i64 {
     var list = split(files, '\n');
     sort(list) { a, b => compare(a, b) < 0 };
     var total = 0;
+    let from = fixture_base(dir);
     for f in list {
         guard f.len > 0;
-        let n = lint_file(out, f, facts);
+        let n = lint_file(out, f, facts, from);
         if n < 0 { total = -1; } else if total >= 0 { total += n; }
     }
     return if ok { total } else { -1 };
@@ -224,7 +225,7 @@ fn run_check(paths: u8[:][:]) -> i64 {
     var facts = Facts { text: text, items: items, path: Span { at: 0, len: 0 } };
     for path in paths {
         var out: u8[>..] = [];
-        let n = if is_dir(path) { lint_dir(out, path, facts) } else { lint_file(out, path, facts) };
+        let n = if is_dir(path) { lint_dir(out, path, facts) } else { lint_file(out, path, facts, fixture_base(path)) };
         write_stdout(out);
         if n < 0 { failed = true; } else { total += n; }
     }

@@ -137,11 +137,19 @@ fn is_excluded(path: const u8[:]) -> bool { is_under(EXCLUDE, path) }
 
 fn is_disabled(rule: const u8[:]) -> bool { in_list(DISABLE, rule) }
 
-fn in_pass_fixture(path: const u8[:]) -> bool {
+fn fixture_base(root: const u8[:]) -> i64 {
+    var end = root.len;
+    while end > 0 && root[end - 1] == '/' { end -= 1; }
+    var at = end;
+    while at > 0 && root[at - 1] != '/' { at -= 1; }
+    return at;
+}
+
+fn in_pass_fixture(path: const u8[:], from: i64) -> bool {
     var found = false;
     var parent: u8[>..] = [];
     each_split(path, '/') {
-        if it == "pass" && is_dir(str(parent, "fail")) { found = true; }
+        if it == "pass" && parent.len >= from && is_dir(str(parent, "fail")) { found = true; }
         format(parent, it, "/");
     };
     return found;
