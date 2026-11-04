@@ -66,7 +66,7 @@ Each other Markdown file, such as a blog post, gets all of the other rules.
 | `ste-passive` | A form of "be" and then a past participle, such as `is used`. |
 | `llm-stock` | A stock word or a stock phrase of LLM text, such as `delve` or `seamless`. It skips a name or a title, as `ste-word` does. |
 | `llm-hedge` | A hedge or a filler word, such as `basically` or `very`. |
-| `llm-em-dash` | An em dash. It skips a table cell that holds only an em dash, because that dash is a placeholder. In a `.sm.md` file, it also skips the last `" — "` of a `- <id>: <text> — <source>` line, because that dash separates the text from its source. |
+| `llm-em-dash` | An em dash. It skips a table cell that holds only an em dash. In a `.sm.md` file, it skips the last spaced em dash of a `- <id>: <text> — <tail>` list item. A ` -- ` after that dash keeps it flagged. The rule does not flag a text dash in that last position. |
 | `llm-contrast` | The forms `not just X, but Y` and `it is not X, it is Y`. |
 | `llm-rule-of-three` | A list of 3 adjectives, such as `fast, simple and safe`. |
 | `llm-heading-emoji` | An emoji in a heading. |

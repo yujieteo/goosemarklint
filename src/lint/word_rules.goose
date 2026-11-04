@@ -137,7 +137,7 @@ fn has_id_prefix(s: const u8[:]) -> bool {
 fn source_separator(L: Lint&, p: Prose&, b: i64) -> i64 {
     guard L.machine else { return -1; }
     let item = L.d.nodes[b].parent;
-    guard item >= 0 && L.d.nodes[item].kind == Kind.Item else { return -1; }
+    guard item >= 0 && L.d.nodes[item].kind == Kind.Item && L.d.nodes[item].first == b else { return -1; }
     guard has_id_prefix(p.text) else { return -1; }
     var at = -1;
     for c, i in p.text {
