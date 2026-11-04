@@ -8,6 +8,11 @@ import lint.tokens;
 
 let PHRASE_RULES = [BAN, CONTRACTION, STOCK, HEDGE];
 let ING_AFTER = ["without", "before", "after", "by", "while", "when", "than", "upon", "of", "for", "in", "from", "about", "on", "to"];
+let ING_VERBS = [
+    "prefer", "prefers", "preferred", "avoid", "avoids", "avoided", "start", "starts", "started", "stop", "stops", "stopped",
+    "keep", "keeps", "kept", "finish", "finishes", "finished", "consider", "considers", "considered", "begin", "begins", "began", "begun",
+    "enjoy", "enjoys", "enjoyed", "suggest", "suggests", "suggested", "recommend", "recommends", "recommended",
+];
 
 fn lower_ends_with(w: const u8[:], suffix: const u8[:]) -> bool {
     w.len >= suffix.len && lower_equal(w[w.len - suffix.len..], suffix)
@@ -80,7 +85,7 @@ fn is_verb_slot(p: Prose&, w: Words&, i: i64, series: bool) -> bool {
     guard k >= 0 && is_plain(w, k) else { return false; }
     let prev = tok_text(p, w.toks[k]);
     guard !(lower_equal(prev, "and") || lower_equal(prev, "or")) else { return series; }
-    return in_list(BE, prev) || any(ING_AFTER) { lower_equal(prev, it) };
+    return in_list(BE, prev) || any(ING_AFTER) { lower_equal(prev, it) } || any(ING_VERBS) { lower_equal(prev, it) };
 }
 
 fn check_ing(L: Lint&, p: Prose&, w: Words&, i: i64, starts: bool, series: bool) -> bool {

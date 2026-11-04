@@ -141,6 +141,7 @@
 ./server/README.md:237:40: ste-contraction: "Let's" is a contraction: write "let us"
 ./server/README.md:239:103: ste-passive: "are not set" is passive voice: name who does the action
 ./server/README.md:246:1: MD040: fenced code block has no language: add one after the fence
+./site/AGENTS.md:3:64: ste-ing: warning: "deleting" is an -ing verb form: use another verb form
 ./site/AGENTS.md:3:76: ste-ing: warning: "adding" is an -ing verb form: use another verb form
 ./site/README.md:1:1: readme-run-block: README has no fenced code block: show the run steps in one
 ./site/README.md:3:1: readme-purpose: first paragraph has 3 sentences: state the purpose in 1 sentence

@@ -61,7 +61,7 @@ Each other Markdown file, such as a blog post, gets all of the other rules.
 | `ste-sentence-length` | A sentence of more than 25 words, or an instruction of more than 20 words. An instruction starts with a verb, or has a verb after its first comma. |
 | `ste-contraction` | A contraction, such as `don't`. |
 | `ste-semicolon` | A semicolon. |
-| `ste-ing` | A warning for an -ing verb form. This is a word that ends in -ing and is not in an `allow` list. It comes after a form of "be" or after a word such as `without`, `of`, `for` or `to`, with possibly one adverb between them. It also comes after `and` or `or` when the sentence has a found -ing word before it. It skips a word with a capital letter that does not start a sentence. Thus the rule skips most nouns, adjectives, titles and names. |
+| `ste-ing` | A warning for an -ing verb form. This is a word that ends in -ing and is not in an `allow` list. It comes after a form of "be" or after a word such as `without`, `of`, `for` or `to`. It also comes after a verb such as `prefer`, `avoid` or `stop`, which takes an -ing object. One adverb can come between them. It also comes after `and` or `or` when the sentence has a found -ing word before it. It skips a word with a capital letter that does not start a sentence. Thus the rule skips most nouns, adjectives, titles and names. |
 | `ste-passive` | A form of "be" and then a past participle, such as `is used`. |
 | `llm-stock` | A stock word or a stock phrase of LLM text, such as `delve` or `seamless`. It skips a name or a title, as `ste-word` does. |
 | `llm-hedge` | A hedge or a filler word, such as `basically` or `very`. |
