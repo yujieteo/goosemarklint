@@ -20,7 +20,7 @@ In a folder, it reads each `.md` file and skips `node_modules` and each folder w
 Each finding is one line: `file:line:col: rule: message`.
 A warning has the word `warning:` before its message.
 The exit status is 0 for no finding or only warnings, and 1 for an error.
-It is 2 for a file or a config that the tool cannot read.
+It is 2 for an invalid config or a Markdown file that the tool cannot read.
 
 `./goosemarklint rules` prints the rule IDs.
 `./goosemarklint --version` prints the version.
@@ -198,6 +198,12 @@ disable = ["ste-ing"]
 Lists can span lines.
 Values follow JSON string and array syntax, including backslash escapes, with no trailing commas.
 Repeated keys add entries.
+Each key takes a list, even when it has only one value.
+For `ban`, each item must have exactly two non-empty strings.
+An invalid entry or an unknown rule exits with status 2 and reports the config error.
+The tool reads `.goosemarklint` from the current working directory, not from each checked file's folder.
+If the file is absent or the tool cannot read it, the tool uses its built-in lists and gives no error.
+
 Existing tab-separated entries remain valid:
 
 - `allow`, a tab and a word.
@@ -207,12 +213,6 @@ Existing tab-separated entries remain valid:
 - `disable`, a tab and a rule ID.
 
 Config paths match paths relative to the folder where you run goosemarklint.
-
-This command makes a config with 1 line of each type:
-
-```sh
-printf 'allow\tHugging\nban\twhitelist\tallow-list\ngenerated\tvalidation/reports/\nexclude\tvendor/\ndisable\tste-ing\n' > .goosemarklint
-```
 
 An `allow` word passes each word rule.
 A `ban` word gives a `ste-word` finding.
