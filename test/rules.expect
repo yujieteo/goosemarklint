@@ -67,6 +67,12 @@
 ./llm-contrast/fail/doc.md:3:1: llm-contrast: "not X, but Y" contrast: state Y
 ./llm-contrast/fail/doc.md:5:13: llm-contrast: "not X, but Y" contrast: state Y
 ./llm-em-dash/fail/doc.md:3:18: llm-em-dash: em dash: write two sentences or use a comma
+./llm-em-dash/fail/spec.sm.md:5:27: llm-em-dash: em dash: write two sentences or use a comma
+./llm-em-dash/fail/spec.sm.md:7:25: llm-em-dash: em dash: write two sentences or use a comma
+./llm-em-dash/fail/spec.sm.md:8:27: llm-em-dash: em dash: write two sentences or use a comma
+./llm-em-dash/fail/spec.sm.md:9:16: llm-em-dash: em dash: write two sentences or use a comma
+./llm-em-dash/fail/spec.sm.md:11:21: llm-em-dash: em dash: write two sentences or use a comma
+./llm-em-dash/fail/spec.sm.md:13:13: llm-em-dash: em dash: write two sentences or use a comma
 ./llm-heading-emoji/fail/doc.md:1:3: llm-heading-emoji: emoji in a heading: delete it
 ./llm-heading-emoji/fail/fe0f/doc.md:1:3: llm-heading-emoji: emoji in a heading: delete it
 ./llm-heavy-bold/fail/doc.md:3:1: llm-heavy-bold: paragraph has 3 bold spans: keep bold for one key term

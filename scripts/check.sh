@@ -26,7 +26,7 @@ for f in $(git -C "$root" ls-files -co --exclude-standard '*.py'); do
   fi
 done
 
-for m in $(git -C "$root" ls-files -co --exclude-standard '*.sm.md' ':!test/corpus'); do
+for m in $(git -C "$root" ls-files -co --exclude-standard '*.sm.md' ':!test/corpus' ':!test/rules'); do
   mapfile -t cited < <(awk -F '|' '
     !/^\|/ { col = 0; next }
     !col { for (i = 2; i < NF; i++) { h = $i; gsub(/ /, "", h); if (h == "source") col = i } next }

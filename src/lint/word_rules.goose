@@ -124,19 +124,43 @@ fn check_passive(L: Lint&, p: Prose&, w: Words&, i: i64) {
 
 fn is_em_dash(s: const u8[:], i: i64) -> bool { s[i] == 0xE2 && i + 2 < s.len && s[i + 1] == 0x80 && s[i + 2] == 0x94 }
 
-fn check_marks(L: Lint&, p: Prose&) {
+fn is_id_char(c: u8) -> bool {
+    (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '-' || c == '_' || c == '.'
+}
+
+fn has_id_prefix(s: const u8[:]) -> bool {
+    var k = 0;
+    while k < s.len && is_id_char(s[k]) { k++; }
+    return k > 0 && k + 1 < s.len && s[k] == ':' && s[k + 1] == ' ';
+}
+
+fn source_separator(L: Lint&, p: Prose&, b: i64) -> i64 {
+    guard L.machine else { return -1; }
+    let item = L.d.nodes[b].parent;
+    guard item >= 0 && L.d.nodes[item].kind == Kind.Item && L.d.nodes[item].first == b else { return -1; }
+    guard has_id_prefix(p.text) else { return -1; }
+    var at = -1;
+    for c, i in p.text {
+        if is_em_dash(p.text, i) && i > 0 && p.text[i - 1] == ' ' && i + 3 < p.text.len && p.text[i + 3] == ' ' { at = i; }
+    }
+    guard at >= 0 && find(p.text[at..], " -- ") < 0 else { return -1; }
+    return at;
+}
+
+fn check_marks(L: Lint&, p: Prose&, b: i64) {
     let alone = trim(p.text);
     let placeholder = alone.len == 3 && is_em_dash(alone, 0);
+    let separator = source_separator(L, p, b);
     for c, i in p.text {
         if c == ';' { report(L, p.pos[i], "ste-semicolon", "semicolon: write two sentences"); }
-        if is_em_dash(p.text, i) && !placeholder {
+        if is_em_dash(p.text, i) && !placeholder && i != separator {
             report(L, p.pos[i], "llm-em-dash", "em dash: write two sentences or use a comma");
         }
     }
 }
 
-fn check_words(L: Lint&, p: Prose&, w: Words&) {
-    check_marks(L, p);
+fn check_words(L: Lint&, p: Prose&, w: Words&, b: i64) {
+    check_marks(L, p, b);
     var starts: bool[>..] = [];
     for t in w.toks { starts.push(false); }
     for s in w.sents {

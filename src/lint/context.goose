@@ -85,6 +85,7 @@ struct Directive { line: i64, col: i64, target: i64, rules: Span, used: bool = f
 struct Lint {
     d: Doc&,
     profile: Profile,
+    machine: bool,
     lines: i64[>..]&,
     kinds: i64[>..]&,
     found: Finding[>..]&,

@@ -117,8 +117,10 @@ fn track_pre(f: Fmt&, t: const u8[:]) -> bool {
     return opens + closes > 0;
 }
 
+fn is_machine_header(d: Doc&, n: i64) -> bool { return starts_with(text_of(d, d.nodes[n].content), "initial:"); }
+
 fn put_raw_paragraph(f: Fmt&, n: i64) {
-    var keep = f.pre > 0 || is_target(f, first_line(f.d, n)) || has_directive(f.d, n);
+    var keep = f.pre > 0 || is_target(f, first_line(f.d, n)) || has_directive(f.d, n) || is_machine_header(f.d, n);
     var k = f.d.nodes[n].first;
     while k >= 0 {
         if f.d.nodes[k].kind == Kind.HtmlInline && track_pre(f, text_of(f.d, f.d.nodes[k].content)) { keep = true; }
