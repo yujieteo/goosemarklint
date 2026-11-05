@@ -4,6 +4,7 @@ import dictionary;
 import md.node;
 import md.parse;
 import lint.lists;
+import lint.config_values;
 import lint.context;
 import lint.prose;
 import lint.tokens;
@@ -200,9 +201,9 @@ fn lint_dir(out: u8[>..]&, dir: const u8[:], facts: Facts&) -> i64 {
 fn load_config() -> bool {
     var text: u8[>..] = [];
     guard file_exists(CONFIG) && read_file(CONFIG, text) else { return true; }
-    let bad = add_lists(text, CONFIG_CATEGORIES);
+    let bad = add_config(text);
     guard bad == 0 else {
-        write_stderr(str(CONFIG, ":", bad, ": write allow<TAB>word, ban<TAB>word<TAB>replacement, generated<TAB>path, exclude<TAB>path or disable<TAB>rule\n"));
+        write_stderr(str(CONFIG, ":", bad, ": expected key = [values] or a tab-separated entry\n"));
         return false;
     }
     for e in entries {

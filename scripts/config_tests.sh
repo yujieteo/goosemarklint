@@ -100,6 +100,58 @@ if ! grep -q 'repeated-fact: warning' "$work/out"; then
   exit 1
 fi
 
+syntax="$work/syntax"
+mkdir -p "$syntax/folder space"
+printf '# Doc\n\nBad phrase; keep this.\n' >"$syntax/doc.md"
+printf '# Doc\n\nBad phrase.\n' >"$syntax/folder space/doc.md"
+printf '%s\n' 'allow = ["finding", "other"]' 'ban = [["bad phrase", "better phrase"]]' \
+  'exclude = [' '  "folder space/"' ']' 'disable = ["ste-semicolon"]' >"$syntax/.goosemarklint"
+status=0
+(cd "$syntax" && "$bin" check .) >"$work/out" 2>&1 || status=$?
+if [ "$status" -ne 1 ] || ! grep -q 'use "better phrase"' "$work/out" || grep -qE 'ste-semicolon|folder space' "$work/out"; then
+  cat "$work/out"
+  echo "config_tests: key/value lists did not apply"
+  exit 1
+fi
+status=0
+(cd "$syntax" && "$bin" fmt --check 'folder space/doc.md') >"$work/out" 2>&1 || status=$?
+if [ "$status" -ne 0 ] || [ -s "$work/out" ]; then
+  cat "$work/out"
+  echo "config_tests: fmt did not honor key/value exclusion"
+  exit 1
+fi
+mkdir -p "$syntax/generated"
+printf 'allow = ["unusual"]\nban = [["unusual", "normal"]]\ngenerated = ["generated/"]\n' >"$syntax/.goosemarklint"
+printf '# Doc\n\nUnusual wording helps the reader understand how this command works.\n' >"$syntax/doc.md"
+cp "$syntax/doc.md" "$syntax/generated/doc.md"
+status=0
+(cd "$syntax" && "$bin" check doc.md generated/doc.md) >"$work/out" 2>&1 || status=$?
+if [ "$status" -ne 0 ] || [ -s "$work/out" ]; then
+  cat "$work/out"
+  echo "config_tests: key/value allow or generated failed"
+  exit 1
+fi
+for invalid in 'ban = [["bad", ""]]' 'allow = [1]' 'disable = ["no-such-rule"]' 'exclude = ["folder",]' 'ban = [["bad"]]'; do
+  printf '%s\n' "$invalid" >"$syntax/.goosemarklint"
+  status=0
+  (cd "$syntax" && "$bin" check .) >"$work/out" 2>&1 || status=$?
+  if [ "$status" -ne 2 ]; then
+    cat "$work/out"
+    echo "config_tests: invalid entry accepted: $invalid"
+    exit 1
+  fi
+done
+mkdir -p "$syntax/a=b"
+printf 'exclude\ta=b/\n' >"$syntax/.goosemarklint"
+printf '# Doc\n\nA line; with a semicolon.\n' >"$syntax/a=b/doc.md"
+status=0
+(cd "$syntax" && "$bin" check 'a=b/doc.md') >"$work/out" 2>&1 || status=$?
+if [ "$status" -ne 0 ] || [ -s "$work/out" ]; then
+  cat "$work/out"
+  echo "config_tests: legacy tab entry with equals failed"
+  exit 1
+fi
+
 version=$("$bin" --version)
 if ! [[ "$version" =~ ^goosemarklint\ [0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   echo "config_tests: --version printed '$version'"

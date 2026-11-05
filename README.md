@@ -182,7 +182,21 @@ The reason is necessary.
 ## Config
 
 A `.goosemarklint` file in the current folder changes the word lists and the rules.
-Each line is one of these:
+Write a key, `=`, and a list of double-quoted strings.
+For `ban`, each list item is a pair of strings: the phrase and its replacement.
+
+```text
+allow = ["finding", "other"]
+ban = [["bad phrase", "better phrase"]]
+generated = ["validation/reports/"]
+exclude = ["vendor/", "folder with spaces/"]
+disable = ["ste-ing"]
+```
+
+Lists can span lines.
+Values follow JSON string and array syntax, including backslash escapes, with no trailing commas.
+Repeated keys add entries.
+Existing tab-separated entries remain valid:
 
 - `allow`, a tab and a word.
 - `ban`, a tab, a word or a phrase, a tab and the replacement.
