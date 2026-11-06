@@ -1,5 +1,2 @@
-allow	finding
-exclude	test/rules
-exclude	test/config
-exclude	test/fmt
-exclude	test/corpus
+allow = ["finding"]
+exclude = ["test/rules", "test/config", "test/fmt", "test/corpus"]
