@@ -17,7 +17,8 @@ done
   gfm "$root/test/spec/gfm-0.29.txt" \
   ext "$root/test/spec/extensions.txt"
 
-mapfile -t sources < <(git -C "$root" ls-files -co --exclude-standard '*.goose' '*.sh')
+sources=()
+while IFS= read -r line; do sources+=("$line"); done < <(git -C "$root" ls-files -co --exclude-standard '*.goose' '*.sh')
 "$out/lint" "$out/specs.txt" "${sources[@]/#/$root/}"
 for f in $(git -C "$root" ls-files -co --exclude-standard '*.py'); do
   if python3 -I -m tokenize "$root/$f" | awk '$2 == "COMMENT" { found = 1; print } END { exit !found }'; then
@@ -27,7 +28,8 @@ for f in $(git -C "$root" ls-files -co --exclude-standard '*.py'); do
 done
 
 for m in $(git -C "$root" ls-files -co --exclude-standard '*.sm.md' ':!test/corpus' ':!test/rules'); do
-  mapfile -t cited < <(awk -F '|' '
+  cited=()
+  while IFS= read -r line; do cited+=("$line"); done < <(awk -F '|' '
     !/^\|/ { col = 0; next }
     !col { for (i = 2; i < NF; i++) { h = $i; gsub(/ /, "", h); if (h == "source") col = i } next }
     $col !~ /^ *-+ *$/ { v = $col; gsub(/ /, "", v); print v }
@@ -45,7 +47,7 @@ for m in $(git -C "$root" ls-files -co --exclude-standard '*.sm.md' ':!test/corp
 done
 
 tail -n +2 "$root/data/sources.tsv" | awk -F '\t' -v root="$root" '{ print $2 "  " root "/" $1 }' >"$out/sources.sha256"
-sha256sum --check --quiet "$out/sources.sha256"
+shasum -a 256 -c --quiet "$out/sources.sha256"
 
 "$root/scripts/rule_tests.sh" "$out/main" "$@"
 "$root/scripts/fmt_tests.sh" "$out/main" "$@"

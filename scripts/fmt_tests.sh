@@ -26,7 +26,7 @@ fi
   echo "==> ${f#./} <=="
   cat "$f"
 done) >"$work/fmt"
-if diff -u --label test/fmt.expect --label branch/fmt "$root/test/fmt.expect" "$work/fmt"; then
+if diff -u -L test/fmt.expect -L branch/fmt "$root/test/fmt.expect" "$work/fmt"; then
   echo "fmt_tests: the formatted corpus is the same as test/fmt.expect"
   exit 0
 fi

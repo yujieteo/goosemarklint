@@ -23,9 +23,14 @@ run() {
   fi
 }
 
-mapfile -t rules < <("$bin" rules)
-mapfile -t dirs < <(find "$root/test/rules" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort)
-mapfile -t sorted < <(printf '%s\n' "${rules[@]}" | sort)
+rules=()
+while IFS= read -r line; do rules+=("$line"); done < <("$bin" rules)
+dirs=()
+while IFS= read -r line; do dirs+=("$line"); done < <(
+  find "$root/test/rules" -type d ! -path "$root/test/rules" -prune -exec basename {} \; | sort
+)
+sorted=()
+while IFS= read -r line; do sorted+=("$line"); done < <(printf '%s\n' "${rules[@]}" | sort)
 if [ "${dirs[*]}" != "${sorted[*]}" ]; then
   echo "rule_tests: test/rules has [${dirs[*]}], the rules are [${sorted[*]}]"
   exit 1
@@ -51,7 +56,7 @@ run 0 "$root" README.md
 changed=0
 for name in rules corpus; do
   if [ "$name" = rules ]; then run 1 "$root/test/rules" .; else run 1 "$root/test/corpus" .; fi
-  if ! diff -u --label "test/$name.expect" --label "branch/$name" "$root/test/$name.expect" "$work/out"; then
+  if ! diff -u -L "test/$name.expect" -L "branch/$name" "$root/test/$name.expect" "$work/out"; then
     changed=$((changed + 1))
     if [ "$accept" = yes ]; then cp "$work/out" "$root/test/$name.expect"; fi
   fi

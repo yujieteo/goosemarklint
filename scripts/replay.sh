@@ -21,14 +21,15 @@ fi
 goose build -q "$work/base/src/main.goose" -o "$work/base.bin" >/dev/null
 goose build -q "$root/src/main.goose" -o "$work/branch.bin" >/dev/null
 
-mapfile -t files < <(find "$root/test/corpus" -name '*.md' | sort)
+files=()
+while IFS= read -r line; do files+=("$line"); done < <(find "$root/test/corpus" -name '*.md' | sort)
 limit=$((${#files[@]} / 5))
 changed=0
 for f in "${files[@]}"; do
   name=${f#"$root/"}
   { "$work/base.bin" tree "$f" || echo "exit $?"; } >"$work/base.out" 2>&1
   { "$work/branch.bin" tree "$f" || echo "exit $?"; } >"$work/branch.out" 2>&1
-  if ! diff -u --label "base/$name" --label "branch/$name" "$work/base.out" "$work/branch.out"; then
+  if ! diff -u -L "base/$name" -L "branch/$name" "$work/base.out" "$work/branch.out"; then
     changed=$((changed + 1))
     if [ "$changed" -gt "$limit" ]; then
       echo "replay: large change, more than 20% of ${#files[@]} outputs differ, stopped early"
